@@ -20,7 +20,11 @@ namespace Eregister.Controllers
         {
             return View(db.Rooms.ToList());
         }
-        //
+        /// <summary>
+        /// /
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // GET: Rooms/Details/5
         public ActionResult Details(int? id)
         {
