@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eregister", "Eregister\Eregister.csproj", "{D18A2A52-85A6-4EAC-9375-4EC1A6FCAAA3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBModels", "DbModels\DBModels.csproj", "{238430CE-4B3B-4879-8A98-85F68821AEBD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D18A2A52-85A6-4EAC-9375-4EC1A6FCAAA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D18A2A52-85A6-4EAC-9375-4EC1A6FCAAA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D18A2A52-85A6-4EAC-9375-4EC1A6FCAAA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D18A2A52-85A6-4EAC-9375-4EC1A6FCAAA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{238430CE-4B3B-4879-8A98-85F68821AEBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{238430CE-4B3B-4879-8A98-85F68821AEBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{238430CE-4B3B-4879-8A98-85F68821AEBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{238430CE-4B3B-4879-8A98-85F68821AEBD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B3E7E753-7860-46EB-AD96-9914998331BA}
+	EndGlobalSection
+EndGlobal
