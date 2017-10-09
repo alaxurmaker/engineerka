@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace DBModels
         public DateTime BirthDate { get; set; }
         public DateTime JoinDate { get; set; }
         public string Classroom { get; set; }
+        public Sex? Sex { get; set; }
 
         public int AddressID { get; set; }
         public int UserID { get; set; }
@@ -30,5 +32,13 @@ namespace DBModels
         public virtual ICollection<StudentHistory> StudentHistories { get; set; }
         public virtual ICollection<Group> Groups { get; set; }
 
+    }
+
+    public enum Sex
+    {
+     //   [Display(Name = "Mężczyzna")]
+         M,
+      //  [Display(Name = "Kobieta")]
+         K
     }
 }

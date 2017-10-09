@@ -16,6 +16,8 @@ namespace DBModels
         public string PasswordSalt { get; set; }
         public string PasswordHash { get; set; }
         public string Role { get; set; }
+        public DateTime Created { get; set; }
+        public DateTime LastLogin { get; set; }
 
         public virtual ICollection<Parent> Parents { get; set; }
         public virtual ICollection<Teacher> Teachers { get; set; }

@@ -9,9 +9,10 @@ namespace DBModels
     public class StudentGrade
     {
         public int StudentGradeID { get; set; }
-        public List<string> ListaOcenKar { get; set; }
-        public List<string> ListaOcenOdp { get; set; }
-        public List<string> ListaOcenSpr { get; set; }
+        public List<int> ListaOcenKar { get; set; }
+        public List<int> ListaOcenOdp { get; set; }
+        public List<int> ListaOcenSpr { get; set; }
+        public List<int> ListaOcenQuiz { get; set; }
 
         public int StudentID { get; set; }
         public int SubjectID { get; set; }

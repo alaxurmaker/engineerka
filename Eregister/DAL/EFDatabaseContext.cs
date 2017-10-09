@@ -6,6 +6,7 @@ using DBModels;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using Eregister.Models.Features.Quiz;
 
 namespace Eregister.Models
 {
@@ -38,6 +39,8 @@ namespace Eregister.Models
         public DbSet<Educator> Educators { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<TeacherSubject> TeacherSubjects { get; set; }
+
+        public DbSet<Quiz> Quizzes { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
