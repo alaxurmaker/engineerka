@@ -3,7 +3,7 @@ namespace Eregister.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class init : DbMigration
+    public partial class InitialCreate : DbMigration
     {
         public override void Up()
         {
@@ -30,8 +30,8 @@ namespace Eregister.Migrations
                         UserID = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.ParentID)
-                .ForeignKey("dbo.Addresses", t => t.AddressID, cascadeDelete: true)
-                .ForeignKey("dbo.Users", t => t.UserID, cascadeDelete: true)
+                .ForeignKey("dbo.Addresses", t => t.AddressID)
+                .ForeignKey("dbo.Users", t => t.UserID)
                 .Index(t => t.AddressID)
                 .Index(t => t.UserID);
             
@@ -44,8 +44,8 @@ namespace Eregister.Migrations
                         ParentID = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.StudentParentID)
-                .ForeignKey("dbo.Parents", t => t.ParentID, cascadeDelete: true)
-                .ForeignKey("dbo.Students", t => t.StudentID, cascadeDelete: true)
+                .ForeignKey("dbo.Parents", t => t.ParentID)
+                .ForeignKey("dbo.Students", t => t.StudentID)
                 .Index(t => t.StudentID)
                 .Index(t => t.ParentID);
             
@@ -65,9 +65,9 @@ namespace Eregister.Migrations
                         EducatorID = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.StudentID)
-                .ForeignKey("dbo.Addresses", t => t.AddressID, cascadeDelete: true)
-                .ForeignKey("dbo.Educators", t => t.EducatorID, cascadeDelete: true)
-                .ForeignKey("dbo.Users", t => t.UserID, cascadeDelete: true)
+                .ForeignKey("dbo.Addresses", t => t.AddressID)
+                .ForeignKey("dbo.Educators", t => t.EducatorID)
+                .ForeignKey("dbo.Users", t => t.UserID)
                 .Index(t => t.AddressID)
                 .Index(t => t.UserID)
                 .Index(t => t.EducatorID);
@@ -80,7 +80,7 @@ namespace Eregister.Migrations
                         TeacherID = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.EducatorID)
-                .ForeignKey("dbo.Teachers", t => t.TeacherID, cascadeDelete: true)
+                .ForeignKey("dbo.Teachers", t => t.TeacherID)
                 .Index(t => t.TeacherID);
             
             CreateTable(
@@ -96,8 +96,8 @@ namespace Eregister.Migrations
                         UserID = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.TeacherID)
-                .ForeignKey("dbo.Addresses", t => t.AddressID, cascadeDelete: true)
-                .ForeignKey("dbo.Users", t => t.UserID, cascadeDelete: true)
+                .ForeignKey("dbo.Addresses", t => t.AddressID)
+                .ForeignKey("dbo.Users", t => t.UserID)
                 .Index(t => t.AddressID)
                 .Index(t => t.UserID);
             
@@ -112,9 +112,9 @@ namespace Eregister.Migrations
                         StudentID = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.GroupID)
-                .ForeignKey("dbo.Students", t => t.StudentID, cascadeDelete: true)
-                .ForeignKey("dbo.Subjects", t => t.SubjectID, cascadeDelete: true)
-                .ForeignKey("dbo.Teachers", t => t.TeacherID, cascadeDelete: true)
+                .ForeignKey("dbo.Students", t => t.StudentID)
+                .ForeignKey("dbo.Subjects", t => t.SubjectID)
+                .ForeignKey("dbo.Teachers", t => t.TeacherID)
                 .Index(t => t.TeacherID)
                 .Index(t => t.SubjectID)
                 .Index(t => t.StudentID);
@@ -139,7 +139,7 @@ namespace Eregister.Migrations
                         SubjectID = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.GradeRatingID)
-                .ForeignKey("dbo.Subjects", t => t.SubjectID, cascadeDelete: true)
+                .ForeignKey("dbo.Subjects", t => t.SubjectID)
                 .Index(t => t.SubjectID);
             
             CreateTable(
@@ -151,8 +151,8 @@ namespace Eregister.Migrations
                         SubjectID = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.StudentGradeID)
-                .ForeignKey("dbo.Students", t => t.StudentID, cascadeDelete: true)
-                .ForeignKey("dbo.Subjects", t => t.SubjectID, cascadeDelete: true)
+                .ForeignKey("dbo.Students", t => t.StudentID)
+                .ForeignKey("dbo.Subjects", t => t.SubjectID)
                 .Index(t => t.StudentID)
                 .Index(t => t.SubjectID);
             
@@ -169,8 +169,8 @@ namespace Eregister.Migrations
                         SeasonID = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.FinalGradeID)
-                .ForeignKey("dbo.Seasons", t => t.SeasonID, cascadeDelete: true)
-                .ForeignKey("dbo.StudentGrades", t => t.StudentGradeID, cascadeDelete: true)
+                .ForeignKey("dbo.Seasons", t => t.SeasonID)
+                .ForeignKey("dbo.StudentGrades", t => t.StudentGradeID)
                 .Index(t => t.StudentGradeID)
                 .Index(t => t.SeasonID);
             
@@ -196,8 +196,8 @@ namespace Eregister.Migrations
                         StudentID = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.StudentHistoryID)
-                .ForeignKey("dbo.Seasons", t => t.SeasonID, cascadeDelete: true)
-                .ForeignKey("dbo.Students", t => t.StudentID, cascadeDelete: true)
+                .ForeignKey("dbo.Seasons", t => t.SeasonID)
+                .ForeignKey("dbo.Students", t => t.StudentID)
                 .Index(t => t.SeasonID)
                 .Index(t => t.StudentID);
             
@@ -210,8 +210,8 @@ namespace Eregister.Migrations
                         SubjectID = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.TeacherSubjectID)
-                .ForeignKey("dbo.Subjects", t => t.SubjectID, cascadeDelete: true)
-                .ForeignKey("dbo.Teachers", t => t.TeacherID, cascadeDelete: true)
+                .ForeignKey("dbo.Subjects", t => t.SubjectID)
+                .ForeignKey("dbo.Teachers", t => t.TeacherID)
                 .Index(t => t.TeacherID)
                 .Index(t => t.SubjectID);
             

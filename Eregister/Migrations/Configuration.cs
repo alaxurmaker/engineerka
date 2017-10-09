@@ -5,14 +5,15 @@ namespace Eregister.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<Eregister.Models.DatabaseContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<Eregister.Models.EFDatabaseContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
+            ContextKey = "Eregister.Models.EFDatabaseContext";
         }
 
-        protected override void Seed(Eregister.Models.DatabaseContext context)
+        protected override void Seed(Eregister.Models.EFDatabaseContext context)
         {
             //  This method will be called after migrating to the latest version.
 
