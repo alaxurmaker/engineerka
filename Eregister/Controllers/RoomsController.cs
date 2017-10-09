@@ -13,18 +13,14 @@ namespace Eregister.Controllers
 {
     public class RoomsController : Controller
     {
-        private DatabaseContext db = new DatabaseContext();
+        private EFDatabaseContext db = new EFDatabaseContext();
 
         // GET: Rooms
         public ActionResult Index()
         {
             return View(db.Rooms.ToList());
         }
-        /// <summary>
-        /// /
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+
         // GET: Rooms/Details/5
         public ActionResult Details(int? id)
         {
