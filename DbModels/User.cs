@@ -8,6 +8,11 @@ namespace DBModels
 {
    public class User
     {
+        public User()
+        {
+            Role = "student";
+           // ImagePath = "default_avatar.jpg";
+        }
         public int UserID { get; set; }
 
         public string Email { get; set; }
@@ -18,6 +23,12 @@ namespace DBModels
         public string Role { get; set; }
         public DateTime Created { get; set; }
         public DateTime LastLogin { get; set; }
+
+        public int ImageId { get; set; }
+        public string ImageTitle { get; set; }
+        public byte[] ImageByte { get; set; }
+        public string ImagePath { get; set; }
+      //  public HttpPostedFileWrapper ImageFile { get; set; }
 
         public virtual ICollection<Parent> Parents { get; set; }
         public virtual ICollection<Teacher> Teachers { get; set; }

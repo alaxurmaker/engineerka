@@ -23,9 +23,14 @@ namespace Eregister
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
 
+            //moje
+            //bundles.Add(new ScriptBundle("~/bundles/popper").Include(
+            //          "~/Scripts/popper.js"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
+                      //"~/Content/simple-sidebar.css")); //moje
         }
     }
 }

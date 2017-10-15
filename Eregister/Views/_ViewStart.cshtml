@@ -1,3 +1,42 @@
-﻿@{
+﻿@*@{
     Layout = "~/Views/Shared/_Layout.cshtml";
+}*@
+
+
+@{
+    //if (this.User.IsInRole("teacher"))
+    //{
+    //    Layout = "~/Views/Shared/_AdminTemplate.cshtml";
+    //}
+    //else if (this.User.IsInRole("parent"))
+    //{
+    //    Layout = "~/Views/Shared/_AdminTemplate.cshtml";
+    //}
+    //else if (this.User.IsInRole("student"))
+    //{
+    //    Layout = "~/Views/Shared/_AdminTemplate.cshtml";
+    //}
+    //else
+    //{
+    //    Layout = "~/Views/Shared/_AdminTemplate.cshtml";
+    //    //Layout = "~/Views/Shared/_Entry.cshtml";
+    //}
+
+
+    var controller = HttpContext.Current.Request.RequestContext.RouteData.Values["Controller"].ToString();
+    string cLayout = "";
+    if (controller == "Entry")
+    {
+        //  cLayout = "~/Views/Shared/_Entry.cshtml";
+        cLayout = "~/Views/Shared/_AdminTemplate.cshtml";
+    }
+    else
+    {
+        cLayout = "~/Views/Shared/_AdminTemplate.cshtml";
+    }
+    Layout = cLayout;
+
+
+
+
 }
