@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,7 @@ namespace DBModels
         public DateTime Created { get; set; }
         public DateTime LastLogin { get; set; }
 
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ImageId { get; set; }
         public string ImageTitle { get; set; }
         public byte[] ImageByte { get; set; }

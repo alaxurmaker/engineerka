@@ -16,7 +16,7 @@ namespace Eregister.Controllers
         // GET: UserProfile
         public ActionResult Index()
         {
-            return View();
+            return View();//db.Users);
         }
 
         public JsonResult ImageUpload(ImageViewModel model)
@@ -45,17 +45,40 @@ namespace Eregister.Controllers
                 img.PasswordHash = "pw123";
                 img.PasswordSalt = "pw123";
                 img.Role = "test";
-                
+
+                //  User ifPictureExists = db.Users.Find(img.UserID);
+
+                //  if (ifPictureExists == null)
+                // {
+                //      db.Users.Remove(ifPictureExists);
+                //       db.Users.Add(img);
+                //       db.SaveChanges();
+                //    }
+                //     else
+                //    { 
+                imgId = img.ImageId;
                 db.Users.Add(img);
                 db.SaveChanges();
-                imgId = img.ImageId;
+                //     }
+                
+
+
             }
             return Json(imgId, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult Show(int id)
+        {
+            var imageData = db.Users.FirstOrDefault(x => x.ImageId == id);
+        
+            return File(imageData.ImageByte, "my_image/jpg");
+        }
+        
+
         public ActionResult DisplayingImage(int imgid)
         {
-            var img = db.Users.SingleOrDefault(x => x.ImageId == imgid);
+            var img = db.Users.FirstOrDefault(x => x.ImageId == imgid);
+            //  var img = db.Users.SingleOrDefault(x => x.ImageId == imgid);
             return File(img.ImageByte, "image/jpg");
         }
     }

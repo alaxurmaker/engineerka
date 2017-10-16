@@ -175,6 +175,10 @@
     <Compile Include="Migrations\201710141914441_Third_migration.Designer.cs">
       <DependentUpon>201710141914441_Third_migration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201710161026196_Fourth_migration.cs" />
+    <Compile Include="Migrations\201710161026196_Fourth_migration.Designer.cs">
+      <DependentUpon>201710161026196_Fourth_migration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountManagerModel.cs" />
     <Compile Include="Models\Features\Quiz\Quiz.cs" />
@@ -7490,6 +7494,7 @@
     <Content Include="Views\Shared\_Entry.cshtml" />
     <Content Include="Views\Entry\Index.cshtml" />
     <Content Include="Views\Entry\Login.cshtml" />
+    <Content Include="Views\UserProfile\Show.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -7527,6 +7532,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201710141914441_Third_migration.resx">
       <DependentUpon>201710141914441_Third_migration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710161026196_Fourth_migration.resx">
+      <DependentUpon>201710161026196_Fourth_migration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
