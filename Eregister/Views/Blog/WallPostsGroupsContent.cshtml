@@ -1,0 +1,250 @@
+﻿@model PagedList.IPagedList<Models.BlogViewModel>
+@using PagedList.Mvc;
+@using Eregister.Controllers
+@using Microsoft.AspNet.Identity
+@using Models
+
+@{
+    ViewBag.Title = "WallPostsGroupsContent";
+}
+@{
+    BlogController blogCtrl = new BlogController();
+    int postnum = 0;
+}
+<div style="overflow:hidden;width:100%;">
+    <table style="float:right;">
+        <tr>
+            <th>Sort by :</th>
+            <th>
+                @using (Html.BeginForm("Wall", "Blog", FormMethod.Get))
+            {
+                if (ViewBag.CurrentSearchCategory != null)
+                {
+                    foreach (var item in ViewBag.CurrentSearchCategory)
+                    {
+                            <input type="hidden" name="searchCategory" value="@item" />
+                        }
+                    }
+                    if (ViewBag.CurrentSearchTag != null)
+                    {
+                        foreach (var item in ViewBag.CurrentSearchTag)
+                        {
+                            <input type="hidden" name="searchTag" value="@item" />
+                        }
+                    }
+                    <input type="hidden" name="searchString" value="@ViewBag.CurrentSearchString" />
+                    <input type="hidden" name="sortOrder" value="@ViewBag.DateSortParm" />
+                    <input class="submitBtnLink" type="submit" value="Date" />
+                }
+            </th>
+            <th class="tableTitle">
+                @using (Html.BeginForm("Wall", "Blog", FormMethod.Get))
+            {
+                if (ViewBag.CurrentSearchCategory != null)
+                {
+                    foreach (var item in ViewBag.CurrentSearchCategory)
+                    {
+                            <input type="hidden" name="searchCategory" value="@item" />
+                        }
+                    }
+                    if (ViewBag.CurrentSearchTag != null)
+                    {
+                        foreach (var item in ViewBag.CurrentSearchTag)
+                        {
+                            <input type="hidden" name="searchTag" value="@item" />
+                        }
+                    }
+                    <input type="hidden" name="searchString" value="@ViewBag.CurrentSearchString" />
+                    <input type="hidden" name="sortOrder" value="@ViewBag.TitleSortParm" />
+                    <input class="submitBtnLink" type="submit" value="Title" />
+                }
+            </th>
+        </tr>
+    </table>
+</div>
+
+
+
+
+<!-- robienie postow-->
+@foreach (var post in Model)
+{
+    postnum++;
+    var total = post.PostLikes - post.PostDislikes;
+
+    // Time ago
+    BlogController blgCtrler = new BlogController();
+    //var timeAgo = blgCtrler.TimeAgo(post.PostedOn);
+    string postedAgo = blgCtrler.TimeAgo(post.PostedOn);
+
+    <div class="container">
+        <div class="col-md-5">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <section class="post-heading">
+                        <div class="row">
+                            <div class="col-md-11">
+                                <div class="media">
+                                    <div class="media-left">
+                                        <a href="#">
+                                            <img class="media-object photo-profile" src="http://0.gravatar.com/avatar/38d618563e55e6082adf4c8f8c13f3e4?s=40&d=mm&r=g" width="40" height="40" alt="...">
+                                        </a>
+                                    </div>
+                                    <div class="media-body">
+                                        <a href="#" class="anchor-username"><h4 class="media-heading">@post.Post.UserName</h4></a> <!-- Autor -->
+                                        <a href="#" class="anchor-time"> @postedAgo</a> <!-- Czas temu -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <div>
+                        &nbsp;
+                        <a href="#">
+                            <div class="postDescTitle"><h4>@Html.ActionLink(@post.Title, "Post", "Blog", new { slug = @post.UrlSlug }, null)</h4></div>
+                        </a>
+                        <div>
+                            <label>Category:&nbsp;</label>
+                            @{
+                                var postCats = blogCtrl.GetPostCategories(post.Post);
+                                int postcatnum = 0;
+                                foreach (var cat in postCats)
+                                {
+                                    postcatnum++;
+                                    <a href="#">
+                                        <div class="postDescCatNames">
+                                            @cat.Name@if (postcatnum < postCats.Count())
+                                            {
+                                                @Html.Raw(",&nbsp;")
+                                            }
+                                        </div>
+                                    </a>
+                                }
+                            }
+                        </div>
+                        <!-- UPLOAD FIMOW-->
+                        <!-- UPLOAD FIMOW-->
+                        <!-- UPLOAD FIMOW-->
+                        <!-- UPLOAD FIMOW-->
+                        <!-- UPLOAD FIMOW-->
+                    </div>
+
+                    <section class="post-body">
+                        <p>
+
+                            <div class="postDescBody">
+                                @{
+                                    var postVideos = blogCtrl.GetPostVideos(post.Post);
+                                    if (postVideos != null)
+                                    {
+                                        <div class="postVidCont">
+                                            @foreach (var video in postVideos)
+                                            {
+                                                <a href="@video.VideoUrl" class="postVidThumb" target="_blank"><img src="@Url.Content(video.VideoThumbnail)" width="200" height="160" /></a>
+                                            }
+                                        </div>
+                                    }
+                                }
+                                @Html.Raw(post.ShortDescription)
+                                @Html.ActionLink("Czytaj dalej...", "Post", "Blog", new { slug = @post.UrlSlug }, null)
+                            </div>
+
+                        </p>
+                    </section>
+
+                    <div class="media-body">
+                        <a href="#" class="anchor-time">@post.PostedOn.ToShortDateString()</a> <!-- data dodania -->
+                    </div>
+
+                    <section class="post-footer">
+                        <hr>
+                        <div class="post-footer-option container">
+                            <div>
+                                @if (total >= 0)
+                                {
+                                    <ul @*class="list-unstyled"*@>
+                                        <li>
+                                            <a href="#">
+                                                <i class="glyphicon glyphicon-thumbs-up"></i>
+                                                Podziękowało: <font color="green">@total</font>
+                                                @*<h4 style="color:green;">@total</h4>*@
+                                            </a>
+                                        </li>
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <ul @*class="list-unstyled"*@>
+                                        <li>
+                                            <a href="#">
+                                                <i class="glyphicon glyphicon-thumbs-up"></i>
+                                                Podziękowało: <font color:#b50000>@total</font>
+                                                @*<h4 style="color:#b50000;">@total</h4>*@
+                                            </a>
+                                        </li>
+                                    </ul>
+                                }
+                            </div>
+                            <div>
+                                <ul class="list-unstyled">
+                                    <li><a href="#"><i class="glyphicon glyphicon-comment"></i> Komentarz</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="post-footer-comment-wrapper">
+                            <div class="comment-form">
+
+                            </div>
+                            <div class="comment">
+                                <div class="media">
+                                    <div class="media-left">
+                                        <a href="#">
+                                            <img class="media-object photo-profile" src="http://0.gravatar.com/avatar/38d618563e55e6082adf4c8f8c13f3e4?s=40&d=mm&r=g" width="32" height="32" alt="...">
+                                        </a>
+                                    </div>
+                                    @*@{Html.RenderPartial("WallComments", Model.CommentViewModel);}*@  <!--dodalem by wyswietlac komentarze pod postem-->
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+                                    }
+<div id="spacer"></div>
+<div class="paging">
+    <div class="pagenum">
+        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+    </div>
+    @{
+        List<string> searchCatList = new List<string>();
+        List<string> searchTagList = new List<string>();
+        if (ViewBag.CurrentSearchCategory != null)
+        {
+            foreach (var item in ViewBag.CurrentSearchCategory)
+            {
+                searchCatList.Add(item);
+            }
+        }
+        if (ViewBag.CurrentSearchTag != null)
+        {
+            foreach (var item in ViewBag.CurrentSearchTag)
+            {
+                searchTagList.Add(item);
+            }
+        }
+    }
+
+    @if (ViewBag.CurrentSearchCategory != null || ViewBag.CurrentSearchTag != null)
+    {
+        @Html.PagedListPager(Model, page => Url.Action("Wall", "Blog", new { page, sortOrder = ViewBag.CurrentSort, searchString = ViewBag.SearchString }) + "?" + string.Join("&", searchCatList.Select(x => "searchCategory=" + x)) + "&" + string.Join("&", searchTagList.Select(x => "searchTag=" + x)))
+    }
+    else
+    {
+        @Html.PagedListPager(Model, page => Url.Action("Wall", "Blog", new { page, sortOrder = ViewBag.CurrentSort, searchString = ViewBag.SearchString }))
+    }
+</div>
+

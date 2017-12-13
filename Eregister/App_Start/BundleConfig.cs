@@ -29,7 +29,8 @@ namespace Eregister
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                      "~/Content/siteold.css"));
+                      //"~/Content/site.css"));
                       //"~/Content/simple-sidebar.css")); //moje
         }
     }

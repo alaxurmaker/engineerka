@@ -1,0 +1,142 @@
+﻿@model CommentViewModel
+@using Models
+@using Eregister.Controllers
+@using Microsoft.AspNet.Identity
+@using System.Web
+<div class="bottomContainer">
+    <div class="commentContainer">
+        <div class="commHeader">
+            <table class="commentSort">
+                <tr>
+                    <td>@Html.ActionLink("Best", "Post", "Blog", new { slug = Model.UrlSeo, sortOrder = ViewBag.BestSortParm }, new { @id = ViewBag.BestSortLink })</td>
+                    <td>@Html.ActionLink("Date", "Post", "Blog", new { slug = Model.UrlSeo, sortOrder = ViewBag.DateSortParm }, new { @id = ViewBag.DateSortLink })</td>
+                </tr>
+            </table>
+            @*<img src="@Url.Content("~/Content/images/post/comment.png")" width="30" height="20" alt="like" />*@
+            <i class="glyphicon glyphicon-comment"></i> 
+            @if (Model.Comments.Count() == 1)
+            {<a>(@Model.Comments.Count()) Komentarze </a>}
+            else if (Model.Comments.Count() > 1)
+            {<a>()@Model.Comments.Count()) Komentarze </a>}
+        </div>
+        <hr />
+        @if (Request.IsAuthenticated)
+        {
+            //var imgUrl = Url.Content("~/Content/images/profile/" + User.Identity.GetUserName() + ".png") + "?time=" + DateTime.Now.ToString();
+            BlogController blgCtrl = new BlogController();
+            var ncmDetails = blgCtrl.NewCommentDetails(User.Identity.GetUserName());
+            <table class="newComment">
+                <tr>
+                    @*<td style="width:50px;vertical-align: top;"><div class="comImg"><img src="@imgUrl" height="50" width="50" /></div></td>*@     <!-- PO WPROWADZENIU ZDJEC-->
+                    <td style="width:50px;vertical-align: top;"><div class="comImg"><img class="media-object photo-profile" src="http://0.gravatar.com/avatar/38d618563e55e6082adf4c8f8c13f3e4?s=40&d=mm&r=g" width="45" height="45" alt="..."/></div></td>
+                    <td style="vertical-align:middle; min-height:40px;" class="comText" id="@ncmDetails[0]">
+                        @using (Html.BeginForm("NewComment", "Blog", FormMethod.Post, new { @class = "comTextdivParent", role = "form"}))
+                        {
+                            @Html.AntiForgeryToken()
+                            <textarea name="commentBody" id="@ncmDetails[1]"></textarea>
+                            <script>
+                                CKEDITOR.replace('@ncmDetails[1]',
+                                    {
+                                      //  customConfig: '/Scripts/ckEditorConfig1.js'
+                                        customConfig: '/Scripts/ckEditorConfigComments.js'
+                                    });
+
+                            </script>
+                            <div class="comTextSub">
+                                <input value="@Model.UrlSeo" name="slug" type="hidden" />
+                                @*<input value="@Model.ID" name="pageid" type="hidden" />*@
+                                @*<input value="@Model.ID" name="pageid" type="hidden" />*@                               
+                                <input value="@Model.ID" name="pageid" type="hidden" />
+                                <input value="@User.Identity.GetUserName()" name="comUserName" type="hidden" />
+                                <input class="comTextBtn" type="submit" value="&#x27a5;" />
+                            </div>
+                        }
+                    </td>
+                </tr>
+            </table>
+        }
+        @foreach (var comment in Model.Comments)
+        {
+            BlogController blgCtrl = new BlogController();
+            var cmDetails = blgCtrl.CommentDetails(comment);
+            var likes = blgCtrl.LikeDislikeCount("commentlike", comment.Id);
+            var dislikes = blgCtrl.LikeDislikeCount("commentdislike", comment.Id);
+         
+            <div class="userComment" id="@cmDetails[4]">
+                <div class="maincomment" id="@cmDetails[5]">
+                    <table class="commentControl" id="@cmDetails[15]">
+                        <tr>                            
+                            @*<td><a class="commentFlagCtrl" id="@cmDetails[9]"><img src="@Url.Content("~/Content/images/post/report.png")" width="10" height="10" alt="report" /></a></td>*@
+                            <td><a class="commentFlagCtrl" id="@cmDetails[9]"><i class="glyphicon glyphicon-flag"></i></a></td>
+                            <td> Zgłoś</td> 
+                        </tr>
+                    </table>
+                    @*<div class="userImage"><img src="@cmDetails[1]" height="50" width="50" /></div>*@  <!-- ZDJECIE USERA Z BAZY-->
+                    <div class="userImage"><img class="media-object photo-profile" src="http://0.gravatar.com/avatar/38d618563e55e6082adf4c8f8c13f3e4?s=40&d=mm&r=g" width="45" height="45" alt="..." /></div>
+                    <div class="commentUserName"><strong>@cmDetails[0]</strong>&nbsp;&nbsp;<span class="cmntTime">-- @cmDetails[2]</span></div>
+                    <div class="commentDate">@cmDetails[3]</div>
+                    <div class="commentExp" id="@cmDetails[7]">
+                        <div class="commentBody">@Html.Raw(comment.Body)</div>
+                        @if (!blgCtrl.CommentDeleteCheck(comment.Id))
+                        {             
+                            <div class="replySubMenu">
+                                <a class="likecount" style="color:green;">@likes</a>
+                                <a href="@Url.Action("UpdateCommentLike", "Blog", new { commentid = comment.Id, username = User.Identity.GetUserName(), likeordislike = "like", slug = Model.UrlSeo,sortorder = ViewBag.CurrentSort })"><i class="glyphicon glyphicon-thumbs-up"></i>    @*<img src="@Url.Content("~/Content/images/post/like.png")" alt="like" />*@</a>
+                                <a href="@Url.Action("UpdateCommentLike", "Blog", new { commentid = comment.Id, username = User.Identity.GetUserName(), likeordislike = "dislike", slug = Model.UrlSeo,sortorder = ViewBag.CurrentSort})"><i class="glyphicon glyphicon-thumbs-down"></i>   @*<img src="@Url.Content("~/Content/images/post/dislike.png")" alt="dislike" />*@</a>
+                                <a class="likecount" style="color:red;">@dislikes</a>
+                                <a style="cursor:pointer;" class="comReplyParent" id="@cmDetails[14]">Odpowiedz</a>
+
+                                @if (comment.UserName == User.Identity.GetUserName())
+                                {
+                                    <table class="commentMenu" id="@cmDetails[16]">
+                                        <tr>
+                                            @*<td><a href="@Url.Action("EditComment", "Blog", new { commentid = comment.Id })" title="Edit"><img src="@Url.Content("~/Content/images/post/edit.png")" alt="edit" /></a></td>
+                                            <td><a href="@Url.Action("DeleteComment", "Blog", new { commentid = comment.Id })" title="Delete"><img src="@Url.Content("~/Content/images/post/delete.png")" alt="delete" /></a></td>*@
+                                            <td><a href="@Url.Action("EditComment", "Blog", new { commentid = comment.Id })" title="Edit"><i class="glyphicon glyphicon-pencil"></i></a></td>
+                                            <td><a href="@Url.Action("DeleteComment", "Blog", new { commentid = comment.Id })" title="Delete"><i class="glyphicon glyphicon-trash"></i></a></td>
+                                            
+                                        </tr>
+                                    </table>
+                                }
+                            </div>
+                            if (Request.IsAuthenticated)
+                            {
+                                //var imgUrl = Url.Content("~/Content/images/profile/" + User.Identity.GetUserName() + ".png") + "?time=" + DateTime.Now.ToString();
+                                <table class="newComment collapseComment" id="">
+                                    <tr>
+                                        @*<td style="width:50px;vertical-align: top;"><div class="comImg"><img src="@imgUrl" height="50" width="50" /></div></td>*@
+                                        <td style="width:50px;vertical-align: top;"><div class="comImg"><img class="media-object photo-profile" src="http://0.gravatar.com/avatar/38d618563e55e6082adf4c8f8c13f3e4?s=40&d=mm&r=g" width="45" height="45" alt="..." /></div></td>
+                                        <td style="vertical-align:middle; min-height:40px;" class="comText" id="@cmDetails[12]">
+                                            @using (Html.BeginForm("NewParentReply", "Blog", FormMethod.Post, new { @class = "comTextdivParent", role = "form" }))
+                                            {
+                                                @Html.AntiForgeryToken()
+                                                <textarea name="replyBody" id="@cmDetails[13]"></textarea>
+                                                <script>
+                                                    CKEDITOR.replace('@cmDetails[13]',
+                                                        {
+                                                            customConfig: '/Scripts/ckEditorConfigComments.js'
+                                                        });
+                                                </script>
+                                                <div class="comTextSub">
+                                                    <input value="@comment.Id" name="commentid" type="hidden" />
+                                                    <input value="@Model.UrlSeo" name="slug" type="hidden" />
+                                                    <input value="@Model.ID" name="pageid" type="hidden" />
+                                                    <input value="@User.Identity.GetUserName()" name="comUserName" type="hidden" />
+                                                    <input class="comTextBtn" type="submit" value="&#x27a5;" />
+                                                </div>
+                                            }
+                                        </td>
+                                    </tr>
+                                </table>
+                            }
+                         }
+                    </div>
+                </div>
+                <div class="commentreplies" id="@cmDetails[6]">
+                    @{Html.RenderPartial("Replies", new CommentViewModel(comment));}
+                </div>
+            </div>
+         }
+    </div>
+</div>
+

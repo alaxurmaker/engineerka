@@ -9,11 +9,11 @@ namespace DBModels
 {
    public class User
     {
-        public User()
-        {
-            Role = "student";
-           // ImagePath = "default_avatar.jpg";
-        }
+        //public User()
+        //{
+        //    Role = "student";
+        //   // ImagePath = "default_avatar.jpg";
+        //}
         public int UserID { get; set; }
 
         public string Email { get; set; }

@@ -24,8 +24,9 @@ namespace DBModels
         public int UserID { get; set; }
         public int EducatorID { get; set; }
 
-        public virtual Address Address { get; set; }       
+        public virtual Address Address { get; set; }
         public virtual User User { get; set; }
+        //  public virtual ApplicationUser User { get; set; }//ApplicationUser 
         public virtual Educator Educator { get; set; }
         public virtual ICollection<StudentParent> StudentParents { get; set; }
         public virtual ICollection<StudentGrade> StudentGrades { get; set; }
@@ -36,9 +37,9 @@ namespace DBModels
 
     public enum Sex
     {
-     //   [Display(Name = "Mężczyzna")]
-         M,
-      //  [Display(Name = "Kobieta")]
-         K
+        //   [Display(Name = "Mężczyzna")]
+        M,
+        //  [Display(Name = "Kobieta")]
+        K
     }
 }

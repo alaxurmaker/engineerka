@@ -26,5 +26,20 @@ namespace Eregister.Controllers
 
             return View();
         }
+
+        //do testow
+        public ActionResult Success()
+        {
+            ViewBag.Message = "Powiodło się";
+
+            return View();
+        }
+        //do testow
+        public ActionResult Fail()
+        {
+            ViewBag.Message = "Nie udało się";
+
+            return View();
+        }
     }
 }
