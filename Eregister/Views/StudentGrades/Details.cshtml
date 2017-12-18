@@ -1,0 +1,42 @@
+﻿@model Eregister.StudentGrade
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>StudentGrade</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Student.Pesel)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Student.Pesel)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Subject.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Subject.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Grade)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Grade)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.StudentGradeID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,4 +1,9 @@
-﻿using System;
+﻿using Eregister.App_Start;
+using Eregister.DAL;
+using Eregister.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -6,10 +11,19 @@ using System.Web.Mvc;
 
 namespace Eregister.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
+        public ApplicationDbContext context { get; set; }
+
+        public HomeController()
+        {
+            context = new ApplicationDbContext();
+        }
+
+
         public ActionResult Index()
         {
+            ViewBag.Alert = TempData["Alert"];
             return View();
         }
 
@@ -41,5 +55,67 @@ namespace Eregister.Controllers
 
             return View();
         }
+
+        //UWIERZYTELNIANIE
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AuthorizeFromCandidate(string code, string pesel) //(string code)
+        {
+            if (!string.IsNullOrWhiteSpace(code) && !string.IsNullOrWhiteSpace(pesel))
+            {
+                string userName = User.Identity.Name;
+                string loggedUserId = User.Identity.GetUserId();
+
+                ApplicationUser user = context.Users.Where(u => u.UserName.Equals(userName, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
+                long pes = 0;
+                bool result = Int64.TryParse(pesel, out pes);
+                var token = GetAuthorizationToken(user.Id);
+
+                token.TokenIsValid = true; //zakomentowac te sztywne dane
+               // token.TokenValue = "Student"; // temp code dla candidatee->student
+
+                if (User.IsInRole("Candidate") && code == token.TokenValue && token.TokenIsValid)
+                {
+                    // var doesStudentExist = context.Students.Where(s => s.UserId.Equals(loggedUserId)).ToList();//.ToList().FirstOrDefault().UserId;
+                    // PostCategory postCategory = _context.PostCategories.Where(x => x.PostId == postid && x.CategoryId == categoryid).FirstOrDefault();
+                    var ifStudentExist = context.Students.Find(loggedUserId);
+                    if (ifStudentExist == null)
+                    {
+                        UserManager.RemoveFromRole(user.Id, "Candidate");
+                        UserManager.AddToRole(user.Id, "Student");
+                        user.TokenIsValid = false;
+                        var myStudent = new Student() { UserId = loggedUserId, JoinDate = DateTime.Now, Pesel = result ? pesel : "",
+                    };
+                        context.Students.Add(myStudent);
+                        context.SaveChanges();
+                    }
+                    ViewBag.ResultMessage = "Uwierzytelniono, dodano do listy";
+                }
+                else
+                {
+                    ViewBag.ResultMessage = "Nie uwierzytelniono";
+                }
+            }
+            return View("Index");
+        }
+
+        #region Helpers
+        public ApplicationUser GetAuthorizationToken(string userId)
+        {
+            var token = context.Users.Where(x => x.Id == userId).FirstOrDefault();
+            return token;
+        }
+
+        //public Student AddCandidateToStudents(string userID)
+        //{
+        //    Group group = new Group();
+        //    group.Teacher.UserId
+        //    group.StudentID = userID;
+        //    var addGroup = context.Groups.Add()
+        //    var student = context.MyUserss.Where(x => x.UserId == userId).FirstOrDefault();
+        //    return token;
+        //}
+        #endregion
     }
 }

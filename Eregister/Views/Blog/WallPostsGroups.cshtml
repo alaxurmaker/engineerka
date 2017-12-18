@@ -18,9 +18,9 @@
         @{Html.RenderPartial("WallPostsGroupsContent", Model.PagedBlogViewModel);}
 
     </div>
-
+    @*uczen tez bedzie mogl dodawac posty*@
     <div class="mainblogbar">
-        @if (User.IsInRole("Admin") || User.IsInRole("Teacher"))
+        @if (User.IsInRole("Admin") || User.IsInRole("Teacher") || User.IsInRole("Student")) 
             {
             <div class="adminBlogCtrl">
                 <table>
@@ -36,7 +36,10 @@
     </div>
 
     @*komentarze Blog/Index.cshtml*@
-    <div class="mainComments">
-        @{Html.RenderPartial("WallComments", Model.CommentViewModel);}
-    </div>
+
+
+    @*tu byl ostatni div*@
+</div>
+<div class="mainComments">
+    @{Html.RenderPartial("WallComments", Model.CommentViewModel);}
 </div>

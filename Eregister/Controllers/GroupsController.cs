@@ -15,11 +15,153 @@ namespace Eregister.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
+
+        public ActionResult ClassList()
+        {
+            //GroupViewModel model = new GroupViewModel();
+            //List<Group> myGroup = db.Groups.Where(x => x.GroupID == id).ToList();
+
+            //model.StudentsListView = new List<StudentsListViewModel>();
+
+            //foreach (var m in myGroup)
+            //{
+            //    model.StudentsListView.Add(new StudentsListViewModel()
+            //    {
+            //        NameSurname = m.Students.FirstOrDefault().ApplicationUser.NameSurname,
+            //        JoinDate = m.Students.FirstOrDefault().JoinDate,
+            //        Pesel = m.Students.FirstOrDefault().Pesel
+            //    });
+            //}
+            return PartialView();
+        }
+
+
+        public ActionResult IndexDetails(int? groupId)
+        {
+            GroupViewModel model = new GroupViewModel();
+            List<Group> myGroup = db.Groups.Where(x => x.GroupID == groupId).ToList();
+
+            model.Name = myGroup.FirstOrDefault().Name;
+            model.Year = myGroup.FirstOrDefault().Year;
+            model.ShortDescription = myGroup.FirstOrDefault().ShortDescription;
+            model.StudentsListView = new List<StudentsListViewModel>();
+
+            foreach (var m in myGroup)
+            {
+                model.StudentsListView.Add(new StudentsListViewModel()
+                {
+                    NameSurname = m.Students.FirstOrDefault().ApplicationUser.NameSurname,
+                    JoinDate = m.Students.FirstOrDefault().JoinDate,
+                    Pesel = m.Students.FirstOrDefault().Pesel
+                });
+            }
+            return View(model);
+        }
+
+
+        //GET
+        public ActionResult CreateClass(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Group group = db.Groups.Find(id);
+
+            GroupViewModel model = new GroupViewModel();
+            
+
+            List<Student> studentsList = db.Students.Where(x => String.IsNullOrEmpty(x.Group.Name)).ToList();
+
+            var selectList = new List<SelectListItem>();
+            foreach (var s in studentsList)
+            {
+                selectList.Add(new SelectListItem
+                {
+                    Value = s.ApplicationUser.NameSurname,
+                    Text = s.ApplicationUser.NameSurname
+                });
+            }
+
+            model.GroupID = id;// != null ? id : 2;
+            model.Name = group.Name;
+            model.Year = group.Year;
+            model.ShortDescription = group.ShortDescription;
+            model.StudentsSelectList = selectList;
+
+            model.StudentsListView = new List<StudentsListViewModel>();
+            model.StudentsListView = CreateStudentsListViewModel(id);
+
+            if (model == null)
+            {
+                return HttpNotFound();
+            }
+            return View(model);
+        }
+
+        // GET: Groups/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateClass(GroupViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Student student = db.Students.Where(x => x.ApplicationUser.NameSurname.Equals(model.SelectedStudent)).FirstOrDefault();
+                var x = model.SelectedStudent.ToString();
+
+                var student = db.Students.Where(y => y.ApplicationUser.NameSurname == x).FirstOrDefault();
+                Student studentToUpdate = db.Students.Where(u => u.UserId == student.UserId).SingleOrDefault();
+                // student.GroupID = model.GroupID;
+                // studentToUpdate.GroupName = model.Name;
+
+                //  studentToUpdate.GroupID = model.GroupID.Value; // tu wywala
+                studentToUpdate.GroupID = model.GroupID;
+                studentToUpdate.GroupName = model.Name;
+                
+
+                var entity = db.Students.Find(studentToUpdate.UserId);
+                //if (entity == null)
+                //{
+                //    return;
+                //}
+
+                db.Entry(entity).CurrentValues.SetValues(studentToUpdate);
+
+                //   db.Students.Attach(student); // State = Unchanged
+                //  student.GroupID = model.GroupID; // State = Modified, and only the FirstName property is dirty.
+                // student.GroupID = model.GroupID;
+                //    student.GroupName = model.Name;
+
+
+                //db.Students.Attach(student);
+                //student.GroupID = model.GroupID;
+                //Group grp = new Group();
+                //grp.GroupID = model.GroupID.Value;
+                //grp.Name = model.Name;
+                //student.Group = new Group();
+                //student.Group = grp;
+
+
+                db.SaveChanges();
+
+                return RedirectToAction("Index");
+            }
+
+            return View(model);
+        }
+
+
+
+
+
+
+
+
         // GET: Groups
         public ActionResult Index()
         {
-            var groups = db.Groups.Include(g => g.Subject).Include(g => g.Teacher);
-            return View(groups.ToList());
+            return View(db.Groups.ToList());
         }
 
         // GET: Groups/Details/5
@@ -40,9 +182,6 @@ namespace Eregister.Controllers
         // GET: Groups/Create
         public ActionResult Create()
         {
-            ViewBag.SubjectID = new SelectList(db.Subjects, "SubjectID", "Name");
-            //ViewBag.TeacherID = new SelectList(db.Teachers, "TeacherID", "Name");
-            ViewBag.TeacherID = new SelectList(db.Educators, "TeacherID", "Name");
             return View();
         }
 
@@ -51,7 +190,7 @@ namespace Eregister.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "GroupID,Name,TeacherID,SubjectID,StudentID")] Group group)
+        public ActionResult Create([Bind(Include = "GroupID,Name,Year,ShortDescription")] Group group)
         {
             if (ModelState.IsValid)
             {
@@ -60,9 +199,6 @@ namespace Eregister.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.SubjectID = new SelectList(db.Subjects, "SubjectID", "Name", group.SubjectID);
-            ViewBag.TeacherID = new SelectList(db.Educators, "TeacherID", "Name", group.TeacherID);
-            // ViewBag.TeacherID = new SelectList(db.Teachers, "TeacherID", "Name", group.TeacherID);
             return View(group);
         }
 
@@ -78,8 +214,6 @@ namespace Eregister.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.SubjectID = new SelectList(db.Subjects, "SubjectID", "Name", group.SubjectID);
-            ViewBag.TeacherID = new SelectList(db.Teachers, "TeacherID", "Name", group.TeacherID);
             return View(group);
         }
 
@@ -88,7 +222,7 @@ namespace Eregister.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "GroupID,Name,TeacherID,SubjectID,StudentID")] Group group)
+        public ActionResult Edit([Bind(Include = "GroupID,Name,Year,ShortDescription")] Group group)
         {
             if (ModelState.IsValid)
             {
@@ -96,8 +230,6 @@ namespace Eregister.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.SubjectID = new SelectList(db.Subjects, "SubjectID", "Name", group.SubjectID);
-            ViewBag.TeacherID = new SelectList(db.Teachers, "TeacherID", "Name", group.TeacherID);
             return View(group);
         }
 
@@ -134,6 +266,47 @@ namespace Eregister.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+
+
+
+
+
+
+
+
+
+        public List<StudentsListViewModel> CreateStudentsListViewModel(int? id)
+        {
+           // GroupViewModel model = new GroupViewModel();
+
+            //List<Group> myGroup = db.Groups.Where(x => x.GroupID == id).ToList();
+
+            List<Student> students = db.Students.Where(y => y.Group.GroupID == id).ToList();
+
+            GroupViewModel grp = new GroupViewModel();
+
+            List<StudentsListViewModel> studentsListView = new List<StudentsListViewModel>();
+            studentsListView = null;
+
+            //  var student = db.Students.Where(y => y.ApplicationUser.NameSurname == x).FirstOrDefault();
+            if (students.Count() > 0)
+            {
+                foreach (var s in students)
+                {
+                        studentsListView.Add(new StudentsListViewModel()
+                        {
+                            NameSurname = s.ApplicationUser.NameSurname !=null ? s.ApplicationUser.NameSurname : "",//?.FirstOrDefault().ApplicationUser.NameSurname,  //.FirstOrDefault().ApplicationUser.NameSurname,
+                            JoinDate = s.JoinDate,
+                            Pesel = s.Pesel != null ? s.Pesel : ""
+                        });
+                    
+                }
+            }
+
+
+            return studentsListView;
         }
     }
 }

@@ -1,0 +1,27 @@
+﻿@model IEnumerable<Eregister.Models.StudentsListViewModel>
+@{
+    ViewBag.Title = "ClassList";
+}
+
+<h2>ClassList</h2>
+
+
+<div><b>Lista uczniów</b><br /></div>
+<table class="table table-bordered table-responsive table-hover">
+    <tr>
+        <th>Imię i Nazwisko</th>
+        <th>Pesel</th>
+        <th>Dodany</th>
+       
+    </tr>
+    @foreach (var d in Model)
+    {
+        <tr>
+            <td>@d.NameSurname</td>
+            <td>@d.Pesel</td>
+            <td>@d.JoinDate.ToString()</td>
+        </tr>
+    }
+</table>
+
+  

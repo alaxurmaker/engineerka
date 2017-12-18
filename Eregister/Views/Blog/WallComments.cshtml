@@ -17,7 +17,7 @@
             @if (Model.Comments.Count() == 1)
             {<a>(@Model.Comments.Count()) Komentarze </a>}
             else if (Model.Comments.Count() > 1)
-            {<a>()@Model.Comments.Count()) Komentarze </a>}
+            {<a>(@Model.Comments.Count()) Komentarze </a>}
         </div>
         <hr />
         @if (Request.IsAuthenticated)

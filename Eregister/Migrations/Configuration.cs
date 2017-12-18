@@ -10,7 +10,6 @@ namespace Eregister.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
-          //  ContextKey = "Eregister.Models.EFDatabaseContext";
         }
 
         protected override void Seed(Eregister.Models.ApplicationDbContext context)
@@ -26,7 +25,6 @@ namespace Eregister.Migrations
             //      new Person { FullName = "Brice Lambson" },
             //      new Person { FullName = "Rowan Miller" }
             //    );
-            //
             //
         }
     }

@@ -1,45 +1,33 @@
-﻿//using System;
+﻿//using Eregister.Models;
+//using System;
 //using System.Collections.Generic;
 //using System.ComponentModel.DataAnnotations;
+//using System.ComponentModel.DataAnnotations.Schema;
 //using System.Linq;
 //using System.Text;
 //using System.Threading.Tasks;
 
 //namespace Eregister
 //{
-//    public class Student
-//    {
-//        public int StudentID { get; set; }
+//    //public class Student
+//    //{
+//    //    [Key, ForeignKey("ApplicationUser")]
+//    //    public string UserId { get; set; }
 
-//        public string Name { get; set; }
+//    //    public int Pesel { get; set; }
+//    //    public DateTime? JoinDate { get; set; }
 
-//        public string Surname { get; set; }
-//        public int Pesel { get; set; }
-//        public DateTime BirthDate { get; set; }
-//        public DateTime JoinDate { get; set; }
-//        public string Classroom { get; set; }
-//        public Sex? Sex { get; set; }
+//    //    public int AddressID { get; set; }
+//    //    public int EducatorID { get; set; }
 
-//        public int AddressID { get; set; }
-//        public int UserID { get; set; }
-//        public int EducatorID { get; set; }
+//    //    public virtual Address Address { get; set; }
+//    //    public virtual ApplicationUser ApplicationUser { get; set; }
+//    //   // public virtual Educator Educator { get; set; }
 
-//        public virtual Address Address { get; set; }
-//        public virtual User User { get; set; }
-//    //    public virtual ApplicationUser User { get; set; }//ApplicationUser 
-//        public virtual Educator Educator { get; set; }
-//        public virtual ICollection<StudentParent> StudentParents { get; set; }
-//        public virtual ICollection<StudentGrade> StudentGrades { get; set; }
-//        public virtual ICollection<StudentHistory> StudentHistories { get; set; }
-//        public virtual ICollection<Group> Groups { get; set; }
+//    //    public virtual ICollection<StudentParent> StudentParents { get; set; }
+//    //    public virtual ICollection<StudentGrade> StudentGrades { get; set; }
+//    //    public virtual ICollection<StudentHistory> StudentHistories { get; set; }
+//    //    public virtual ICollection<Group> Groups { get; set; }
 
-//    }
-
-//    public enum Sex
-//    {
-//        [Display(Name = "Mężczyzna")]
-//        M,
-//        [Display(Name = "Kobieta")]
-//        K
-//    }
+//    //}
 //}

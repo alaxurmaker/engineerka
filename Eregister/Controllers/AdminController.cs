@@ -295,7 +295,6 @@ namespace Eregister.Controllers
             UserDeleted,
             UserUpdated
         }
-
         #endregion
     }
 }

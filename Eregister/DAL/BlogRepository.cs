@@ -22,25 +22,52 @@ namespace Eregister.DAL
         {
             return _context.Posts.ToList();
         }
+        //public IList<Post> GetPostsToGroups(string groupPostId)
+        //{
+        //    //int numValue;
+        //    //bool isIdParsed = Int32.TryParse(pageId, out int x);
+        //    var postsList = _context.Posts.ToList();
+        //    //   IList<Post> templist = null;
+        //    List<Post> templist = new List<Post>();
+        //    templist = null;
+
+        //    foreach (var p in postsList)
+        //    {
+        //        if(p.Id.Contains(groupPostId))
+        //        {
+        //            Post post = new Post();
+        //            post = p;
+        //            templist.Add(p);
+        //        }
+
+        //        //if (p.UrlSeo.Contains("warunek"))
+        //        //    templist.Add(p);
+        //    }
+        //    if (templist != null && templist.Count()>0) return templist;
+        //    else return postsList; // <jezeli nie znajdzie postow dla grupy zwroc cos innego niz wszystkie posty!!!!
+        //}
         public IList<Post> GetPostsToGroups(string groupPostId)
         {
             //int numValue;
             //bool isIdParsed = Int32.TryParse(pageId, out int x);
-            var postsList = _context.Posts.ToList();
-            IList<Post> templist = null;
-            foreach (var p in postsList)
-            {
-                if(p.Id.Contains(groupPostId))
-                {
-                    templist.Add(p);
-                }
+            var postsList = _context.Posts.Where(x=>x.Id.Contains(groupPostId)).ToList();
+            //   IList<Post> templist = null;
+            List<Post> templist = new List<Post>();
+           // templist = null;
 
+            foreach (var p in postsList)
+            {            
+                    //Post post = new Post();
+                   // post = p;
+                    templist.Add(p);
+                
                 //if (p.UrlSeo.Contains("warunek"))
                 //    templist.Add(p);
             }
-            if (templist != null && templist.Count()>0) return templist;
+            if (templist != null && templist.Count() > 0) return templist;
             else return postsList; // <jezeli nie znajdzie postow dla grupy zwroc cos innego niz wszystkie posty!!!!
         }
+
         public IList<Tag> GetTags()
         {
             return _context.Tags.ToList();
@@ -148,8 +175,16 @@ namespace Eregister.DAL
                         break;
                 }
             }
+            //
             var post = _context.Posts.Where(x => x.Id == postid).FirstOrDefault();
-            post.NetLikeCount = LikeDislikeCount("postlike", postid) - LikeDislikeCount("postdislike", postid);
+          //  post.NetLikeCount = LikeDislikeCount("postlike", postid) - LikeDislikeCount("postdislike", postid);
+
+            int newValue = LikeDislikeCount("postlike", postid) - LikeDislikeCount("postdislike", postid);
+         //   int currentLikes = _context.Entry(post).Property(u => u.NetLikeCount).CurrentValue;
+            _context.Entry(post).Property(u => u.NetLikeCount).CurrentValue = newValue;
+
+
+
             Save();
         }
         public void AddVideoToPost(string postid, string videoUrl)
@@ -333,6 +368,10 @@ namespace Eregister.DAL
         public IList<Comment> GetCommentsByPageId(string pageId)
         {
             return _context.Comments.Where(p => p.PageId == pageId).ToList();
+        }
+        public IList<Comment> GetCommentsByPageIdForGroupWalls(string pageId)
+        {
+            return _context.Comments.Where(c => c.PageId.Contains(pageId)).ToList();
         }
         public List<CommentViewModel> GetParentReplies(Comment comment)
         {
@@ -536,16 +575,40 @@ namespace Eregister.DAL
         #region Student
         // tu przekazuje userName jak userId = 2341q74rFSAF%$#@%
         public string GetStudentGroupName(string userName)
-        {       
-        //    var getStudentgr = _context.Groups.Where(u => u.Student.UserId == userName).FirstOrDefault().Name;
-            var x = _context.Groups.Where(u => u.Student.UserId == userName).FirstOrDefault().Name;
-            return x;// _context.Groups.Find(getStudentgr).Name;
+        {
+            var groupName = _context.Students.Where(u => u.UserId == userName).FirstOrDefault()?.GroupName;//Group.Name;
+        
+            return groupName;// _context.Groups.Find(getStudentgr).Name;
         }
 
         public string GetPostIdByGroupName(string groupName)
         {
             return _context.Posts.Where(x => x.Id == groupName).FirstOrDefault().Id;
         }
+        #endregion Student
+
+        #region Konto
+
+        public ApplicationUser GetAuthorizationToken(string userId)
+        {
+            var token = _context.Users.Where(x => x.Id == userId).FirstOrDefault();
+            return token;
+        }
+
+
+        public string GetUserFullName(string userid)
+        {
+            var user = _context.Users.Where(x => x.Id == userid).FirstOrDefault().NameSurname;//SingleOrDefault(u => u.NameSurname == userid);
+                                                                                              // string fullName = string.Concat(new string[] { user.FirstName, " ", user.LastName });
+
+            return user;// fullName;
+        }
+
+        //public IList<Code> GenerateCodes()
+        //{
+        //  Code = GenerateEmailConfirmationTokenAsync
+        //    return _context.Categories.ToList();
+        //}
 
         #endregion
 

@@ -1,0 +1,107 @@
+﻿@model Eregister.Models.GroupViewModel
+
+<h2>Details</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <table class="table">
+        @*<table class="form-group">*@
+        <tr>
+
+                <th>
+                    @Html.DisplayNameFor(model => Model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => Model.Year)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => Model.ShortDescription)
+                </th>
+</tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(model => Model.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(model => Model.Year)
+            </td>
+            <td>
+                @Html.DisplayFor(model => Model.ShortDescription)
+            </td>
+        </tr>
+    </table>
+
+        <div class="form-group">
+          Dodaj ucznia
+            <p>
+                @Html.DropDownListFor(m => m.SelectedStudent, Model.StudentsSelectList, "--Wybierz ucznia--")
+                @Html.HiddenFor(model => Model.Name)
+                @Html.HiddenFor(model => Model.GroupID)
+            </p>         
+        </div>
+        @*</div>*@
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+}
+
+@*<p>*@
+    @*@Html.ActionLink("Edit", "Edit", new { id = Model.GroupID }) |*@
+    @*@Html.ActionLink("Back to List", "Index")
+        </p>*@
+
+@*<table class="table">
+    <tr>
+        <th>
+            Imię
+        </th>
+        <th>
+            Nazwisko
+        </th>
+        <th>
+            Pesel
+        </th>
+    </tr>
+    <tr>
+        <td>
+            @Html.DisplayFor(model => model.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(model => model.Year)
+        </td>
+        <td>
+            @Html.DisplayFor(model => model.ShortDescription)
+        </td>
+    </tr>
+</table>*@
+
+
+
+
+@if (Model.StudentsListView != null)
+{
+   <p>Lista uczniów dla klasy @Html.DisplayFor(model => model.Name)</p>
+        
+    foreach (var item in Model.StudentsListView)
+    {
+        <tr>
+            @Html.Partial("_ClassList", item)
+        </tr>
+    }
+}
+
+
+
+@*<div>
+    @{Html.RenderPartial("ClassList", Model.GroupID);}
+    
+</div>*@
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

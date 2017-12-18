@@ -54,6 +54,7 @@ namespace Eregister.DAL
         Post GetPostByReply(string replyid);
         string GetUrlSeoByReply(Reply reply);
         IList<Comment> GetCommentsByPageId(string pageId);
+        IList<Comment> GetCommentsByPageIdForGroupWalls(string pageId);
         IList<Comment> GetComments();
         IList<Reply> GetReplies();
         void AddNewComment(Comment comment);
@@ -67,7 +68,11 @@ namespace Eregister.DAL
         #region StudentHelpers
         string GetStudentGroupName(string userName);
         string GetPostIdByGroupName(string groupName);
+        string GetUserFullName(string userid);
         #endregion
+
+
+
     }
 
 }

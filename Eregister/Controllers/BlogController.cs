@@ -74,6 +74,7 @@ namespace Eregister.Controllers
         [AllowAnonymous]
         public ActionResult Wall(int? page, string sortOrder, string searchString, string[] searchCategory, string[] searchTag)
         {
+           // if (!User.IsInRole("Student") || !User.IsInRole("Teacher") || !User.IsInRole("Admin") || !User.IsInRole("Parent")) RedirectToAction("Index", "Home");
             checkCatList.Clear();
             checkTagList.Clear();
             CreateCatAndTagList();
@@ -92,6 +93,14 @@ namespace Eregister.Controllers
         [AllowAnonymous]
         public ActionResult WallPostsGroups(int? page, string sortOrder, string searchString, string[] searchCategory, string[] searchTag)
         {
+            string userId = User.Identity.GetUserId();
+            var groupName = _blogRepository.GetStudentGroupName(userId);
+            if(String.IsNullOrEmpty(groupName))
+            {
+                TempData["Alert"] = "Strona Twojej grupy jeszcze nie istnieje";
+                return RedirectToAction("Index", "Home");
+            }
+
             checkCatList.Clear();
             checkTagList.Clear();
             CreateCatAndTagList();
@@ -99,10 +108,9 @@ namespace Eregister.Controllers
             BlogViewModel model = new BlogViewModel();
             //   model.ID = 2;
             //       model.UrlSlug = "groupWall";
-           // groupWall4b2017
-            string groupWall = "groupWall" + _blogRepository.GetStudentGroupName(User.Identity.GetUserId()) + String.Format("{yyyy}", thisDate);
-            //pageID !!!!
-            
+            // groupWall4b2017
+            string groupWall = "groupWall" + groupName + DateTime.Now.Year.ToString();// User.Identity.GetUserId());// + DateTime.Now.Year.ToString();
+
             model.CommentViewModel = CreateCommentViewModel(groupWall, sortOrder);
             model.PagedBlogViewModel = CreatePagedBlogViewModelForGroup(page, sortOrder, searchString, searchCategory, searchTag);
             return View(model);
@@ -140,6 +148,7 @@ namespace Eregister.Controllers
         {
             return PartialView();
         }
+
         #endregion WallComments
         //
 
@@ -276,8 +285,10 @@ namespace Eregister.Controllers
             ViewBag.DateSortParm = string.IsNullOrEmpty(sortOrder) ? "date_desc" : "";
             ViewBag.TitleSortParm = sortOrder == "Title" ? "title_desc" : "Title";
 
+            // User.Identity.
             //dodalem
-            string groupWall = "groupWall" + _blogRepository.GetStudentGroupName(User.Identity.GetUserId()) + String.Format("{yyyy}", thisDate);
+            //przenies do ogolnej metody 
+            string groupWall = "groupWall" + _blogRepository.GetStudentGroupName(User.Identity.GetUserId()) + DateTime.Now.Year.ToString();
             var posts = _blogRepository.GetPostsToGroups(groupWall);
 
             foreach (var post in posts)
@@ -478,10 +489,11 @@ namespace Eregister.Controllers
             var lastPostId = posts.OrderBy(i => i.PostedOn).Last().Id;
             var nextId = posts.OrderBy(i => i.PostedOn).SkipWhile(i => i.Id != postid).Skip(1).Select(i => i.Id).FirstOrDefault();
             var previousId = posts.OrderBy(i => i.PostedOn).TakeWhile(i => i.Id != postid).Select(i => i.Id).LastOrDefault();
-           
+            string userName = _blogRepository.GetUserFullName(User.Identity.GetUserId());
+
             model.FirstPostId = firstPostId;
             model.LastPostId = lastPostId;
-            model.Username = User.Identity.GetUserName(); //
+            model.Username = userName;// User.Identity.GetUserName(); //
             model.PreviousPostSlug = posts.Where(x => x.Id == previousId).Select(x => x.UrlSeo).FirstOrDefault();
             model.NextPostSlug = posts.Where(x => x.Id == nextId).Select(x => x.UrlSeo).FirstOrDefault();
             model.ID = post.Id;
@@ -503,7 +515,7 @@ namespace Eregister.Controllers
         public ActionResult UpdatePostLike(string postid, string slug, string username, string likeordislike, string sortorder)
         {
             _blogRepository.UpdatePostLike(postid, username, likeordislike);
-            return RedirectToAction("Post", new { slug = slug, sortorder = sortorder });
+            return RedirectToAction("Post", new { slug = slug, sortorder = sortorder }); //Wall
         }
 
 
@@ -811,7 +823,7 @@ namespace Eregister.Controllers
 
 
 
-        [Authorize(Roles = "Admin, Parent, Student, Teacher")]
+        [Authorize(Roles = "Admin, Parent, Student, Teacher")] 
         [HttpGet]
         public ActionResult AddNewPost()
         {
@@ -861,22 +873,25 @@ namespace Eregister.Controllers
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
         public ActionResult AddNewPost(PostViewModel model)
-        { 
+        {
             //var userIdentity = (ClaimsIdentity)User.Identity;
             //var claims = userIdentity.Claims;
             //var roleClaimType = userIdentity.RoleClaimType;
             //var roles = claims.Where(c => c.Type == ClaimTypes.Role).ToList();
 
+            string userName = _blogRepository.GetUserFullName(User.Identity.GetUserId());
 
             if (model.GroupDirect != null)
             {
-                model.ID = "groupWall" + model.GroupDirect + String.Format("{yyyy}", thisDate)  + "_" + model.ID ;//dodac nie model.ID
+                // model.ID = "groupWall" + model.GroupDirect + String.Format("{yyyy}", thisDate)  + "_" + model.ID ;//dodac nie model.ID
+                model.ID = "groupWall" + model.GroupDirect + DateTime.Now.Year.ToString() + "_" + model.ID;
+                
             }
-
+           
             var post = new Post
             {
                 Id = model.ID,
-                UserName = User.Identity.GetUserName(),
+                UserName = userName,// User.Identity.GetUserName(),
                 Body = model.Body,
                 Meta = model.Meta,
                 PostedOn = thisDate,
@@ -939,7 +954,13 @@ namespace Eregister.Controllers
             ViewBag.DateSortParm = string.IsNullOrEmpty(sortOrder) ? "date_asc" : "";
             ViewBag.BestSortParm = sortOrder == "Best" ? "best_desc" : "Best";
 
-            var comments = _blogRepository.GetCommentsByPageId(pageId).OrderByDescending(d => d.DateTime).ToList();
+            // komentarze pod postem maja id>15 liter, te na glownej stronie grupy maja rowno 15
+            // Gdy kierujemy na walla konkretnej grupy to zbieramy komentarze z pageid danej grupy końcówką informującą o Id postu (pageId>15 słowa groupWall+klasa+rok+id>15), nie chcemy groupWall3b2017, tylko groupwWall3b2017xxx
+            List<Comment> comments;
+            if (pageId.Contains("groupWall") && pageId.Length > 15) comments = _blogRepository.GetCommentsByPageIdForGroupWalls(pageId+DateTime.Now.Year.ToString()).OrderByDescending(d => d.DateTime).ToList();
+            else comments = _blogRepository.GetCommentsByPageId(pageId).OrderByDescending(d => d.DateTime).ToList();
+
+            // var comments = _blogRepository.GetCommentsByPageId(pageId).OrderByDescending(d => d.DateTime).ToList();
             foreach (var comment in comments)
             {
                 var likes = LikeDislikeCount("commentlike", comment.Id);
@@ -957,7 +978,10 @@ namespace Eregister.Controllers
             {
                 model.UrlSeo = _blogRepository.GetPostById(pageId).UrlSeo;
             }
-            else if (pageId.Contains("groupWall"))
+
+            //  model.UrlSeo!!!!
+            // !!!!!!!!
+            else if (pageId.Contains("groupWall") && pageId.Length>15)
             {
                 model.UrlSeo = _blogRepository.GetPostById(pageId).UrlSeo;
             }
@@ -1076,14 +1100,32 @@ namespace Eregister.Controllers
         [ValidateInput(false)]
         public ActionResult NewComment(string commentBody, string comUserName, string slug, string pageId)
         {
-            if (!String.IsNullOrEmpty(slug) && pageId == "") pageId = _blogRepository.GetPostIdBySlug(slug);
-
-            if(User.IsInRole("Student"))
+            if (pageId == "mainPage" && (!User.IsInRole("Admin") || !User.IsInRole("Teacher")))
             {
-                string classroom =_blogRepository.GetStudentGroupName(User.Identity.GetUserId());
-                string param = classroom + String.Format("{yyyy}", thisDate);
-                pageId = _blogRepository.GetPostIdByGroupName(param);
+                ViewBag.Alert = "Nie masz uprawnień do dodawania wiadomości na stronie głównej";
+                TempData["Alert"] = "Nie masz uprawnień do dodawania wiadomości na stronie głównej";
+
+                return RedirectToAction("Index", "Home");
             }
+
+            if (!String.IsNullOrEmpty(slug) && !String.IsNullOrEmpty(pageId)) pageId = _blogRepository.GetPostIdBySlug(slug);
+
+            if (!String.IsNullOrEmpty(slug) && String.IsNullOrEmpty(pageId)) pageId = _blogRepository.GetPostIdBySlug(slug); //dodalem
+
+            if (User.IsInRole("Student"))
+            {
+                string classroom = _blogRepository.GetStudentGroupName(User.Identity.GetUserId());
+            //    string param = classroom + DateTime.Now.Year.ToString();
+                pageId = "groupWall" + classroom + DateTime.Now.Year.ToString();
+               // _blogRepository.GetPostIdByGroupName(param); // co to?
+            }
+            else if (String.IsNullOrEmpty(slug) && String.IsNullOrEmpty(pageId)) pageId = "mainPage";
+
+            //if (String.IsNullOrEmpty(slug) && String.IsNullOrEmpty(pageId)) pageId = "mainPage";
+
+
+
+        
            
            // int numValue;
           //  bool isIdParsed = Int32.TryParse(pageId, out numValue);
@@ -1107,15 +1149,23 @@ namespace Eregister.Controllers
                 num = 1;
             }
             var newid = "cmt" + num.ToString();
+
+            string userName = _blogRepository.GetUserFullName(User.Identity.GetUserId());
+
             var comment = new Comment()
             {
                 Id = newid,
                 PageId = pageId,
                 DateTime = thisDate,
-                UserName = !String.IsNullOrEmpty(User.Identity.GetUserName()) ? User.Identity.GetUserName() : "Anonimowy",// User.Identity.GetUserName(), //comUserName,
+                UserName = userName,// ? User.Identity.GetUserName() : "Anonimowy",// User.Identity.GetUserName(), //comUserName,
                 Body = commentBody,
                 NetLikeCount = 0
             };
+
+               
+
+
+            // DODAWANIE
             _blogRepository.AddNewComment(comment);
 
             if (pageId.Contains("post"))
@@ -1125,7 +1175,8 @@ namespace Eregister.Controllers
             //   else if (isIdParsed) return RedirectToAction("XXX", new { slug = slug }); // <- zwykle posty
             else if (pageId.Contains("groupWall"))
             {
-                return RedirectToAction("Post", new { slug = slug });
+                //return RedirectToAction("Post", new { slug = slug });
+                return RedirectToAction("WallPostsGroups", "Blog");
             }
             else
             {
@@ -1162,13 +1213,15 @@ namespace Eregister.Controllers
                     num = 1;
                 }
                 var newid = "rep" + num.ToString();
+                string userName = _blogRepository.GetUserFullName(User.Identity.GetUserId());
+
                 var reply = new Reply()
                 {
                     Id = newid,
                     CommentId = commentid,
                     ParentReplyId = null,
                     DateTime = thisDate,
-                    UserName = !String.IsNullOrEmpty(User.Identity.GetUserName()) ? User.Identity.GetUserName() : "Anonimowy", //comUserName,
+                    UserName = userName,//!String.IsNullOrEmpty(User.Identity.GetUserName()) ? User.Identity.GetUserName() : "Anonimowy", //comUserName,
                     Body = replyBody,
                 };
                 _blogRepository.AddNewReply(reply);
@@ -1216,13 +1269,14 @@ namespace Eregister.Controllers
                     num = 1;
                 }
                 var newid = "rep" + num.ToString();
+                string userName = _blogRepository.GetUserFullName(User.Identity.GetUserId());
                 var reply = new Reply()
                 {
                     Id = newid,
                     CommentId = preply.CommentId,
                     ParentReplyId = preply.Id,
                     DateTime = thisDate,
-                    UserName = !String.IsNullOrEmpty(User.Identity.GetUserName()) ? User.Identity.GetUserName() : "Anonimowy",//comUserName,
+                    UserName = userName,//!String.IsNullOrEmpty(User.Identity.GetUserName()) ? User.Identity.GetUserName() : "Anonimowy",//comUserName,
                     Body = replyBody,
                 };
                 _blogRepository.AddNewReply(reply);
@@ -1635,10 +1689,12 @@ namespace Eregister.Controllers
 
         public PostViewModel CreatePostViewModel(string slug)
         {
+            string userName = _blogRepository.GetUserFullName(User.Identity.GetUserId());
+
             PostViewModel model = new PostViewModel();
             var postid = _blogRepository.GetPostIdBySlug(slug);
             var post = _blogRepository.GetPostById(postid);
-            model.Username = User.Identity.GetUserName();
+            model.Username = userName;// User.Identity.GetUserName();
             model.ID = postid;
             model.Title = post.Title;
             model.Body = post.Body;

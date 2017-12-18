@@ -13,9 +13,18 @@
     @if (User.IsInRole("Student"))
     {
         <div>
-            <h3>Przejdz na stronę grupy</h3>
+            <h3>Przejdz na stronę swojej grupy</h3>
             <a href="@Url.Action("WallPostsGroups", "Blog")">Przejdź</a>
         </div>
+    }
+    @if (ViewBag.Alert != null)
+    {
+        <script>
+            $(document).ready(function(){
+            alert('@ViewBag.Message');
+            });
+        </script>
+
     }
 
 
@@ -124,7 +133,9 @@
     </div>
 
  @*komentarze Blog/Index.cshtml*@
+
+
+</div>
 <div class="mainComments">
     @{Html.RenderPartial("WallComments", Model.CommentViewModel);}
-</div>
 </div>

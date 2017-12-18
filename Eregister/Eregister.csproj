@@ -187,10 +187,14 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\EntryController.cs" />
     <Compile Include="Controllers\GroupsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RoomsController.cs" />
+    <Compile Include="Controllers\StudentGradesController.cs" />
+    <Compile Include="Controllers\SubjectsController.cs" />
+    <Compile Include="Controllers\TeacherSubjectsController.cs" />
     <Compile Include="Controllers\UserProfileController.cs" />
     <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="DAL\EFDatabaseContext.cs" />
@@ -199,55 +203,56 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201710091517405_InitialCreate.cs" />
-    <Compile Include="Migrations\201710091517405_InitialCreate.Designer.cs">
-      <DependentUpon>201710091517405_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201712151508144_Iinit.cs" />
+    <Compile Include="Migrations\201712151508144_Iinit.Designer.cs">
+      <DependentUpon>201712151508144_Iinit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201710091519128_Initial_migration.cs" />
-    <Compile Include="Migrations\201710091519128_Initial_migration.Designer.cs">
-      <DependentUpon>201710091519128_Initial_migration.cs</DependentUpon>
+    <Compile Include="Migrations\201712152353023_AddedGroups.cs" />
+    <Compile Include="Migrations\201712152353023_AddedGroups.Designer.cs">
+      <DependentUpon>201712152353023_AddedGroups.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201710092132003_Second_migration.cs" />
-    <Compile Include="Migrations\201710092132003_Second_migration.Designer.cs">
-      <DependentUpon>201710092132003_Second_migration.cs</DependentUpon>
+    <Compile Include="Migrations\201712160435327_AddedNameSurnameApplicationUser.cs" />
+    <Compile Include="Migrations\201712160435327_AddedNameSurnameApplicationUser.Designer.cs">
+      <DependentUpon>201712160435327_AddedNameSurnameApplicationUser.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201710141914441_Third_migration.cs" />
-    <Compile Include="Migrations\201710141914441_Third_migration.Designer.cs">
-      <DependentUpon>201710141914441_Third_migration.cs</DependentUpon>
+    <Compile Include="Migrations\201712160456584_AddedNameSurnameApplicationUser2.cs" />
+    <Compile Include="Migrations\201712160456584_AddedNameSurnameApplicationUser2.Designer.cs">
+      <DependentUpon>201712160456584_AddedNameSurnameApplicationUser2.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201710161026196_Fourth_migration.cs" />
-    <Compile Include="Migrations\201710161026196_Fourth_migration.Designer.cs">
-      <DependentUpon>201710161026196_Fourth_migration.cs</DependentUpon>
+    <Compile Include="Migrations\201712161851284_LilChange.cs" />
+    <Compile Include="Migrations\201712161851284_LilChange.Designer.cs">
+      <DependentUpon>201712161851284_LilChange.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201712100050474_revolution.cs" />
-    <Compile Include="Migrations\201712100050474_revolution.Designer.cs">
-      <DependentUpon>201712100050474_revolution.cs</DependentUpon>
+    <Compile Include="Migrations\201712161909517_GroupsChange.cs" />
+    <Compile Include="Migrations\201712161909517_GroupsChange.Designer.cs">
+      <DependentUpon>201712161909517_GroupsChange.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201712100217546_revolution2.cs" />
-    <Compile Include="Migrations\201712100217546_revolution2.Designer.cs">
-      <DependentUpon>201712100217546_revolution2.cs</DependentUpon>
+    <Compile Include="Migrations\201712162005057_GroupsChange2.cs" />
+    <Compile Include="Migrations\201712162005057_GroupsChange2.Designer.cs">
+      <DependentUpon>201712162005057_GroupsChange2.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201712110117532_NoSeperateContextallInOneIdentityContext.cs" />
-    <Compile Include="Migrations\201712110117532_NoSeperateContextallInOneIdentityContext.Designer.cs">
-      <DependentUpon>201712110117532_NoSeperateContextallInOneIdentityContext.cs</DependentUpon>
+    <Compile Include="Migrations\201712162247277_GroupsChange3.cs" />
+    <Compile Include="Migrations\201712162247277_GroupsChange3.Designer.cs">
+      <DependentUpon>201712162247277_GroupsChange3.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201712111817503_JoinStudentToIdentity.cs" />
-    <Compile Include="Migrations\201712111817503_JoinStudentToIdentity.Designer.cs">
-      <DependentUpon>201712111817503_JoinStudentToIdentity.cs</DependentUpon>
+    <Compile Include="Migrations\201712171443285_GroupsChange4.cs" />
+    <Compile Include="Migrations\201712171443285_GroupsChange4.Designer.cs">
+      <DependentUpon>201712171443285_GroupsChange4.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201712111849326_JoinStudentToIdentity2.cs" />
-    <Compile Include="Migrations\201712111849326_JoinStudentToIdentity2.Designer.cs">
-      <DependentUpon>201712111849326_JoinStudentToIdentity2.cs</DependentUpon>
+    <Compile Include="Migrations\201712171506354_GroupsChange5.cs" />
+    <Compile Include="Migrations\201712171506354_GroupsChange5.Designer.cs">
+      <DependentUpon>201712171506354_GroupsChange5.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201712112340057_AddedUserToPost.cs" />
-    <Compile Include="Migrations\201712112340057_AddedUserToPost.Designer.cs">
-      <DependentUpon>201712112340057_AddedUserToPost.cs</DependentUpon>
+    <Compile Include="Migrations\201712172202330_GroupsChange6.cs" />
+    <Compile Include="Migrations\201712172202330_GroupsChange6.Designer.cs">
+      <DependentUpon>201712172202330_GroupsChange6.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountManagerModel.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AdminsViewModel.cs" />
     <Compile Include="Models\Features\Quiz\Quiz.cs" />
+    <Compile Include="Models\GroupViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ImageViewModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -7661,6 +7666,25 @@
     <Content Include="Views\Groups\Details.cshtml" />
     <Content Include="Views\Groups\Edit.cshtml" />
     <Content Include="Views\Groups\Index.cshtml" />
+    <Content Include="Views\Groups\IndexDetails.cshtml" />
+    <Content Include="Views\Groups\CreateClass.cshtml" />
+    <Content Include="Views\Groups\ClassList.cshtml" />
+    <Content Include="Views\Groups\_ClassList.cshtml" />
+    <Content Include="Views\Subjects\Create.cshtml" />
+    <Content Include="Views\Subjects\Delete.cshtml" />
+    <Content Include="Views\Subjects\Details.cshtml" />
+    <Content Include="Views\Subjects\Edit.cshtml" />
+    <Content Include="Views\Subjects\Index.cshtml" />
+    <Content Include="Views\StudentGrades\Create.cshtml" />
+    <Content Include="Views\StudentGrades\Delete.cshtml" />
+    <Content Include="Views\StudentGrades\Details.cshtml" />
+    <Content Include="Views\StudentGrades\Edit.cshtml" />
+    <Content Include="Views\StudentGrades\Index.cshtml" />
+    <Content Include="Views\TeacherSubjects\Create.cshtml" />
+    <Content Include="Views\TeacherSubjects\Delete.cshtml" />
+    <Content Include="Views\TeacherSubjects\Details.cshtml" />
+    <Content Include="Views\TeacherSubjects\Edit.cshtml" />
+    <Content Include="Views\TeacherSubjects\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -7670,6 +7694,7 @@
     <Folder Include="ckeditor\samples\" />
     <Folder Include="ckeditor\skins\" />
     <Folder Include="UploadImage\" />
+    <Folder Include="Views\Base\" />
     <Folder Include="Views\Wall\" />
   </ItemGroup>
   <ItemGroup>
@@ -7686,45 +7711,45 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201710091517405_InitialCreate.resx">
-      <DependentUpon>201710091517405_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201710091519128_Initial_migration.resx">
-      <DependentUpon>201710091519128_Initial_migration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201710092132003_Second_migration.resx">
-      <DependentUpon>201710092132003_Second_migration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201710141914441_Third_migration.resx">
-      <DependentUpon>201710141914441_Third_migration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201710161026196_Fourth_migration.resx">
-      <DependentUpon>201710161026196_Fourth_migration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201712100050474_revolution.resx">
-      <DependentUpon>201712100050474_revolution.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201712100217546_revolution2.resx">
-      <DependentUpon>201712100217546_revolution2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201712110117532_NoSeperateContextallInOneIdentityContext.resx">
-      <DependentUpon>201712110117532_NoSeperateContextallInOneIdentityContext.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201712111817503_JoinStudentToIdentity.resx">
-      <DependentUpon>201712111817503_JoinStudentToIdentity.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201712111849326_JoinStudentToIdentity2.resx">
-      <DependentUpon>201712111849326_JoinStudentToIdentity2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201712112340057_AddedUserToPost.resx">
-      <DependentUpon>201712112340057_AddedUserToPost.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <TypeScriptCompile Include="Content\admin\bower_components\moment\moment.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201712151508144_Iinit.resx">
+      <DependentUpon>201712151508144_Iinit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712152353023_AddedGroups.resx">
+      <DependentUpon>201712152353023_AddedGroups.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712160435327_AddedNameSurnameApplicationUser.resx">
+      <DependentUpon>201712160435327_AddedNameSurnameApplicationUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712160456584_AddedNameSurnameApplicationUser2.resx">
+      <DependentUpon>201712160456584_AddedNameSurnameApplicationUser2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712161851284_LilChange.resx">
+      <DependentUpon>201712161851284_LilChange.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712161909517_GroupsChange.resx">
+      <DependentUpon>201712161909517_GroupsChange.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712162005057_GroupsChange2.resx">
+      <DependentUpon>201712162005057_GroupsChange2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712162247277_GroupsChange3.resx">
+      <DependentUpon>201712162247277_GroupsChange3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712171443285_GroupsChange4.resx">
+      <DependentUpon>201712171443285_GroupsChange4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712171506354_GroupsChange5.resx">
+      <DependentUpon>201712171506354_GroupsChange5.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712172202330_GroupsChange6.resx">
+      <DependentUpon>201712172202330_GroupsChange6.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

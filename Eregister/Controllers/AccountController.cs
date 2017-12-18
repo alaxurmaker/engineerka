@@ -161,6 +161,9 @@ namespace Eregister.Controllers
         //}
         #endregion Login
 
+        #region EnterCode
+        #endregion
+
         #region Register
 
         //
@@ -197,15 +200,19 @@ namespace Eregister.Controllers
                     JoinDate = DateTime.Now,
                     EmailLinkDate = DateTime.Now,
                     LastLoginDate = DateTime.Now,
-                    //
+                    NameSurname = model.FirstName + " " + model.LastName,
+
+                    TokenValue = "123456",
+                    TokenIsValid = true,
                     PersonSex = model.Sex,
                     EmailConfirmed = true // <- wylaczone EmailConfirm
             };
+
                 var result = await UserManager.CreateAsync(user, model.RegisterPassword);
                 if(result.Succeeded)
                 {
-                    
                     UserManager.AddToRole(user.Id, "Candidate");
+
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 }
                 return RedirectToAction("Success", "Home");

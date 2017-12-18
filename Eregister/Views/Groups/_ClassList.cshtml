@@ -1,0 +1,27 @@
+﻿@*@model Eregister.Models.Student
+
+<td>
+    @Html.DisplayFor(model => model.ApplicationUser.NameSurname)
+</td>
+
+<td>
+    @Html.DisplayFor(model => model.Pesel)
+</td>
+
+<td>
+    @Html.DisplayFor(model => model.JoinDate.ToString())
+</td>*@
+
+@model Eregister.Models.StudentsListViewModel
+
+<td>
+    @Html.DisplayFor(model => model.ApplicationUser.NameSurname)
+</td>
+
+<td>
+    @Html.DisplayFor(model => model.Pesel)
+</td>
+
+<td>
+    @Html.DisplayFor(model => model.JoinDate.ToString())
+</td>
