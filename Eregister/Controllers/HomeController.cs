@@ -85,8 +85,13 @@ namespace Eregister.Controllers
                         UserManager.RemoveFromRole(user.Id, "Candidate");
                         UserManager.AddToRole(user.Id, "Student");
                         user.TokenIsValid = false;
-                        var myStudent = new Student() { UserId = loggedUserId, JoinDate = DateTime.Now, Pesel = result ? pesel : "",
-                    };
+                        //var myStudent = new Student() { UserId = loggedUserId, JoinDate = DateTime.Now, Pesel = result ? pesel : "",
+                        var myStudent = new Student()
+                        {
+                            UserId = loggedUserId,
+                            Pesel = result ? pesel : "",
+
+                        };
                         context.Students.Add(myStudent);
                         context.SaveChanges();
                     }
@@ -98,6 +103,58 @@ namespace Eregister.Controllers
                 }
             }
             return View("Index");
+        }
+
+
+        //[ValidateInput(false)]
+        [HttpPost]
+        public ActionResult ClearNotifications(int go)
+        {
+            // if (User != null)
+            if (User.Identity.GetUserId() != null && !String.IsNullOrEmpty(User.Identity.GetUserId()))
+            {
+                var context = new ApplicationDbContext();
+                var user = context.Users.SingleOrDefault(u => u.UserName == User.Identity.Name);
+                var userId = User.Identity.GetUserId();
+                if (user.Teacher != null)
+                {
+                    var teacherNots = context.Alerts.Where(x => x.TeacherUserId == userId).ToList();
+
+                    if (teacherNots != null & teacherNots.Count > 0)
+                    {
+                        //var notsId = user.Teacher.AlertID.Value;
+                        //var isOn = user.Teacher.Alert.IsOn;
+
+                        //var notsCount = user.Teacher.Alert.Count;
+
+                        //if (notsId != 0)
+                        //{
+                        //    //  isOn = false;
+                        //    //  notsCount = 0;
+
+                        //    user.Teacher.Alert.IsOn = false;
+                        //    user.Teacher.Alert.Count = 0;
+
+                        //    context.SaveChanges();
+
+                        foreach (var i in teacherNots)
+                        {
+                            context.Alerts.Remove(i);
+                        }
+                        context.SaveChanges();
+                        ViewData.Remove("NotificationsContent");
+                        ViewData.Remove("NotificationsCount");
+                        //  }
+                    }
+                }
+                //else if (user.Student != null)
+                //{
+
+                //}
+            }
+            return Redirect(Request.UrlReferrer.ToString());
+          //  return new EmptyResult();
+           
         }
 
         #region Helpers

@@ -15,7 +15,8 @@
 @model Eregister.Models.StudentsListViewModel
 
 <td>
-    @Html.DisplayFor(model => model.ApplicationUser.NameSurname)
+    @Html.DisplayFor(model => model.NameSurname)
+    @*@Html.DisplayFor(model => model.ApplicationUser.NameSurname)*@
 </td>
 
 <td>
@@ -23,5 +24,5 @@
 </td>
 
 <td>
-    @Html.DisplayFor(model => model.JoinDate.ToString())
+    @Html.DisplayFor(model => model.JoinDate) @*//.ToString())*@
 </td>

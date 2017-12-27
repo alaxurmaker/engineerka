@@ -25,6 +25,7 @@
 
     var controller = HttpContext.Current.Request.RequestContext.RouteData.Values["Controller"].ToString();
     string cLayout = "";
+
     if (controller == "Entry")
     {
         //  cLayout = "~/Views/Shared/_Entry.cshtml";
@@ -34,7 +35,20 @@
     {
         cLayout = "~/Views/Shared/_AdminTemplate.cshtml";
     }
+
+    if(ViewContext.ViewData["Skin"] != null)
+    {
+        cLayout = ViewContext.ViewData["Skin"].ToString();
+    }
+
+
+
     Layout = cLayout;
+
+    //   var y = HttpContext.Current.GetOwinContext().Authentication.User.Equals(User.Identity.Name);
+    //   var x = System.Web.HttpContext.Current.GetOwinContext().Authentication.User.fin//GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+
+
 
 
 

@@ -31,18 +31,11 @@ namespace Eregister.Models
         public string PersonSex { get; internal set; }
         public string TokenValue { get; internal set; }
         public bool TokenIsValid { get; internal set; }
-        // public string NameSurname { get; internal set; }
-        //[Display(Name = "Full Name")]
+        public string CustomSkin { get; internal set; }
         public string NameSurname { get; internal set; }
-        //{
-        //    get
-        //    {
-        //        return FirstName + " " + LastName;
-        //    }
-        //}
 
-        //public virtual MyUser MyUser { get; set; }
-        public virtual Parent Parent { get; set; }
+
+         public virtual Parent Parent { get; set; }
          public virtual Teacher Teacher { get; set; }
          public virtual Student Student { get; set; }
         
@@ -67,6 +60,10 @@ namespace Eregister.Models
         [ForeignKey("Address")]
         public int? AddressID { get; set; }
 
+        //[ForeignKey("Alert")]
+        //public int? AlertID { get; set; }   
+        //public virtual Alert Alert { get; set; }
+
         public virtual Address Address { get; set; }
 
         //[Required]
@@ -75,6 +72,7 @@ namespace Eregister.Models
 
        // public virtual ICollection<Group> Groups { get; set; }
         public virtual ICollection<TeacherSubject> TeacherSubjects { get; set; }
+        public virtual ICollection<Alert> Alerts { get; set; }
     }
 
     public class Student
@@ -100,6 +98,11 @@ namespace Eregister.Models
         public virtual ApplicationUser ApplicationUser { get; set; }
         // public virtual Educator Educator { get; set; }
 
+
+        //[ForeignKey("Alert")]
+        //public int? AlertID { get; set; }
+        //public virtual Alert Alert { get; set; }
+        public virtual ICollection<Alert> Alerts { get; set; }
         public virtual ICollection<StudentParent> StudentParents { get; set; }
         public virtual ICollection<StudentGrade> StudentGrades { get; set; }
         public virtual ICollection<StudentHistory> StudentHistories { get; set; }
@@ -124,6 +127,29 @@ namespace Eregister.Models
         public virtual ICollection<StudentParent> StudentParents { get; set; }
     }
 
+    public class Alert
+    {
+        [Key]
+        public int AlertID { get; set; }
+    //    public int Count { get; set; }
+        public bool IsOn { get; set; }
+
+        public DateTime? AddDate { get; set; }
+
+        [ForeignKey("Student")]
+        public string StudentUserId { get; set; }
+
+        [ForeignKey("Teacher")]
+        public string TeacherUserId { get; set; }
+
+        [ForeignKey("AlertContent")]
+        public int AlertContentID { get; set; }
+
+        public virtual AlertContent AlertContent { get; set; }
+
+        public virtual Student Student { get; set; }
+        public virtual Teacher Teacher { get; set; }
+    }
     //public class MyUser
     //{
     //    [Key, ForeignKey("ApplicationUser")]
@@ -230,9 +256,11 @@ namespace Eregister.Models
         public DbSet<FinalGrade> FinalGrades { get; set; }
         //public DbSet<Educator> Educators { get; set; }
         public DbSet<Address> Addresses { get; set; }
+        public DbSet<Alert> Alerts { get; set; }
+        public DbSet<AlertContent> AlertContents { get; set; }
 
         // UNCOMENT!!!!!!!!!!!!!!!!!!!!
-       // public DbSet<TeacherSubject> TeacherSubjects { get; set; }
+        public DbSet<TeacherSubject> TeacherSubjects { get; set; }
 
         public DbSet<Quiz> Quizzes { get; set; }
 
@@ -265,7 +293,7 @@ namespace Eregister.Models
             modelBuilder.Conventions.Remove<ManyToManyCascadeDeleteConvention>();
         }
 
-        public System.Data.Entity.DbSet<Eregister.TeacherSubject> TeacherSubjects { get; set; }
+
 
         //protected override void OnModelCreating(DbModelBuilder modelBuilder)
         //{

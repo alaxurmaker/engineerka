@@ -1,5 +1,5 @@
-﻿
-@using Microsoft.AspNet.Identity
+﻿@using Eregister.Controllers
+@*@using Microsoft.AspNet.Identity*@
 <!DOCTYPE html>
 <!--
 This is a starter template page. Use this page to start your new project from
@@ -65,6 +65,7 @@ desired effect
 |               | sidebar-mini                            |
 |---------------------------------------------------------|
 -->
+
 <body class="hold-transition skin-green-light sidebar-mini">
     <div class="wrapper">
 
@@ -87,7 +88,14 @@ desired effect
                         </a>
                         <!-- Navbar Right Menu -->
                         <div class="navbar-custom-menu">
+
                             <ul class="nav navbar-nav">
+
+
+
+@if (!String.IsNullOrEmpty(User.Identity.Name))
+{
+
                                 <!-- Messages: style can be found in dropdown.less-->
                                 <li class="dropdown messages-menu">
                                     <!-- Menu toggle button -->
@@ -123,29 +131,85 @@ desired effect
                                         <li class="footer"><a href="#">See All Messages</a></li>
                                     </ul>
                                 </li>
+
                                 <!-- /.messages-menu -->
                                 <!-- Notifications Menu -->
                                 <li class="dropdown notifications-menu">
                                     <!-- Menu toggle button -->
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                         <i class="fa fa-bell-o"></i>
-                                        <span class="label label-warning">10</span>
+                                       
+                                        @if (ViewData["NotificationsCount"] != null)
+                                        {
+                                            <span class="label label-warning">@ViewData["NotificationsCount"]</span>
+                                        }
+
+
+                                        
+
+
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li class="header">You have 10 notifications</li>
+                                        @if (ViewData["NotificationsCount"] != null)
+                                        {
+                                            <li class="header">Masz @ViewData["NotificationsCount"] nowych powiadomień</li>
+                                        }
+                                      
+
                                         <li>
                                             <!-- Inner Menu: contains the notifications -->
                                             <ul class="menu">
                                                 <li>
                                                     <!-- start notification -->
-                                                    <a href="#">
-                                                        <i class="fa fa-users text-aqua"></i> 5 new members joined today
-                                                    </a>
+
+                                                    @{
+                                                        var notificationList = ViewData["NotificationsContent"] as List<string>;
+                                                        if (notificationList != null)
+                                                        {
+                                                            if (notificationList.Count > 0)
+                                                            {
+                                                                foreach (var notify in notificationList)
+                                                                {
+                                                                    <a href="#">
+                                                                        <i class="fa fa-users text-aqua"></i> @notify
+                                                                    </a>
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                <a href="#">
+                                                                    <i class="fa fa-users text-aqua"></i> Brak nowych powiadomień
+                                                                </a>
+                                                            }
+
+                                                        }
+
+                                                    }
+                                                    
+
                                                 </li>
                                                 <!-- end notification -->
                                             </ul>
                                         </li>
-                                        <li class="footer"><a href="#">View all</a></li>
+@{
+    if (ViewData["NotificationsCount"] != null)
+    {
+
+        using (Html.BeginForm("ClearNotifications", "Home"))
+        {
+           @Html.Hidden("go", 2)
+              <li class="footer">
+                   <input type="submit" value="Wyczyść powiadomienia" />
+             </li>
+
+        }
+    }
+
+}
+
+@*<li class="footer"><a href="@Html.Action("ClearNotifications", "Home")"><i class="fa fa-link"></i><span>Wyczyść powiadomienia</span></a></li>*@
+                                        @*<li class="footer"><a href="@Html.Action("ClearNotifications", "Home")"><i class="fa fa-link"></i><span>Wyczyść powiadomienia</span></a></li>*@
+                                       
                                     </ul>
                                 </li>
                                 <!-- Tasks Menu -->
@@ -186,6 +250,7 @@ desired effect
                                         </li>
                                     </ul>
                                 </li>
+         }
                                 <!-- User Account Menu -->
                                 <li class="dropdown user user-menu">
                                     <!-- Menu Toggle Button -->
@@ -199,8 +264,9 @@ desired effect
                                     </a>
 
     <ul class="dropdown-menu">
+        
         <!-- The user image in the menu -->
-@if (User.Identity.GetUserId() != null)
+@if (!String.IsNullOrEmpty(User.Identity.Name))//.GetUserId() != null)
 {
         <li class="user-header">
             <img src="~/Content/admin/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
@@ -252,6 +318,7 @@ desired effect
                                     <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
                                 </li>
                             </ul>
+               
                         </div>
                     </nav>
 </header>
@@ -271,11 +338,11 @@ desired effect
                         <!-- Status -->
                         @*<p>@User.Identity.Name</p>*@
                         
-                        @if (!String.IsNullOrEmpty(User.Identity.GetUserName()))
-                        {
+                        @if(!String.IsNullOrEmpty(User.Identity.Name))
+                        { 
                             <p>
                                @ViewData["FirstName"]
-                               @ViewData["LastName"]
+                                       @ViewData["LastName"]
                             </p>
                              <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                         }

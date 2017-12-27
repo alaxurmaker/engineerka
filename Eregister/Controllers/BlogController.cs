@@ -20,7 +20,7 @@ using System.Security.Claims;
 
 namespace Eregister.Controllers
 {
-    public class BlogController : Controller
+    public class BlogController : BaseController//Controller
     {
         private IBlogRepository _blogRepository;
         public static List<BlogViewModel> postList = new List<BlogViewModel>();
@@ -31,7 +31,7 @@ namespace Eregister.Controllers
         DateTime thisDate = DateTime.Now;
 
         private ApplicationSignInManager _signInManager;
-        private ApplicationUserManager _userManager;
+       // private ApplicationUserManager _userManager;
 
         public BlogController()
         {
@@ -40,7 +40,7 @@ namespace Eregister.Controllers
         public BlogController(IBlogRepository blogRepository, ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             _blogRepository = blogRepository;
-            UserManager = userManager;
+     //       UserManager = userManager;
             SignInManager = signInManager;
 
         }
@@ -55,17 +55,17 @@ namespace Eregister.Controllers
                 _signInManager = value;
             }
         }
-        public ApplicationUserManager UserManager
-        {
-            get
-            {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
-        }
+        //public ApplicationUserManager UserManager
+        //{
+        //    get
+        //    {
+        //        return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+        //    }
+        //    private set
+        //    {
+        //        _userManager = value;
+        //    }
+        //}
 
         // DODATKOWE
         // ZERKNIJ TU !!!!!!!!!!!!!!!!!!!!!!!!
@@ -83,6 +83,7 @@ namespace Eregister.Controllers
             BlogViewModel model = new BlogViewModel();
             model.CommentViewModel = CreateCommentViewModel("mainPage", sortOrder);
             model.PagedBlogViewModel = CreatePagedBlogViewModel(page, sortOrder, searchString, searchCategory, searchTag);
+           
             return View(model);
         }
         #endregion Wall
@@ -264,11 +265,12 @@ namespace Eregister.Controllers
                     postList = postList.OrderByDescending(x => x.Title).ToList();
                     break;
                 default:
-                    postList = postList.OrderBy(x => x.PostedOn).ToList();
+                    postList = postList.OrderByDescending(x => x.PostedOn).ToList();
+                    // postList = postList.OrderBy(x => x.PostedOn).ToList();
                     break;
             }
 
-            int pageSize = 2;
+            int pageSize = 4;
             int pageNumber = (page ?? 1);
             return postList.ToPagedList(pageNumber, pageSize);
         }
@@ -363,11 +365,11 @@ namespace Eregister.Controllers
                     postList = postList.OrderByDescending(x => x.Title).ToList();
                     break;
                 default:
-                    postList = postList.OrderBy(x => x.PostedOn).ToList();
+                    postList = postList.OrderByDescending(x => x.PostedOn).ToList();
                     break;
             }
 
-            int pageSize = 2;
+            int pageSize = 4;
             int pageNumber = (page ?? 1);
             return postList.ToPagedList(pageNumber, pageSize);
         }
@@ -461,11 +463,11 @@ namespace Eregister.Controllers
                     allPostsList = allPostsList.OrderByDescending(x => x.Title).ToList();
                     break;
                 default:
-                    allPostsList = allPostsList.OrderBy(x => x.Date).ToList();
+                    allPostsList = allPostsList.OrderByDescending(x => x.Date).ToList();
                     break;
             }
 
-            int pageSize = 2;
+            int pageSize = 4;
             int pageNumber = (page ?? 1);
             return View("AllPosts", allPostsList.ToPagedList(pageNumber, pageSize));
 
@@ -519,7 +521,7 @@ namespace Eregister.Controllers
         }
 
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Teacher, Student, Parent")]
         [HttpGet]
         public ActionResult EditPost(string slug)
         {
@@ -528,7 +530,7 @@ namespace Eregister.Controllers
         }
 
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Teacher, Student, Parent")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
@@ -543,11 +545,17 @@ namespace Eregister.Controllers
             post.Modified = thisDate;
             _blogRepository.Save();
 
-            return RedirectToAction("Post", new { slug = model.UrlSeo });
+            if(!model.ID.Contains("groupWall"))
+            {
+                _blogRepository.AddNotifications("wszyscy", 1);
+            }
+
+            //  return RedirectToAction("Post", new { slug = model.UrlSeo });
+            return RedirectToAction("Wall", "Blog");
         }
 
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Teacher, Student, Parent")]
         [HttpGet]
         public ActionResult AddVideoToPost(string postid, string slug)
         {
@@ -558,7 +566,7 @@ namespace Eregister.Controllers
         }
 
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Teacher, Student, Parent")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult AddVideoToPost(string postid, string slug, string videoUrl)
@@ -569,7 +577,7 @@ namespace Eregister.Controllers
         }
 
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Teacher, Student, Parent")]
         public ActionResult RemoveVideoFromPost(string slug, string postid, string videoUrl)
         {
             CreatePostViewModel(slug);
@@ -578,7 +586,7 @@ namespace Eregister.Controllers
         }
 
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Teacher")]
         [HttpGet]
         public ActionResult AddCategoryToPost(string postid)
         {
@@ -588,7 +596,7 @@ namespace Eregister.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Teacher")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult AddCategoryToPost(PostViewModel model)
@@ -637,7 +645,7 @@ namespace Eregister.Controllers
         }
 
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Teacher")]
         [HttpGet]
         public ActionResult AddNewCategory(string postid, bool callfrompost)
         {
@@ -653,7 +661,7 @@ namespace Eregister.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Teacher")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult AddNewCategory(string postid, string catName, string catUrlSeo, string catDesc)
@@ -671,7 +679,7 @@ namespace Eregister.Controllers
         }
 
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Teacher")]
         [HttpGet]
         public ActionResult AddTagToPost(string postid)
         {
@@ -682,7 +690,7 @@ namespace Eregister.Controllers
         }
 
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Teacher")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult AddTagToPost(PostViewModel model)
@@ -722,7 +730,7 @@ namespace Eregister.Controllers
             return RedirectToAction("EditPost", new { slug = post.UrlSeo });
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Teacher")]
         public ActionResult RemoveTagFromPost(string slug, string postid, string tagName)
         {
             CreatePostViewModel(slug);
@@ -731,7 +739,7 @@ namespace Eregister.Controllers
         }
 
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Teacher")]
         [HttpGet]
         public ActionResult AddNewTag(string postid, bool callfrompost)
         {
@@ -747,7 +755,7 @@ namespace Eregister.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Teacher")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult AddNewTag(string postid, string tagName, string tagUrlSeo)
@@ -881,7 +889,7 @@ namespace Eregister.Controllers
 
             string userName = _blogRepository.GetUserFullName(User.Identity.GetUserId());
 
-            if (model.GroupDirect != null)
+            if (model.GroupDirect != null && model.GroupDirect.Length<=2)
             {
                 // model.ID = "groupWall" + model.GroupDirect + String.Format("{yyyy}", thisDate)  + "_" + model.ID ;//dodac nie model.ID
                 model.ID = "groupWall" + model.GroupDirect + DateTime.Now.Year.ToString() + "_" + model.ID;

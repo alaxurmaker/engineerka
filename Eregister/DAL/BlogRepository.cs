@@ -612,6 +612,71 @@ namespace Eregister.DAL
 
         #endregion
 
+        #region Notifications
+
+        public void AddNotifications(string group, int alert)
+        {
+            var alertType = _context.AlertContents.Where(c => c.AlertContentID == alert).FirstOrDefault().AlertContentID;
+            var dateNow = DateTime.Now;
+            if (group.ToUpper().Contains("UCZNIOWIE"))
+            {
+                var aLLStudents = _context.Students.Where(u => u.UserId != null).ToList();
+
+                if (aLLStudents != null && aLLStudents.Count > 0)
+                {
+                    foreach (var i in aLLStudents)
+                    {
+                        _context.Alerts.Add(new Alert() { IsOn = true, StudentUserId = i.UserId, AddDate = dateNow, AlertContentID = alertType });
+                    }
+                }
+                Save();
+            }
+            else if (group.ToUpper().Contains("NAUCZYCIELE"))
+            {
+                var aLLTeachers = _context.Teachers.Where(u => u.UserId != null).ToList();
+
+                if (aLLTeachers != null && aLLTeachers.Count > 0)
+                {
+                    foreach (var i in aLLTeachers)
+                    {
+                        _context.Alerts.Add(new Alert() { IsOn = true, TeacherUserId = i.UserId, AddDate = dateNow, AlertContentID = alertType });
+                    }
+                }
+                Save();
+            }
+            else
+            {
+                var aLLTeachers = _context.Teachers.Where(u => u.UserId != null).ToList();
+                var aLLStudents = _context.Students.Where(u => u.UserId != null).ToList();
+
+                if(aLLTeachers != null && aLLTeachers.Count>0)
+                {
+                    foreach (var i in aLLTeachers)
+                    {
+                        _context.Alerts.Add(new Alert() { IsOn = true, TeacherUserId = i.UserId, AddDate = dateNow, AlertContentID = alertType });
+                    }
+                }
+
+                if(aLLStudents!=null && aLLStudents.Count>0)
+                {
+                    foreach (var i in aLLStudents)
+                    {
+                        _context.Alerts.Add(new Alert() { IsOn = true, StudentUserId = i.UserId, AddDate = dateNow, AlertContentID = alertType });
+                    }
+                }
+
+
+                Save();
+            }
+           
+
+           // var notify = _context.  //Replies.Where(x => x.Id == replyid).FirstOrDefault();
+          //  _context.Replies.Remove(reply);
+           
+        }
+
+        #endregion
+
     }
 
 }

@@ -247,6 +247,22 @@
     <Compile Include="Migrations\201712172202330_GroupsChange6.Designer.cs">
       <DependentUpon>201712172202330_GroupsChange6.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712191613398_AddSkins.cs" />
+    <Compile Include="Migrations\201712191613398_AddSkins.Designer.cs">
+      <DependentUpon>201712191613398_AddSkins.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712201427114_Alerts.cs" />
+    <Compile Include="Migrations\201712201427114_Alerts.Designer.cs">
+      <DependentUpon>201712201427114_Alerts.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712231614345_AddNotification.cs" />
+    <Compile Include="Migrations\201712231614345_AddNotification.Designer.cs">
+      <DependentUpon>201712231614345_AddNotification.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712271906586_NotificationsUpdate.cs" />
+    <Compile Include="Migrations\201712271906586_NotificationsUpdate.Designer.cs">
+      <DependentUpon>201712271906586_NotificationsUpdate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountManagerModel.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -259,6 +275,7 @@
     <Compile Include="Models\MessageServices.cs" />
     <Compile Include="Models\BlogViewModel.cs" />
     <Compile Include="Models\RegisterModels\Address.cs" />
+    <Compile Include="Models\RegisterModels\AlertContent.cs" />
     <Compile Include="Models\RegisterModels\Educator.cs" />
     <Compile Include="Models\RegisterModels\FinalGrade.cs" />
     <Compile Include="Models\RegisterModels\GradeRating.cs" />
@@ -274,6 +291,7 @@
     <Compile Include="Models\RegisterModels\Teacher.cs" />
     <Compile Include="Models\RegisterModels\TeacherSubject.cs" />
     <Compile Include="Models\RegisterModels\User.cs" />
+    <Compile Include="Models\UserHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -7749,6 +7767,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201712172202330_GroupsChange6.resx">
       <DependentUpon>201712172202330_GroupsChange6.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712191613398_AddSkins.resx">
+      <DependentUpon>201712191613398_AddSkins.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712201427114_Alerts.resx">
+      <DependentUpon>201712201427114_Alerts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712231614345_AddNotification.resx">
+      <DependentUpon>201712231614345_AddNotification.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712271906586_NotificationsUpdate.resx">
+      <DependentUpon>201712271906586_NotificationsUpdate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

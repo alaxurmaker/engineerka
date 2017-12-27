@@ -11,7 +11,7 @@ using Eregister.Models;
 
 namespace Eregister.Controllers
 {
-    public class GroupsController : Controller
+    public class GroupsController : BaseController//Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
@@ -116,9 +116,13 @@ namespace Eregister.Controllers
                 // studentToUpdate.GroupName = model.Name;
 
                 //  studentToUpdate.GroupID = model.GroupID.Value; // tu wywala
+                var now = DateTime.Now;
+
                 studentToUpdate.GroupID = model.GroupID;
                 studentToUpdate.GroupName = model.Name;
-                
+                studentToUpdate.JoinDate = now;
+              //  studentToUpdate.JoinDate = DateTime.Now;
+
 
                 var entity = db.Students.Find(studentToUpdate.UserId);
                 //if (entity == null)
@@ -286,21 +290,30 @@ namespace Eregister.Controllers
             List<Student> students = db.Students.Where(y => y.Group.GroupID == id).ToList();
 
             GroupViewModel grp = new GroupViewModel();
-
             List<StudentsListViewModel> studentsListView = new List<StudentsListViewModel>();
-            studentsListView = null;
+            // List<StudentsListViewModel> studentsListView = new List<StudentsListViewModel>();
+            //studentsListView = null;
 
             //  var student = db.Students.Where(y => y.ApplicationUser.NameSurname == x).FirstOrDefault();
             if (students.Count() > 0)
             {
+                studentsListView = new List<StudentsListViewModel>();
+
                 foreach (var s in students)
                 {
-                        studentsListView.Add(new StudentsListViewModel()
-                        {
-                            NameSurname = s.ApplicationUser.NameSurname !=null ? s.ApplicationUser.NameSurname : "",//?.FirstOrDefault().ApplicationUser.NameSurname,  //.FirstOrDefault().ApplicationUser.NameSurname,
-                            JoinDate = s.JoinDate,
-                            Pesel = s.Pesel != null ? s.Pesel : ""
-                        });
+                    var newStudent = new StudentsListViewModel()
+                    {
+                        NameSurname = s.ApplicationUser.NameSurname != null ? s.ApplicationUser.NameSurname : "",
+                        JoinDate = s.JoinDate != null ? s.JoinDate : new DateTime(10, 10, 10),// DateTime.Now ,
+                        Pesel = s.Pesel != null ? s.Pesel : ""
+                    };
+                    studentsListView.Add(newStudent);
+                        //studentsListView.Add(new StudentsListViewModel()
+                        //{
+                        //    NameSurname = s.ApplicationUser.NameSurname !=null ? s.ApplicationUser.NameSurname : "",//?.FirstOrDefault().ApplicationUser.NameSurname,  //.FirstOrDefault().ApplicationUser.NameSurname,
+                        //    JoinDate = s.JoinDate !=null ? s.JoinDate : new DateTime(10,10,10),// DateTime.Now ,
+                        //    Pesel = s.Pesel != null ? s.Pesel : ""
+                        //});
                     
                 }
             }

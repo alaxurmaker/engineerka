@@ -11,11 +11,11 @@ using System.Web.Mvc;
 
 namespace Eregister.Controllers
 {
-    public class AdminController : Controller
+    public class AdminController : BaseController//Controller
     {
 
         #region Vars/Props
-        public UserManager<ApplicationUser> UserManager { get; set; }
+   //     public UserManager<ApplicationUser> UserManager { get; set; }
         public ApplicationDbContext context { get; set; }
 
         public static List<AdminUserViewModel> usrList = new List<AdminUserViewModel>();
@@ -31,7 +31,7 @@ namespace Eregister.Controllers
         public AdminController()
         {
             context = new ApplicationDbContext();
-            UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+          //  UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
         }
 
         [HttpGet]

@@ -202,6 +202,7 @@ namespace Eregister.Controllers
                     LastLoginDate = DateTime.Now,
                     NameSurname = model.FirstName + " " + model.LastName,
 
+                    CustomSkin = "~/Views/Shared/_AdminTemplate.cshtml",
                     TokenValue = "123456",
                     TokenIsValid = true,
                     PersonSex = model.Sex,

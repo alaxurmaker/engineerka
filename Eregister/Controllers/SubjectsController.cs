@@ -11,7 +11,7 @@ using Eregister.Models;
 
 namespace Eregister.Controllers
 {
-    public class SubjectsController : Controller
+    public class SubjectsController : BaseController//Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 

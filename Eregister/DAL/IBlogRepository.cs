@@ -71,6 +71,10 @@ namespace Eregister.DAL
         string GetUserFullName(string userid);
         #endregion
 
+        #region Notifications
+        void AddNotifications(string group, int alert);
+        #endregion
+
 
 
     }
