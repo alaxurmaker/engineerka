@@ -21,7 +21,7 @@
 
 //        public JsonResult ImageUpload(ImageViewModel model)
 //        {
-//           // User user = new DBModels.User();
+//            // User user = new DBModels.User();
 //            int imgId = 0;
 //            var file = model.ImageFile;
 //            byte[] imagebyte = null;
@@ -60,7 +60,7 @@
 //                db.Userss.Add(img);
 //                db.SaveChanges();
 //                //     }
-                
+
 
 
 //            }
@@ -70,10 +70,10 @@
 //        public ActionResult Show(int id)
 //        {
 //            var imageData = db.Userss.FirstOrDefault(x => x.ImageId == id);
-        
+
 //            return File(imageData.ImageByte, "my_image/jpg");
 //        }
-        
+
 
 //        public ActionResult DisplayingImage(int imgid)
 //        {

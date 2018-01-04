@@ -13,9 +13,9 @@ namespace Eregister.Models
         {
             try
             {
-                var _email = "devsonetest@hotmail.com";
+                var _email = "abc123@hotmail.com";
                 var _epass = ConfigurationManager.AppSettings["EmailPassword"];
-                var _dispName = "Devsone";
+                var _dispName = "UserNAME";
                 MailMessage myMessage = new MailMessage();
                 myMessage.To.Add(email);
                 myMessage.From = new MailAddress(_email, _dispName);

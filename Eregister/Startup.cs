@@ -7,6 +7,7 @@ using Eregister.Controllers;
 using Owin;
 using System.Data.SqlClient;
 using System.Threading;
+using System.Web.Routing;
 
 [assembly: OwinStartupAttribute(typeof(Eregister.Startup))]
 namespace Eregister
@@ -24,6 +25,11 @@ namespace Eregister
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
+
+            //
+            app.MapSignalR();
+            
+            //
             //StartTimer();
         }
         private void DeleteUserFromDatabase(string userid)

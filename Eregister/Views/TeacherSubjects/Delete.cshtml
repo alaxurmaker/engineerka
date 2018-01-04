@@ -4,15 +4,15 @@
     ViewBag.Title = "Delete";
 }
 
-<h2>Delete</h2>
+<h2>Usuwanie</h2>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>Czy jesteś pewien, że chcesz to usunąc?</h3>
 <div>
-    <h4>TeacherSubject</h4>
+    <h4>Nauczyciele i przedmioty</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Subject.Name)
+            @*@Html.DisplayNameFor(model => model.Subject.Name)*@ Przedmiot
         </dt>
 
         <dd>
@@ -20,11 +20,11 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Teacher.Title)
+            @*@Html.DisplayNameFor(model => model.Teacher.Title)*@ Nauczyciel
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Teacher.Title)
+            @Html.DisplayFor(model => model.Teacher.ApplicationUser.NameSurname)
         </dd>
 
     </dl>
@@ -34,7 +34,7 @@
 
         <div class="form-actions no-color">
             <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+            @Html.ActionLink("Powrót", "Index")
         </div>
     }
 </div>

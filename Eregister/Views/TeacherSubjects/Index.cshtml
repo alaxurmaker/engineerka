@@ -4,18 +4,24 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Nauczyciele i przedmioty</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Stwórz nowy", "Create")
+</p>
+<p>
+    @Html.ActionLink("Stwórz nowy2!!!!", "Create2")
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Subject.Name)
+            @*@Html.DisplayNameFor(model => model.Subject.Name)*@ Przedmiot
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Teacher.Title)
+            @*@Html.DisplayNameFor(model => model.Teacher.Title)*@ Nauczyciel
+        </th>
+        <th>
+            @*@Html.DisplayNameFor(model => model.Teacher.Title)*@ Email nauczyciela
         </th>
         <th></th>
     </tr>
@@ -26,7 +32,10 @@
             @Html.DisplayFor(modelItem => item.Subject.Name)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Teacher.Title)
+            @Html.DisplayFor(modelItem => item.Teacher.ApplicationUser.NameSurname)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Teacher.ApplicationUser.Email)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.TeacherSubjectID }) |

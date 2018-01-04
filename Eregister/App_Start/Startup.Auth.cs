@@ -8,6 +8,7 @@ using Owin;
 using System.Configuration;
 using Eregister.Models;
 using Eregister.App_Start;
+using System.Web.Routing;
 
 //using Microsoft.Owin.Security.Facebook;
 //using Microsoft.Owin.Security.Google;
@@ -156,7 +157,6 @@ namespace Eregister//.App_Start
             //app.UseGoogleAuthentication(googleAuthenticationOptions);
 
             //#endregion Google
-
 
         }
     }
