@@ -8,6 +8,8 @@ using System.Web;
 using System.Web.Mvc;
 using Eregister;
 using Eregister.Models;
+using Microsoft.AspNet.Identity;
+using System.Data.Entity.Validation;
 
 namespace Eregister.Controllers
 {
@@ -16,23 +18,42 @@ namespace Eregister.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
 
-        public ActionResult ClassList()
+        public ActionResult Assign(int? id)
         {
-            //GroupViewModel model = new GroupViewModel();
-            //List<Group> myGroup = db.Groups.Where(x => x.GroupID == id).ToList();
+            try
+            {
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
 
-            //model.StudentsListView = new List<StudentsListViewModel>();
 
-            //foreach (var m in myGroup)
-            //{
-            //    model.StudentsListView.Add(new StudentsListViewModel()
-            //    {
-            //        NameSurname = m.Students.FirstOrDefault().ApplicationUser.NameSurname,
-            //        JoinDate = m.Students.FirstOrDefault().JoinDate,
-            //        Pesel = m.Students.FirstOrDefault().Pesel
-            //    });
-            //}
-            return PartialView();
+                Group group = db.Groups.Find(id);
+                group.OwnsEducator = true;
+                var teacherId = User.Identity.GetUserId();
+                int x = id.Value;
+                Teacher entity = db.Teachers.Where(s => s.ApplicationUser.Id == teacherId).FirstOrDefault();
+                //entity.ApplicationUser.
+                entity.ApplicationUser.Id = teacherId;
+                entity.GroupID = x;
+                db.Entry(entity).State = EntityState.Modified;
+
+                db.SaveChanges();
+               
+            }
+            catch (DbEntityValidationException ex)
+            {
+                foreach (var entityValidationErrors in ex.EntityValidationErrors)
+                {
+                    foreach (var validationError in entityValidationErrors.ValidationErrors)
+                    {
+                        Response.Write("Property: " + validationError.PropertyName + " Error: " + validationError.ErrorMessage);
+                    }
+                }
+            }
+            //  db.SaveChanges();
+
+            return RedirectToAction("CreateClass", new { id = id }); //View("CreateClass");
         }
 
 
@@ -70,7 +91,8 @@ namespace Eregister.Controllers
             Group group = db.Groups.Find(id);
 
             GroupViewModel model = new GroupViewModel();
-            
+
+            var teacher = db.Teachers?.Where(x => x.GroupID == id)?.FirstOrDefault()?.ApplicationUser?.NameSurname;
 
             List<Student> studentsList = db.Students.Where(x => String.IsNullOrEmpty(x.Group.Name)).ToList();
 
@@ -86,6 +108,9 @@ namespace Eregister.Controllers
 
             model.GroupID = id;// != null ? id : 2;
             model.Name = group.Name;
+
+            model.Teacher =  !String.IsNullOrEmpty(teacher) ? teacher : "Brak";
+
             model.Year = group.Year;
             model.ShortDescription = group.ShortDescription;
             model.StudentsSelectList = selectList;
@@ -165,6 +190,7 @@ namespace Eregister.Controllers
         // GET: Groups
         public ActionResult Index()
         {
+            var teacherGroup = db.Teachers.Where(x => x.GroupID != null).ToList();
             return View(db.Groups.ToList());
         }
 

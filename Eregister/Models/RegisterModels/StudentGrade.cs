@@ -16,6 +16,8 @@ namespace Eregister
 
         public string Grade { get; set; }
 
+        public string Grades { get; set; }
+
         [ForeignKey("Student")]
         public string UserId { get; set; }
 

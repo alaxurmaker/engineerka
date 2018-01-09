@@ -31,7 +31,7 @@
                 </div>
             </div>
         }
-        <div class=" postHeader">
+        <div class="postHeader">
             @if (Model.ID != Model.FirstPostId)
             {
                 @Html.ActionLink("<< Poprzedni", "Post", "Blog", new { slug = Model.PreviousPostSlug, sortorder = ViewBag.CurrentSort }, new { style = "float:left;" })

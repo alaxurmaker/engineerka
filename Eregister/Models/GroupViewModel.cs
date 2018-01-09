@@ -10,6 +10,7 @@ namespace Eregister.Models
     {
         // public Group Group { get; set; }
         public int? GroupID { get; set; }
+        public string Teacher { get; set; }
         public string Name { get; set; }
         public string Year { get; set; }
         public string ShortDescription { get; set; }

@@ -51,7 +51,7 @@
 
         <!--TABELKA  KATEGORIE, SEARCH-->
         @*<div class="blogControlPanel">*@
-       <div class="panel panel-default">
+       <div class="panel panel-default"; style="width:500px; margin:0 auto;">
             @using (Html.BeginForm("Wall", "Blog", FormMethod.Get, new { @class = "indexSearchForm" }))
             {
                 if (ViewBag.CurrentSearchCategory != null)

@@ -1,0 +1,40 @@
+﻿@model IEnumerable<Eregister.Models.Student>
+
+@{
+    ViewBag.Title = "MainIndex";
+}
+
+<h2>Wystawianie ocen</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            Imię i nazwisko ucznia
+        </th>
+        <th>
+            Oceny
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ApplicationUser.NameSurname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Pesel)
+            </td>
+            <td>
+                @Html.ActionLink("1", "AddGrade", new { id = item.ApplicationUser.Id, grade = 1 }) |
+                @Html.ActionLink("2", "AddGrade", new { id = item.ApplicationUser.Id, grade = 2 }) |
+                @Html.ActionLink("3", "AddGrade", new { id = item.ApplicationUser.Id, grade = 3 }) |
+                @Html.ActionLink("4", "AddGrade", new { id = item.ApplicationUser.Id, grade = 4 }) |
+                @Html.ActionLink("5", "AddGrade", new { id = item.ApplicationUser.Id, grade = 5 }) |
+                @Html.ActionLink("6", "AddGrade", new { id = item.ApplicationUser.Id, grade = 6 })
+            </td>
+        </tr>
+    }
+
+</table>

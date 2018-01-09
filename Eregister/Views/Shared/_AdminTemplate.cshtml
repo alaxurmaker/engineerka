@@ -375,7 +375,7 @@ desired effect
                                             <li><a href="#"><i class="fa fa-link"></i> <span>Wall grupy</span></a></li>
                                             <li><a href="/Groups/Index"><i class="fa fa-link"></i> <span>Zarządzaj grupami</span></a></li>
                                             <li><a href="/Subjects/Index"><i class="fa fa-link"></i> <span>Przedmioty</span></a></li>
-                                            <li><a href="/StudentGrades/Index"><i class="fa fa-link"></i> <span>Wystaw oceny</span></a></li>
+                                            <li><a href="/StudentGrades/IndexForTeacher"><i class="fa fa-link"></i> <span>Wystaw oceny</span></a></li>
                                             <li><a href="/TeacherSubjects/Index"><i class="fa fa-link"></i> <span>Przedmioty nauczyciela</span></a></li>
                                             
                                             <li><a href="/Home/About"><i class="fa fa-link"></i><span>About</span></a> </li>
@@ -541,16 +541,36 @@ desired effect
                 <!-- Settings tab content -->
                 <div class="tab-pane" id="control-sidebar-settings-tab">
                     <form method="post">
-                        <h3 class="control-sidebar-heading">General Settings</h3>
+                        <h3 class="control-sidebar-heading">Ustawienia</h3>
 
                         <div class="form-group">
                             <label class="control-sidebar-subheading">
-                                Report panel usage
+                               Edycja profilu
+                                <input type="checkbox" class="pull-right" checked>
+                            </label>
+                            <p>
+                                Zarządzaj swoim profilem, zmień zdjęcie.
+                            </p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-sidebar-subheading">
+                                Adres
+                                <input type="checkbox" class="pull-right" checked>
+                            </label>
+                            <p>
+                                Dopilnuj by podany przez Ciebie adres był poprawny.
+                            </p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-sidebar-subheading">
+                                Zmień skórkę
                                 <input type="checkbox" class="pull-right" checked>
                             </label>
 
                             <p>
-                                Some information about this general settings option
+                                Dopasuj kolor i motyw wyglądu strony pod własne upodobania.
                             </p>
                         </div>
                         <!-- /.form-group -->

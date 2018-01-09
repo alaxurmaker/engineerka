@@ -53,8 +53,6 @@ namespace Eregister.Controllers
 
             var currentTeacherSubjects = db.TeacherSubjects.Where(x => x.UserId == id)?.ToList();
 
-
-
             var subjectsIds = currentTeacherSubjects.Select(x => x.SubjectID).ToList();
 
             var dbSubjects = db.Subjects.Where(x => x.SubjectID != 0 && x.Name != null)?.ToList();
@@ -71,8 +69,7 @@ namespace Eregister.Controllers
                 {
                     var item = dbSubjects.Where(x => x.SubjectID == i).FirstOrDefault();
                     dbSubjects.Remove(item);
-                }
-                    
+                }                  
                 //if (subjectsIds.Any(x => x == y.SubjectID))
                 //    dbSubjects.Remove(y);
             }

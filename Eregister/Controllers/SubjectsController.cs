@@ -47,7 +47,7 @@ namespace Eregister.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "SubjectID,Name,Description")] Subject subject)
+        public ActionResult Create([Bind(Include = "SubjectID,Name,Level,Description")] Subject subject)
         {
             if (ModelState.IsValid)
             {
@@ -79,7 +79,7 @@ namespace Eregister.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "SubjectID,Name,Description")] Subject subject)
+        public ActionResult Edit([Bind(Include = "SubjectID,Name,Level,Description")] Subject subject)
         {
             if (ModelState.IsValid)
             {

@@ -10,7 +10,7 @@ namespace Eregister
 {
     public class TeacherSubject
     {
-        public int TeacherSubjectID { get; set; }
+        public int TeacherSubjectID { get; set; }  
 
         [ForeignKey("Teacher")]
         public string UserId { get; set; }

@@ -993,6 +993,10 @@ namespace Eregister.Controllers
             {
                 model.UrlSeo = _blogRepository.GetPostById(pageId).UrlSeo;
             }
+            else if (!pageId.Contains("main"))
+            {
+                model.UrlSeo = _blogRepository.GetPostById(pageId).UrlSeo;
+            }
 
 
             switch (sortOrder)
@@ -1123,20 +1127,11 @@ namespace Eregister.Controllers
             if (User.IsInRole("Student"))
             {
                 string classroom = _blogRepository.GetStudentGroupName(User.Identity.GetUserId());
-            //    string param = classroom + DateTime.Now.Year.ToString();
                 pageId = "groupWall" + classroom + DateTime.Now.Year.ToString();
                // _blogRepository.GetPostIdByGroupName(param); // co to?
             }
             else if (String.IsNullOrEmpty(slug) && String.IsNullOrEmpty(pageId)) pageId = "mainPage";
 
-            //if (String.IsNullOrEmpty(slug) && String.IsNullOrEmpty(pageId)) pageId = "mainPage";
-
-
-
-        
-           
-           // int numValue;
-          //  bool isIdParsed = Int32.TryParse(pageId, out numValue);
             List<int> numlist = new List<int>();
             int num = 0;
             var comments = _blogRepository.GetComments().ToList();
@@ -1186,9 +1181,12 @@ namespace Eregister.Controllers
                 //return RedirectToAction("Post", new { slug = slug });
                 return RedirectToAction("WallPostsGroups", "Blog");
             }
+            else if (!pageId.Contains("main"))
+            {
+                return RedirectToAction("Post", new { slug = slug });
+            }
             else
             {
-                //return RedirectToAction("Index", "Blog");
                 return RedirectToAction("Wall", "Blog");
             }
         }

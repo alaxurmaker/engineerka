@@ -38,7 +38,12 @@
             @*@Html.ActionLink("Szczegóły", "IndexDetails", new { id = item.GroupID }) |*@
             @Html.ActionLink("Więcej", "CreateClass", new { id = item.GroupID }) |
             @Html.ActionLink("Edit", "Edit", new { id=item.GroupID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.GroupID }) |
+            @if (item.OwnsEducator==false)
+            {
+                @Html.ActionLink("Przypisz", "Assign", new { id = item.GroupID });
+            }
+                      
+            |
             @Html.ActionLink("Delete", "Delete", new { id=item.GroupID })
         </td>
     </tr>

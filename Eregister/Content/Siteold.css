@@ -287,7 +287,8 @@ textarea {
 
     .postContainer a {
         text-decoration: none;
-        color: blue;
+        /*color: blue;*/
+        color: #337ab7;
     }
 
     .postContainer .postTitle {
@@ -624,10 +625,35 @@ blockquote {
             height: 25px;
         }
 
-    .editPostContainer .editPostCategories {
-        overflow: hidden;
+        /*moje*/
+    .editPostContainer .editPostGroupDirect {
         width: 100%;
     }
+
+        .editPostContainer .editPostGroupDirect .editPostGroupDirectLbl {
+            text-align: center;
+            float: left;
+        }
+
+    .editPostContainer .editPostTitle .editPostGroupDirectInp {
+        width: 100%;
+        display: block;
+        height: 25px;
+        border-radius: 10px;
+        text-align: center;
+    }
+
+
+
+
+
+
+
+
+.editPostContainer .editPostCategories {
+    overflow: hidden;
+    width: 100%;
+}
 
         .editPostContainer .editPostCategories .editPostCatInp {
             border: groove 2px;

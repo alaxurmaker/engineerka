@@ -1,0 +1,83 @@
+﻿@model IEnumerable<Eregister.Models.StudentGradeViewModel>
+
+@{
+    ViewBag.Title = "GoToGrades";
+}
+
+<h1>Wystawianie ocen</h1>
+<br /><br />
+<h3>@Html.DisplayFor(model => model.FirstOrDefault().GroupName)</h3>
+
+<div></div>
+<table class="table">
+    <tr>
+        <th>
+            Imię i Naziwsko:
+        </th>
+        <th>
+            Klasa:
+        </th>
+        <th>
+            Oceny:
+        </th>
+        <th>
+            Średnia ocen:
+        </th>
+        <th>
+            Wstaw ocenę:
+        </th>
+        <th>
+            Ocena końcowa:
+        </th>
+        <th>
+
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Group)
+            </td>
+            <td>
+                @if (item.Grades != "brak")
+                {
+                    int pos = 0;
+                    foreach (var i in item.Grades)
+                    {
+                        string text = i + " ";
+                        @Html.ActionLink(text, "DeleteGrade", new { userId = item.UserId, position = pos, subjectId = item.SubjectId })
+
+                        pos++;
+                    }
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Grade)
+            </td>
+            @if (item.Grades != null)
+            {
+            <td>
+                @Html.ActionLink("1", "AddGrade", new { id = item.UserId, grade = 1, subjectId = item.SubjectId }) |
+                @Html.ActionLink("2", "AddGrade", new { id = item.UserId, grade = 2, subjectId = item.SubjectId }) |
+                @Html.ActionLink("3", "AddGrade", new { id = item.UserId, grade = 3, subjectId = item.SubjectId }) |
+                @Html.ActionLink("4", "AddGrade", new { id = item.UserId, grade = 4, subjectId = item.SubjectId }) |
+                @Html.ActionLink("5", "AddGrade", new { id = item.UserId, grade = 5, subjectId = item.SubjectId }) |
+                @Html.ActionLink("6", "AddGrade", new { id = item.UserId, grade = 6, subjectId = item.SubjectId })
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndGrade)
+            </td>
+            <td>
+                @Html.ActionLink("Wystaw ocenę końcową", "EndGrade", new { id = item.UserId, subjectId = item.SubjectId, userName = item.UserName })
+            </td>
+            }
+
+        </tr>
+    }
+    </table>

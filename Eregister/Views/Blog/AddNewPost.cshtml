@@ -1,55 +1,69 @@
 ﻿@model Models.PostViewModel
 
 @{
-    ViewBag.Title = "Add New Post";
-    //Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Dodaj nowy post";
 }
 
 @using (Html.BeginForm("AddNewPost", "Blog", FormMethod.Post, new { role = "form" }))
 {
     @Html.AntiForgeryToken()
+
+    <b>Dodaj nowy post</b>
+    <br />
     <div class="editPostContainer">
         <table>
-            <tr>
-                <td>Id :</td>
-                <td colspan="2" class="editPostId">@Html.TextBoxFor(m => m.ID, new { @class = "editPostIdInp", @readonly = "readonly" })</td>
+            <tr>              
+                @*<td colspan="2" class="editPostId">@Html.TextBoxFor(m => m.ID, new { @class = "editPostIdInp", @readonly = "readonly" })</td>*@
+                <td colspan="2" class="editPostId">@Html.HiddenFor(m => m.ID)</td>              
             </tr>
 
             <tr>
-                <td>Dla grupy :</td>
+                <td>Dla grupy:</td>
                 <td colspan="2">@Html.TextBoxFor(m => m.GroupDirect, new { @class = "editPostGroupDirect" })</td>
+                <td> </td>
             </tr>
 
 
             <tr>
-                <td>Title :</td>
+                <td>Tytuł:</td>
                 <td colspan="2" class="editPostTitle">@Html.TextBoxFor(m => m.Title, new { @class = "editPostTitleInp" })</td>
+                <td> </td>
             </tr>
             <tr>
-                <td>Meta :</td>
+                <td>Meta:</td>
                 <td colspan="2">@Html.TextBoxFor(m => m.Meta, new { @class = "editPostMeta" })</td>
+                <td> </td>
             </tr>
             <tr>
-                <td>UrlSeo :</td>
+                <td>UrlSeo:</td>
                 <td colspan="2">@Html.TextBoxFor(m => m.UrlSeo, new { @class = "editPostSeo" })</td>
+                <td> </td>
             </tr>
             <tr>
-                <td>ShortDescription :</td>
+                <td>Opis:</td>
                 <td colspan="2" class="editPostDesc">
                     @Html.TextAreaFor(m => m.ShortDescription, new { @id = "editor1", Value = Model.ShortDescription })
                     <script>
-                        CKEDITOR.replace('editor1');
+                        CKEDITOR.replace('editor1',
+                            {
+                                customConfig: '/Scripts/ckEditorConfigComments.js'
+                            });
                     </script>
                 </td>
+                <td> </td>
             </tr>
             <tr>
-                <td>Body :</td>
+                <td>Treść:</td>
                 <td colspan="2" class="editPostBody">
                     @Html.TextAreaFor(m => m.Body, new { @id = "editor2", Value = Model.Body })
                     <script>
-                        CKEDITOR.replace('editor2');
+                        CKEDITOR.replace('editor2',
+                            {
+                                customConfig: '/Scripts/ckEditorConfigComments.js'
+                            });
                     </script>
                 </td>
+                <td> </td>
             </tr>
             <tr>
                 <td></td>

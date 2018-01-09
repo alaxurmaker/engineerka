@@ -34,8 +34,13 @@ namespace Eregister.Models
         public string CustomSkin { get; internal set; }
         public string NameSurname { get; internal set; }
 
+        //        //public int ImageId { get; set; }
+        //        //public string ImageTitle { get; set; }
+        public byte[] ImageByte { get; set; }
+        //        //public string ImagePath { get; set; }
 
-         public virtual Parent Parent { get; set; }
+
+        public virtual Parent Parent { get; set; }
          public virtual Teacher Teacher { get; set; }
          public virtual Student Student { get; set; }
         
@@ -60,6 +65,8 @@ namespace Eregister.Models
         [ForeignKey("Address")]
         public int? AddressID { get; set; }
 
+      //  [ForeignKey("Group")]
+        public int? GroupID { get; set; }
         //[ForeignKey("Alert")]
         //public int? AlertID { get; set; }   
         //public virtual Alert Alert { get; set; }
@@ -70,7 +77,8 @@ namespace Eregister.Models
         [Required, ForeignKey("UserId")]
         public virtual ApplicationUser ApplicationUser { get; set; }
 
-       // public virtual ICollection<Group> Groups { get; set; }
+        //public virtual Group Group { get; set; }
+        // public virtual ICollection<Group> Groups { get; set; }
         public virtual ICollection<TeacherSubject> TeacherSubjects { get; set; }
         public virtual ICollection<Alert> Alerts { get; set; }
     }
@@ -92,8 +100,11 @@ namespace Eregister.Models
         public int? GroupID { get; set; }
         public virtual Address Address { get; set; }
 
+      //  [ForeignKey("StudentSubject")]
+     //   public int StudentSubjectID { get; set; }
+        //public virtual ICollection<Subject> Subjects { get; set; }
 
-       // [Required]
+        // [Required]
         [Required, ForeignKey("UserId")]
         public virtual ApplicationUser ApplicationUser { get; set; }
         // public virtual Educator Educator { get; set; }
@@ -108,7 +119,7 @@ namespace Eregister.Models
         public virtual ICollection<StudentHistory> StudentHistories { get; set; }
         // public virtual ICollection<Group> Groups { get; set; }
         public virtual Group Group { get; set; }
-
+        public virtual ICollection<StudentSubject> StudentSubjects { get; set; }
     }
     public class Parent
     {
@@ -176,45 +187,6 @@ namespace Eregister.Models
         K
     }
 
-    //public class Student
-    //{
-    //    //public int StudentID { get; set; }
-
-    //    [Key, ForeignKey("User")]
-    //    public string UserId { get; set; }
-    //    public string FirstName { get; set; }
-
-    //    // other fields...
-
-    //    public virtual ApplicationUser User { get; set; }
-
-    //    //public string StudentId { get; set; }
-    //    //public string UserId { get; set; }
-
-    //    public string Name { get; set; }
-    //    public string Surname { get; set; }
-    //    public int? Pesel { get; set; }
-    //   // public DateTime? BirthDate { get; set; }
-    //  //  public DateTime? JoinDate { get; set; }
-    //    public string Classroom { get; set; }
-    //   // public Sex? Sex { get; set; }
-
-    //    public int? AddressID { get; set; }
-    //    //public int UserID { get; set; }
-    //    public int? EducatorID { get; set; }
-
-    //    public virtual Address Address { get; set; }
-    //    //   public virtual User User { get; set; }
-    //   // public virtual ApplicationUser User { get; set; }
-
-    //    public virtual Educator Educator { get; set; }
-    //    public virtual ICollection<StudentParent> StudentParents { get; set; }
-    //    public virtual ICollection<StudentGrade> StudentGrades { get; set; }
-    //    public virtual ICollection<StudentHistory> StudentHistories { get; set; }
-    //    public virtual ICollection<Group> Groups { get; set; }
-
-    //}
-
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
@@ -258,6 +230,7 @@ namespace Eregister.Models
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Alert> Alerts { get; set; }
         public DbSet<AlertContent> AlertContents { get; set; }
+        public DbSet<StudentSubject> StudentSubjects { get; set; }
 
         // UNCOMENT!!!!!!!!!!!!!!!!!!!!
         public DbSet<TeacherSubject> TeacherSubjects { get; set; }

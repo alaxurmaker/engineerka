@@ -13,10 +13,11 @@ namespace Eregister
     {
         [Key]
         public int GroupID { get; set; }
+        
         public string Name { get; set; }
         public string Year { get; set; }
         public string ShortDescription { get; set; }
-
+        public bool OwnsEducator { get; set; }
         // [ForeignKey("Student")]
         // public string UserId { get; set; }
 
@@ -27,6 +28,8 @@ namespace Eregister
         //  public virtual Teacher Teacher { get; set; }
         //  public virtual Subject Subject { get; set; }
 
+     //   public virtual ICollection<Teacher> Teachers { get; set; }
+      //  public virtual ICollection<Group> Groups { get; set; }
         public virtual ICollection<Student> Students { get; set; }
         //public virtual Student Student { get; set; }
 

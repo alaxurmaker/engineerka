@@ -200,6 +200,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\RoomsController.cs" />
     <Compile Include="Controllers\StudentGradesController.cs" />
+    <Compile Include="Controllers\StudentSubjectsController.cs" />
     <Compile Include="Controllers\SubjectsController.cs" />
     <Compile Include="Controllers\TeacherSubjectsController.cs" />
     <Compile Include="Controllers\UserProfileController.cs" />
@@ -271,6 +272,70 @@
     <Compile Include="Migrations\201712271906586_NotificationsUpdate.Designer.cs">
       <DependentUpon>201712271906586_NotificationsUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201801062056296_TeacherGroup.cs" />
+    <Compile Include="Migrations\201801062056296_TeacherGroup.Designer.cs">
+      <DependentUpon>201801062056296_TeacherGroup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801062135514_EducatorCheckAddToGroup.cs" />
+    <Compile Include="Migrations\201801062135514_EducatorCheckAddToGroup.Designer.cs">
+      <DependentUpon>201801062135514_EducatorCheckAddToGroup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801062204409_EducatorCheckAddToGroup2.cs" />
+    <Compile Include="Migrations\201801062204409_EducatorCheckAddToGroup2.Designer.cs">
+      <DependentUpon>201801062204409_EducatorCheckAddToGroup2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801062250025_EducatorCheckAddToGroup3.cs" />
+    <Compile Include="Migrations\201801062250025_EducatorCheckAddToGroup3.Designer.cs">
+      <DependentUpon>201801062250025_EducatorCheckAddToGroup3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801062253494_EducatorCheckAddToGroup4.cs" />
+    <Compile Include="Migrations\201801062253494_EducatorCheckAddToGroup4.Designer.cs">
+      <DependentUpon>201801062253494_EducatorCheckAddToGroup4.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801062259164_EducatorCheckAddToGroup5.cs" />
+    <Compile Include="Migrations\201801062259164_EducatorCheckAddToGroup5.Designer.cs">
+      <DependentUpon>201801062259164_EducatorCheckAddToGroup5.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801071527424_LevelAddToSubject.cs" />
+    <Compile Include="Migrations\201801071527424_LevelAddToSubject.Designer.cs">
+      <DependentUpon>201801071527424_LevelAddToSubject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801071533248_AddGradesToStudentGrade.cs" />
+    <Compile Include="Migrations\201801071533248_AddGradesToStudentGrade.Designer.cs">
+      <DependentUpon>201801071533248_AddGradesToStudentGrade.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801071627597_StudentSubjectChanges.cs" />
+    <Compile Include="Migrations\201801071627597_StudentSubjectChanges.Designer.cs">
+      <DependentUpon>201801071627597_StudentSubjectChanges.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801071631048_StudentSubjectChangesRemoveSubjects.cs" />
+    <Compile Include="Migrations\201801071631048_StudentSubjectChangesRemoveSubjects.Designer.cs">
+      <DependentUpon>201801071631048_StudentSubjectChangesRemoveSubjects.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801081345126_AddStudentSubjectTableFix.cs" />
+    <Compile Include="Migrations\201801081345126_AddStudentSubjectTableFix.Designer.cs">
+      <DependentUpon>201801081345126_AddStudentSubjectTableFix.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801081427424_AddStudentSubjectTableGradesTypeChange.cs" />
+    <Compile Include="Migrations\201801081427424_AddStudentSubjectTableGradesTypeChange.Designer.cs">
+      <DependentUpon>201801081427424_AddStudentSubjectTableGradesTypeChange.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801082310154_AddSubjectDirectToTeacherSubject.cs" />
+    <Compile Include="Migrations\201801082310154_AddSubjectDirectToTeacherSubject.Designer.cs">
+      <DependentUpon>201801082310154_AddSubjectDirectToTeacherSubject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801082311377_AddSubjectDirectToTeacherSubjectRevert.cs" />
+    <Compile Include="Migrations\201801082311377_AddSubjectDirectToTeacherSubjectRevert.Designer.cs">
+      <DependentUpon>201801082311377_AddSubjectDirectToTeacherSubjectRevert.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801082331539_AddUserEditProfile.cs" />
+    <Compile Include="Migrations\201801082331539_AddUserEditProfile.Designer.cs">
+      <DependentUpon>201801082331539_AddUserEditProfile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801090035398_AddUserEditProfilePhotos.cs" />
+    <Compile Include="Migrations\201801090035398_AddUserEditProfilePhotos.Designer.cs">
+      <DependentUpon>201801090035398_AddUserEditProfilePhotos.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountManagerModel.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -295,11 +360,14 @@
     <Compile Include="Models\RegisterModels\StudentGrade.cs" />
     <Compile Include="Models\RegisterModels\StudentHistory.cs" />
     <Compile Include="Models\RegisterModels\StudentParent.cs" />
+    <Compile Include="Models\RegisterModels\StudentSubject.cs" />
     <Compile Include="Models\RegisterModels\Subject.cs" />
     <Compile Include="Models\RegisterModels\Teacher.cs" />
     <Compile Include="Models\RegisterModels\TeacherSubject.cs" />
     <Compile Include="Models\RegisterModels\User.cs" />
+    <Compile Include="Models\StudentGradeViewModel.cs" />
     <Compile Include="Models\UserHelpers.cs" />
+    <Compile Include="Models\UserProfileViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -7636,7 +7704,6 @@
     <Content Include="Views\Rooms\Index.cshtml" />
     <Content Include="Views\Shared\_MyTemplate.cshtml" />
     <Content Include="Views\Shared\_AdminTemplate.cshtml" />
-    <Content Include="Views\UserProfile\Index.cshtml" />
     <Content Include="Views\Shared\_Entry.cshtml" />
     <Content Include="Views\Entry\Index.cshtml" />
     <Content Include="Views\Entry\Login.cshtml" />
@@ -7715,6 +7782,16 @@
     <Content Include="Views\TeacherSubjects\Index.cshtml" />
     <Content Include="Views\ChatRoom\SignalRChat.cshtml" />
     <Content Include="Views\TeacherSubjects\Create2.cshtml" />
+    <Content Include="Views\StudentGrades\MainIndex.cshtml" />
+    <Content Include="Views\StudentGrades\IndexForTeacher.cshtml" />
+    <Content Include="Views\StudentGrades\GoToGrades.cshtml" />
+    <Content Include="Views\StudentSubjects\Create.cshtml" />
+    <Content Include="Views\StudentSubjects\Delete.cshtml" />
+    <Content Include="Views\StudentSubjects\Details.cshtml" />
+    <Content Include="Views\StudentSubjects\Edit.cshtml" />
+    <Content Include="Views\StudentSubjects\Index.cshtml" />
+    <Content Include="Views\StudentGrades\EndGrade.cshtml" />
+    <Content Include="Views\UserProfile\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -7725,7 +7802,6 @@
     <Folder Include="ckeditor\skins\" />
     <Folder Include="UploadImage\" />
     <Folder Include="Views\Base\" />
-    <Folder Include="Views\Wall\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -7791,6 +7867,54 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201712271906586_NotificationsUpdate.resx">
       <DependentUpon>201712271906586_NotificationsUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801062056296_TeacherGroup.resx">
+      <DependentUpon>201801062056296_TeacherGroup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801062135514_EducatorCheckAddToGroup.resx">
+      <DependentUpon>201801062135514_EducatorCheckAddToGroup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801062204409_EducatorCheckAddToGroup2.resx">
+      <DependentUpon>201801062204409_EducatorCheckAddToGroup2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801062250025_EducatorCheckAddToGroup3.resx">
+      <DependentUpon>201801062250025_EducatorCheckAddToGroup3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801062253494_EducatorCheckAddToGroup4.resx">
+      <DependentUpon>201801062253494_EducatorCheckAddToGroup4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801062259164_EducatorCheckAddToGroup5.resx">
+      <DependentUpon>201801062259164_EducatorCheckAddToGroup5.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801071527424_LevelAddToSubject.resx">
+      <DependentUpon>201801071527424_LevelAddToSubject.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801071533248_AddGradesToStudentGrade.resx">
+      <DependentUpon>201801071533248_AddGradesToStudentGrade.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801071627597_StudentSubjectChanges.resx">
+      <DependentUpon>201801071627597_StudentSubjectChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801071631048_StudentSubjectChangesRemoveSubjects.resx">
+      <DependentUpon>201801071631048_StudentSubjectChangesRemoveSubjects.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801081345126_AddStudentSubjectTableFix.resx">
+      <DependentUpon>201801081345126_AddStudentSubjectTableFix.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801081427424_AddStudentSubjectTableGradesTypeChange.resx">
+      <DependentUpon>201801081427424_AddStudentSubjectTableGradesTypeChange.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801082310154_AddSubjectDirectToTeacherSubject.resx">
+      <DependentUpon>201801082310154_AddSubjectDirectToTeacherSubject.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801082311377_AddSubjectDirectToTeacherSubjectRevert.resx">
+      <DependentUpon>201801082311377_AddSubjectDirectToTeacherSubjectRevert.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801082331539_AddUserEditProfile.resx">
+      <DependentUpon>201801082331539_AddUserEditProfile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801090035398_AddUserEditProfilePhotos.resx">
+      <DependentUpon>201801090035398_AddUserEditProfilePhotos.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

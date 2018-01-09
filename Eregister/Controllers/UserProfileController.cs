@@ -1,85 +1,143 @@
-﻿////using DBModels;
-//using Eregister.Models;
-//using System;
-//using System.Collections.Generic;
-//using System.IO;
-//using System.Linq;
-//using System.Web;
-//using System.Web.Mvc;
+﻿//using DBModels;
+using Eregister.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
 
-//namespace Eregister.Controllers
-//{
-//    public class UserProfileController : Controller
-//    {
-//        private ApplicationDbContext db = new ApplicationDbContext();
+namespace Eregister.Controllers
+{
+    public class UserProfileController : BaseController
+    {
+        private ApplicationDbContext db = new ApplicationDbContext();
 
-//        // GET: UserProfile
-//        public ActionResult Index()
-//        {
-//            return View();//db.Users);
-//        }
+        // GET: UserProfile
+        public ActionResult Index()
+        {
+            return View();//db.Users);
+        }
 
-//        public JsonResult ImageUpload(ImageViewModel model)
-//        {
-//            // User user = new DBModels.User();
-//            int imgId = 0;
-//            var file = model.ImageFile;
-//            byte[] imagebyte = null;
-//            if (file != null)
-//            {
-//                file.SaveAs(Server.MapPath("/UploadImage/" + file.FileName));
-//                BinaryReader reader = new BinaryReader(file.InputStream);
-//                imagebyte = reader.ReadBytes(file.ContentLength);
-//                User img = new User();
-//                img.ImageTitle = file.FileName;
-//                img.ImageByte = imagebyte;
-//                img.ImagePath = "/UploadImage/" + file.FileName;
-//                //do zmiany
-//                img.Created = new DateTime();
-//                img.Created = DateTime.Now;
-//                img.Email = "testowy@vp.pl";
-//                img.LastLogin = new DateTime();
-//                img.LastLogin = DateTime.Now;
-//                img.Login = "test_obrazek";
-//                img.Password = "pw123";
-//                img.PasswordHash = "pw123";
-//                img.PasswordSalt = "pw123";
-//                img.Role = "test";
+        public ActionResult Edit()
+        {
+            var userId = User.Identity.GetUserId();
+            ApplicationUser user = db.Users.Where(x => x.Id == userId).FirstOrDefault();
 
-//                //  User ifPictureExists = db.Users.Find(img.UserID);
+            UserProfileViewModel userVM = new UserProfileViewModel();
+            userVM.UserId = user.Id;
+            userVM.Login = user.UserName;
+            userVM.Email = user.Email;
 
-//                //  if (ifPictureExists == null)
-//                // {
-//                //      db.Users.Remove(ifPictureExists);
-//                //       db.Users.Add(img);
-//                //       db.SaveChanges();
-//                //    }
-//                //     else
-//                //    { 
-//                imgId = img.ImageId;
-//                db.Userss.Add(img);
-//                db.SaveChanges();
-//                //     }
+            return View(userVM);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit([Bind(Exclude = "ImageByte")]UserProfileViewModel editUser)
+        {
+            if (ModelState.IsValid)
+            {
+                byte[] imageData = null;
+                if (Request.Files.Count > 0)
+                {
+                    HttpPostedFileBase poImgFile = Request.Files["ImageByte"];
+
+                    using (var binary = new BinaryReader(poImgFile.InputStream))
+                    {
+                        imageData = binary.ReadBytes(poImgFile.ContentLength);
+                    }
+                }
 
 
+                var usrId = User.Identity.GetUserId();
+                ApplicationUser user = db.Users.Where(x => x.Id == usrId).FirstOrDefault();
+                user.ImageByte = imageData;
+                user.UserName = editUser.Login;
+                user.Email = editUser.Email;
 
-//            }
-//            return Json(imgId, JsonRequestBehavior.AllowGet);
-//        }
-
-//        public ActionResult Show(int id)
-//        {
-//            var imageData = db.Userss.FirstOrDefault(x => x.ImageId == id);
-
-//            return File(imageData.ImageByte, "my_image/jpg");
-//        }
+                Address address = new Address();
+                address.City = editUser.City;
+                address.Country = editUser.Country;
+                address.Phone = editUser.Phone;
+                address.PostalCode = editUser.PostalCode;
+                address.Street = editUser.Street;
+                db.Addresses.Add(address);
 
 
-//        public ActionResult DisplayingImage(int imgid)
-//        {
-//            var img = db.Userss.FirstOrDefault(x => x.ImageId == imgid);
-//            //  var img = db.Users.SingleOrDefault(x => x.ImageId == imgid);
-//            return File(img.ImageByte, "image/jpg");
-//        }
-//    }
-//}
+                if(User.IsInRole("Student"))
+                {
+                    var studentAddress = db.Students.Where(x => x.UserId == usrId).FirstOrDefault();
+                    if(studentAddress.AddressID!=null & studentAddress.AddressID!=0)
+                    studentAddress.AddressID = address.AddressID;
+                }
+                if (User.IsInRole("Teacher"))
+                {
+                    var teacherAddress = db.Teachers.Where(x => x.UserId == usrId).FirstOrDefault();
+                    if (teacherAddress.AddressID != null & teacherAddress.AddressID != 0)
+                        teacherAddress.AddressID = address.AddressID;
+                }
+                if (User.IsInRole("Parent"))
+                {
+                    var parentAddress = db.Students.Where(x => x.UserId == usrId).FirstOrDefault();
+                    if (parentAddress.AddressID != null & parentAddress.AddressID != 0)
+                        parentAddress.AddressID = address.AddressID;
+                }
+
+
+
+                //db.Entry(editUser).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        public FileContentResult UserPhotos()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                String userId = User.Identity.GetUserId();
+
+                if (userId == null)
+                {
+                    string fileName = HttpContext.Server.MapPath(@"~/Images/noImg.png");
+
+                    byte[] imageData = null;
+                    FileInfo fileInfo = new FileInfo(fileName);
+                    long imageFileLength = fileInfo.Length;
+                    FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+                    BinaryReader br = new BinaryReader(fs);
+                    imageData = br.ReadBytes((int)imageFileLength);
+
+                    return File(imageData, "image/png");
+
+                }
+                // to get the user details to load user Image
+                var bdUsers = HttpContext.GetOwinContext().Get<ApplicationDbContext>();
+                var userImage = bdUsers.Users.Where(x => x.Id == userId).FirstOrDefault();
+
+                return new FileContentResult(userImage.ImageByte, "image/jpeg");
+            }
+            else
+            {
+                string fileName = HttpContext.Server.MapPath(@"~/Images/noImg.png");
+
+                byte[] imageData = null;
+                FileInfo fileInfo = new FileInfo(fileName);
+                long imageFileLength = fileInfo.Length;
+                FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+                BinaryReader br = new BinaryReader(fs);
+                imageData = br.ReadBytes((int)imageFileLength);
+                return File(imageData, "image/png");
+
+            }
+        }
+    }
+}

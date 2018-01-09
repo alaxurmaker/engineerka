@@ -110,7 +110,7 @@
                         <td>Tagi :</td>
                     }
                     @*<td style="width:30px;"><a href="@Url.Action("AddTagToPost", "Blog", new { postid = Model.ID})" class="addremoveBtn" title="Add Video"><img src="@Url.Content("~/Content/images/post/add.png")" width="25" height="25" alt="add" /></a></td>*@
-                    <td style="width:30px;"><a href="@Url.Action("AddTagToPost", "Blog", new { postid = Model.ID})" class="addremoveBtn" title="Dodaj film"><img src="@Url.Content("~/Content/images/post/add.png")" width="25" height="25" alt="add" /></a></td>
+                    <td style="width:30px;"><a href="@Url.Action("AddTagToPost", "Blog", new { postid = Model.ID})" class="addremoveBtn" title="Dodaj film"><i class="glyphicon glyphicon-plus-sign"></i></a></td>
                     <td class="editPostTags">
                         @foreach (var tag in Model.PostTags)
                         {
@@ -146,7 +146,10 @@
                 <td colspan="2" class="editPostDesc">
                     @Html.TextAreaFor(m => m.ShortDescription, new { @id = "editor1", Value = Model.ShortDescription })
                     <script>
-                        CKEDITOR.replace('editor1');
+                        CKEDITOR.replace('editor1',
+                            {
+                                customConfig: '/Scripts/ckEditorConfigComments.js'
+                            });
                     </script>
                 </td>
             </tr>
@@ -155,7 +158,10 @@
                 <td colspan="2" class="editPostBody">
                     @Html.TextAreaFor(m => m.Body, new { @id = "editor2", Value = Model.Body })
                     <script>
-                        CKEDITOR.replace('editor2');
+                        CKEDITOR.replace('editor2',
+                            {
+                                customConfig: '/Scripts/ckEditorConfigComments.js'
+                            });
                     </script>
                 </td>
             </tr>

@@ -15,6 +15,7 @@ using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using Eregister.App_Start;
+using System.Net;
 //using Facebook;
 
 
@@ -189,6 +190,23 @@ namespace Eregister.Controllers
 
                 string custEmail = null;
                 string custUserName = null;
+
+                string imageUrl = @"https://wiki.jenkins.io/images/icons/profilepics/default.png";
+                byte[] imageBytes;
+                HttpWebRequest imageRequest = (HttpWebRequest)WebRequest.Create(imageUrl);
+                WebResponse imageResponse = imageRequest.GetResponse();
+
+                Stream responseStream = imageResponse.GetResponseStream();
+
+                using (BinaryReader br = new BinaryReader(responseStream))
+                {
+                    imageBytes = br.ReadBytes(500000);
+                    br.Close();
+                }
+                responseStream.Close();
+                imageResponse.Close();
+
+
                 var user = new ApplicationUser
                 {
                     UserName = model.RegisterUsername,
@@ -206,8 +224,9 @@ namespace Eregister.Controllers
                     TokenValue = "123456",
                     TokenIsValid = true,
                     PersonSex = model.Sex,
-                    EmailConfirmed = true // <- wylaczone EmailConfirm
-            };
+                    EmailConfirmed = true, // <- wylaczone EmailConfirm
+                    ImageByte = imageBytes
+                };
 
                 var result = await UserManager.CreateAsync(user, model.RegisterPassword);
                 if(result.Succeeded)
@@ -222,34 +241,38 @@ namespace Eregister.Controllers
         else
             return RedirectToAction("Fail", "Home");
         }
-            //    if (custEmail == null && custUserName == null)
-            //    {
-            //        var result = await UserManager.CreateAsync(user, model.RegisterPassword);
-            //        if (result.Succeeded)
-            //        {
-            //            UserManager.AddToRole(user.Id, "Candidate");
-            //            // Send an email with this link
-            //            codeType = "EmailConfirmation";
-            //            await SendEmail("ConfirmEmail", "Account", user, model.RegisterEmail, "WelcomeEmail", "Confirm your account");
-            //            return RedirectToAction("ConfirmationEmailSent", "Account");
-            //        }
-            //        AddErrors(result);
-            //    }
-            //    else
-            //    {
-            //        if (custEmail != null)
-            //        {
-            //            ModelState.AddModelError("", "Email is already registered.");
-            //        }
-            //        if (custUserName != null)
-            //        {
-            //            ModelState.AddModelError("", "Username " + model.RegisterUsername.ToLower() + " is already taken.");
-            //        }
-            //    }
-            //}
-            //// If we got this far, something failed, redisplay form
-            //return View(model);
+        //    if (custEmail == null && custUserName == null)
+        //    {
+        //        var result = await UserManager.CreateAsync(user, model.RegisterPassword);
+        //        if (result.Succeeded)
+        //        {
+        //            UserManager.AddToRole(user.Id, "Candidate");
+        //            // Send an email with this link
+        //            codeType = "EmailConfirmation";
+        //            await SendEmail("ConfirmEmail", "Account", user, model.RegisterEmail, "WelcomeEmail", "Confirm your account");
+        //            return RedirectToAction("ConfirmationEmailSent", "Account");
+        //        }
+        //        AddErrors(result);
+        //    }
+        //    else
+        //    {
+        //        if (custEmail != null)
+        //        {
+        //            ModelState.AddModelError("", "Email is already registered.");
+        //        }
+        //        if (custUserName != null)
+        //        {
+        //            ModelState.AddModelError("", "Username " + model.RegisterUsername.ToLower() + " is already taken.");
+        //        }
+        //    }
         //}
+        //// If we got this far, something failed, redisplay form
+        //return View(model);
+        //}
+        #region Index
+
+
+        #endregion
 
 
         #endregion Register
