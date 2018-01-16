@@ -859,7 +859,7 @@ pre code {
   position: relative;
   min-height: 1px;
   padding-right: 15px;
-  padding-left: 15px;
+  padding-left: 25px; /*change*/
 }
 
 .col-xs-1,
@@ -1108,7 +1108,7 @@ pre code {
     width: 33.33333333333333%;
   }
   .col-md-5 {
-    width: 41.66666666666667%;
+    width: 61.66666666666667%; /*change*/
   }
   .col-md-6 {
     width: 50%;
@@ -5327,6 +5327,7 @@ a.list-group-item:focus {
 
 .panel {
   margin-bottom: 20px;
+  margin-left: 15px;
   background-color: #ffffff;
   border: 1px solid transparent;
   border-radius: 4px;

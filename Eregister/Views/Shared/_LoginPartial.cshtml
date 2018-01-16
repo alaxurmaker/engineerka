@@ -1,24 +1,20 @@
 ﻿@using Microsoft.AspNet.Identity
 
 @if (Request.IsAuthenticated)
-{
-    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
-    @Html.AntiForgeryToken()
-        <div class="pull-left">
+        using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm",  @class = "navbar-right", @style ="float: left !important;"}))
+        {
+            @Html.AntiForgeryToken()
+                <div class="pull-left">
             <ul class="nav navbar-nav navbar-right">
-                <li>
-                    @{
-                        // ApplicationUser user = context.Users.Where(u => u.UserName.Equals(userName, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
-                        var imgUrl = Url.Content("~/Content/images/profile/" + User.Identity.GetUserName() + ".png") + "?time=" + DateTime.Now.ToString();
-                    }
-                    <img src="@imgUrl" height="50" width="50" />
-                </li>
-                <li>
-                    @*@Html.ActionLink("Witaj " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })*@
-                    @Html.ActionLink("Witaj " + (ViewData["FullName"]) + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
-                </li>
-                <li><a href="javascript:document.getElementById('logoutForm').submit()">Wyloguj</a></li>
+
+                    <li>
+                        @*@Html.ActionLink("Witaj " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })*@
+                        @Html.ActionLink("Witaj " + (ViewData["FullName"]) + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", style="color: #444;" })
+
+                    </li>
+
+                <li><a style="color:#333" href="javascript:document.getElementById('logoutForm').submit()">Wyloguj</a></li>
             </ul>
         </div>
     }
@@ -26,10 +22,12 @@
 else
  
 {     
-                           <div class="pull-left">
+                           <div class="pull-left" style="margin-left:50px">
                                 <ul class="nav navbar-nav navbar-right">
-                                    <li>@Html.ActionLink("Zarejestruj", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
-                                    <li>@Html.ActionLink("Zaloguj", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+                                    <li>@Html.ActionLink("Zarejestruj", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink", style = "color: #444;" })</li>
+
+
+                                    <li>@Html.ActionLink("Zaloguj", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", style = "color: #444;" })</li>
                                 </ul>
                             </div>                       
 

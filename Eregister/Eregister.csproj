@@ -48,6 +48,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DHTMLX, Version=3.4.6379.28343, Culture=neutral, PublicKeyToken=53f24791214eb8ac, processorArchitecture=MSIL">
+      <HintPath>..\packages\DHTMLX.Scheduler.NET.3.4.1.0\lib\DHTMLX.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -194,15 +197,15 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
-    <Compile Include="Controllers\ChatRoomController.cs" />
-    <Compile Include="Controllers\EntryController.cs" />
     <Compile Include="Controllers\GroupsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\RoomsController.cs" />
+    <Compile Include="Controllers\MailController.cs" />
     <Compile Include="Controllers\StudentGradesController.cs" />
+    <Compile Include="Controllers\StudentParentsController.cs" />
     <Compile Include="Controllers\StudentSubjectsController.cs" />
     <Compile Include="Controllers\SubjectsController.cs" />
     <Compile Include="Controllers\TeacherSubjectsController.cs" />
+    <Compile Include="Controllers\TimetableController.cs" />
     <Compile Include="Controllers\UserProfileController.cs" />
     <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="DAL\EFDatabaseContext.cs" />
@@ -211,7 +214,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Hubs\ChatHub.cs" />
     <Compile Include="Migrations\201712151508144_Iinit.cs" />
     <Compile Include="Migrations\201712151508144_Iinit.Designer.cs">
       <DependentUpon>201712151508144_Iinit.cs</DependentUpon>
@@ -336,6 +338,54 @@
     <Compile Include="Migrations\201801090035398_AddUserEditProfilePhotos.Designer.cs">
       <DependentUpon>201801090035398_AddUserEditProfilePhotos.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201801102217408_AddTimetable.cs" />
+    <Compile Include="Migrations\201801102217408_AddTimetable.Designer.cs">
+      <DependentUpon>201801102217408_AddTimetable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801121714178_TitetableForGroups.cs" />
+    <Compile Include="Migrations\201801121714178_TitetableForGroups.Designer.cs">
+      <DependentUpon>201801121714178_TitetableForGroups.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801131954049_AddTeacherAuthorization.cs" />
+    <Compile Include="Migrations\201801131954049_AddTeacherAuthorization.Designer.cs">
+      <DependentUpon>201801131954049_AddTeacherAuthorization.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801131957070_AddTokensTable.cs" />
+    <Compile Include="Migrations\201801131957070_AddTokensTable.Designer.cs">
+      <DependentUpon>201801131957070_AddTokensTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801131958468_AddTokensTableDb.cs" />
+    <Compile Include="Migrations\201801131958468_AddTokensTableDb.Designer.cs">
+      <DependentUpon>201801131958468_AddTokensTableDb.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801140330286_AlertsChange.cs" />
+    <Compile Include="Migrations\201801140330286_AlertsChange.Designer.cs">
+      <DependentUpon>201801140330286_AlertsChange.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801140347031_AlertsChange2.cs" />
+    <Compile Include="Migrations\201801140347031_AlertsChange2.Designer.cs">
+      <DependentUpon>201801140347031_AlertsChange2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801142339108_AddMessaages.cs" />
+    <Compile Include="Migrations\201801142339108_AddMessaages.Designer.cs">
+      <DependentUpon>201801142339108_AddMessaages.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801142340525_AddMessages.cs" />
+    <Compile Include="Migrations\201801142340525_AddMessages.Designer.cs">
+      <DependentUpon>201801142340525_AddMessages.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801150127380_AddMessagesUpdate.cs" />
+    <Compile Include="Migrations\201801150127380_AddMessagesUpdate.Designer.cs">
+      <DependentUpon>201801150127380_AddMessagesUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801151705560_FinalGradesUpdate.cs" />
+    <Compile Include="Migrations\201801151705560_FinalGradesUpdate.Designer.cs">
+      <DependentUpon>201801151705560_FinalGradesUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801152154413_LittleChanges.cs" />
+    <Compile Include="Migrations\201801152154413_LittleChanges.Designer.cs">
+      <DependentUpon>201801152154413_LittleChanges.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountManagerModel.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -344,15 +394,18 @@
     <Compile Include="Models\GroupViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ImageViewModel.cs" />
+    <Compile Include="Models\Mail\MailModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MessageServices.cs" />
     <Compile Include="Models\BlogViewModel.cs" />
     <Compile Include="Models\RegisterModels\Address.cs" />
     <Compile Include="Models\RegisterModels\AlertContent.cs" />
     <Compile Include="Models\RegisterModels\Educator.cs" />
+    <Compile Include="Models\RegisterModels\Event.cs" />
     <Compile Include="Models\RegisterModels\FinalGrade.cs" />
     <Compile Include="Models\RegisterModels\GradeRating.cs" />
     <Compile Include="Models\RegisterModels\Group.cs" />
+    <Compile Include="Models\RegisterModels\Message.cs" />
     <Compile Include="Models\RegisterModels\Parent.cs" />
     <Compile Include="Models\RegisterModels\Room.cs" />
     <Compile Include="Models\RegisterModels\Season.cs" />
@@ -364,8 +417,10 @@
     <Compile Include="Models\RegisterModels\Subject.cs" />
     <Compile Include="Models\RegisterModels\Teacher.cs" />
     <Compile Include="Models\RegisterModels\TeacherSubject.cs" />
+    <Compile Include="Models\RegisterModels\Token.cs" />
     <Compile Include="Models\RegisterModels\User.cs" />
     <Compile Include="Models\StudentGradeViewModel.cs" />
+    <Compile Include="Models\SubjectsViewModel.cs" />
     <Compile Include="Models\UserHelpers.cs" />
     <Compile Include="Models\UserProfileViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -7020,6 +7075,7 @@
     <Content Include="Content\admin\plugins\timepicker\bootstrap-timepicker.min.js" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\images\pic.png" />
     <Content Include="Content\images\post\add.png" />
     <Content Include="Content\images\post\comment.png" />
     <Content Include="Content\images\post\delete.png" />
@@ -7031,6 +7087,13 @@
     <Content Include="Content\images\post\report.png" />
     <Content Include="Content\images\post\twitter.png" />
     <Content Include="Content\images\post\upvote.png" />
+    <Content Include="Content\images\schl1.jpg" />
+    <Content Include="Content\images\schl2.jpg" />
+    <Content Include="Content\images\schl3.JPG" />
+    <Content Include="Content\images\school.jpg" />
+    <Content Include="Content\images\school1.jpg" />
+    <Content Include="Content\images\school2.jpg" />
+    <Content Include="Content\images\school3.jpg" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\Siteold.css" />
     <Content Include="Content\user\css\simple-sidebar.css" />
@@ -7668,6 +7731,216 @@
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ckEditorConfig1.js" />
     <Content Include="Scripts\ckEditorConfigComments.js" />
+    <Content Include="Scripts\dhtmlxScheduler\dhtmlxscheduler.css" />
+    <Content Include="Scripts\dhtmlxScheduler\dhtmlxscheduler.js" />
+    <Content Include="Scripts\dhtmlxScheduler\dhtmlxscheduler_classic.css" />
+    <Content Include="Scripts\dhtmlxScheduler\dhtmlxscheduler_contrast_black.css" />
+    <Content Include="Scripts\dhtmlxScheduler\dhtmlxscheduler_contrast_white.css" />
+    <Content Include="Scripts\dhtmlxScheduler\dhtmlxscheduler_custom_lightbox.js" />
+    <Content Include="Scripts\dhtmlxScheduler\dhtmlxscheduler_flat.css" />
+    <Content Include="Scripts\dhtmlxScheduler\dhtmlxscheduler_glossy.css" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_active_links.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_agenda_view.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_all_timed.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_collision.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_container_autoresize.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_cookie.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_csp.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_daytimeline.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_drag_between.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_editors.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_expand.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_grid_view.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_html_templates.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_key_nav.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_layer.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_limit.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_live_updates.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_map_view.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_minical.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_monthheight.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_multisection.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_multiselect.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_multisource.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_mvc.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_offline.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_outerdrag.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_pdf.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_quick_info.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_readonly.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_recurring.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_serialize.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_timeline.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_tooltip.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_treetimeline.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_units.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_url.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_week_agenda.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_wp.js" />
+    <Content Include="Scripts\dhtmlxScheduler\ext\dhtmlxscheduler_year_view.js" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs\buttons.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs\but_repeat.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs\calendar.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs\clock_big.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs\clock_small.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs\collapse_expand_icon.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs\controls.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs\databg.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs\databg_now.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs\export_ical.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs\export_pdf.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs\icon.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs\images.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs\loading.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs\resize_dots.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_contrast_black\arrow_left.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_contrast_black\arrow_right.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_contrast_black\but_repeat.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_contrast_black\calendar.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_contrast_black\clock_big.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_contrast_black\clock_small.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_contrast_black\close_icon.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_contrast_black\collapse_expand_icon.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_contrast_black\controls.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_contrast_black\databg.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_contrast_black\export_ical.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_contrast_black\export_pdf.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_contrast_black\resize_dots.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_contrast_black\resizing.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_contrast_white\arrow_left.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_contrast_white\arrow_right.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_contrast_white\but_repeat.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_contrast_white\calendar.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_contrast_white\clock_big.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_contrast_white\clock_small.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_contrast_white\close_icon.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_contrast_white\collapse_expand_icon.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_contrast_white\controls.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_contrast_white\databg.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_contrast_white\export_ical.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_contrast_white\export_pdf.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_contrast_white\quick_info_edit.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_contrast_white\resize_dots.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_contrast_white\resizing.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_dhx_terrace\arrow_left.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_dhx_terrace\arrow_right.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_dhx_terrace\but_repeat.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_dhx_terrace\calendar.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_dhx_terrace\clock_big.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_dhx_terrace\clock_small.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_dhx_terrace\close_icon.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_dhx_terrace\collapse_expand_icon.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_dhx_terrace\controls.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_dhx_terrace\databg.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_dhx_terrace\databg_now.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_dhx_terrace\export_ical.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_dhx_terrace\export_pdf.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_dhx_terrace\resize_dots.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_dhx_terrace\resizing.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_flat\agenda_bg.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_flat\arrow_left.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_flat\arrow_right.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_flat\but_repeat.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_flat\calendar.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_flat\clock.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_flat\clock_big.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_flat\clock_small.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_flat\close_icon.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_flat\collapse_expand_icon.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_flat\controls.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_flat\databg.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_flat\databg_now.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_flat\export_ical.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_flat\export_pdf.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_flat\resize_dots.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_flat\resizing.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_glossy\blue_tab.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_glossy\blue_tab_wide.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_glossy\buttons.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_glossy\but_repeat.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_glossy\calendar.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_glossy\clock_big.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_glossy\clock_small.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_glossy\collapse_expand_icon.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_glossy\controlls5.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_glossy\databg.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_glossy\databg_now.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_glossy\event-bg.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_glossy\export_ical.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_glossy\export_pdf.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_glossy\icon.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_glossy\left-separator.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_glossy\left-time-bg.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_glossy\lightbox.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_glossy\loading.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_glossy\move.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_glossy\multi-days-bg.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_glossy\second-top-days-bg.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_glossy\top-days-bg.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_glossy\top-separator.gif" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_glossy\white_tab.png" />
+    <Content Include="Scripts\dhtmlxScheduler\imgs_glossy\white_tab_wide.png" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\locale_ar.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\locale_be.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\locale_ca.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\locale_cn.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\locale_cs.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\locale_da.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\locale_de.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\locale_el.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\locale_en.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\locale_es.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\locale_fi.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\locale_fr.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\locale_he.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\locale_hu.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\locale_id.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\locale_it.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\locale_jp.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\locale_nb.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\locale_nl.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\locale_no.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\locale_pl.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\locale_pt.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\locale_ro.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\locale_ru.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\locale_si.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\locale_sk.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\locale_sv.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\locale_tr.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\locale_ua.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\locale_recurring_be.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\locale_recurring_cn.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\locale_recurring_cs.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\locale_recurring_da.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\locale_recurring_de.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\locale_recurring_el.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\locale_recurring_en.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\locale_recurring_es.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\locale_recurring_fi.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\locale_recurring_fr.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\locale_recurring_it.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\locale_recurring_nb.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\locale_recurring_nl.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\locale_recurring_pl.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\locale_recurring_pt.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\locale_recurring_ro.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\locale_recurring_ru.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\locale_recurring_sk.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\locale_recurring_sv.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\locale_recurring_ua.js" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\repeat_template_be.html" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\repeat_template_cn.html" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\repeat_template_de.html" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\repeat_template_el.html" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\repeat_template_en.html" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\repeat_template_es.html" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\repeat_template_fr.html" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\repeat_template_it.html" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\repeat_template_nl.html" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\repeat_template_ro.html" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\repeat_template_ru.html" />
+    <Content Include="Scripts\dhtmlxScheduler\locale\recurring\repeat_template_sk.html" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -7697,16 +7970,9 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Rooms\Create.cshtml" />
-    <Content Include="Views\Rooms\Delete.cshtml" />
-    <Content Include="Views\Rooms\Details.cshtml" />
-    <Content Include="Views\Rooms\Edit.cshtml" />
-    <Content Include="Views\Rooms\Index.cshtml" />
     <Content Include="Views\Shared\_MyTemplate.cshtml" />
     <Content Include="Views\Shared\_AdminTemplate.cshtml" />
     <Content Include="Views\Shared\_Entry.cshtml" />
-    <Content Include="Views\Entry\Index.cshtml" />
-    <Content Include="Views\Entry\Login.cshtml" />
     <Content Include="Views\UserProfile\Show.cshtml" />
     <Content Include="Views\Blog\AddCategoryToPost.cshtml" />
     <Content Include="Views\Blog\AddNewCategory.cshtml" />
@@ -7752,7 +8018,7 @@
     <Content Include="Views\Home\Fail.cshtml" />
     <Content Include="Views\Blog\Wall.cshtml" />
     <Content Include="Views\Blog\WallPosts.cshtml" />
-    <Content Include="Views\Blog\TeachersList.cshtml" />
+    <Content Include="Views\Home\TeachersList.cshtml" />
     <Content Include="Views\Blog\WallComments.cshtml" />
     <Content Include="Views\Blog\WallPostsGroups.cshtml" />
     <Content Include="Views\Blog\WallPostsGroupsContent.cshtml" />
@@ -7780,7 +8046,6 @@
     <Content Include="Views\TeacherSubjects\Details.cshtml" />
     <Content Include="Views\TeacherSubjects\Edit.cshtml" />
     <Content Include="Views\TeacherSubjects\Index.cshtml" />
-    <Content Include="Views\ChatRoom\SignalRChat.cshtml" />
     <Content Include="Views\TeacherSubjects\Create2.cshtml" />
     <Content Include="Views\StudentGrades\MainIndex.cshtml" />
     <Content Include="Views\StudentGrades\IndexForTeacher.cshtml" />
@@ -7792,6 +8057,24 @@
     <Content Include="Views\StudentSubjects\Index.cshtml" />
     <Content Include="Views\StudentGrades\EndGrade.cshtml" />
     <Content Include="Views\UserProfile\Edit.cshtml" />
+    <Content Include="Views\UserProfile\View.cshtml" />
+    <Content Include="Views\Timetable\IndexForStudent.cshtml" />
+    <Content Include="Views\Home\Gallery.cshtml" />
+    <Content Include="Views\Timetable\Timetables.cshtml" />
+    <Content Include="Views\Timetable\IndexforTeacher.cshtml" />
+    <Content Include="Views\Home\_ModalAuthorize.cshtml" />
+    <Content Include="Views\Admin\Tokens.cshtml" />
+    <Content Include="Views\Admin\EditToken.cshtml" />
+    <Content Include="Views\Mail\_ModalMail.cshtml" />
+    <Content Include="Views\Mail\_ModalMessages.cshtml" />
+    <Content Include="Views\StudentGrades\IndexForStudent.cshtml" />
+    <Content Include="Views\StudentGrades\GoToStudentGrades.cshtml" />
+    <Content Include="Views\StudentParents\Create.cshtml" />
+    <Content Include="Views\StudentParents\Delete.cshtml" />
+    <Content Include="Views\StudentParents\Details.cshtml" />
+    <Content Include="Views\StudentParents\Edit.cshtml" />
+    <Content Include="Views\StudentParents\Index.cshtml" />
+    <Content Include="Views\StudentParents\IndexForParent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -7915,6 +8198,42 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201801090035398_AddUserEditProfilePhotos.resx">
       <DependentUpon>201801090035398_AddUserEditProfilePhotos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801102217408_AddTimetable.resx">
+      <DependentUpon>201801102217408_AddTimetable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801121714178_TitetableForGroups.resx">
+      <DependentUpon>201801121714178_TitetableForGroups.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801131954049_AddTeacherAuthorization.resx">
+      <DependentUpon>201801131954049_AddTeacherAuthorization.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801131957070_AddTokensTable.resx">
+      <DependentUpon>201801131957070_AddTokensTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801131958468_AddTokensTableDb.resx">
+      <DependentUpon>201801131958468_AddTokensTableDb.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801140330286_AlertsChange.resx">
+      <DependentUpon>201801140330286_AlertsChange.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801140347031_AlertsChange2.resx">
+      <DependentUpon>201801140347031_AlertsChange2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801142339108_AddMessaages.resx">
+      <DependentUpon>201801142339108_AddMessaages.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801142340525_AddMessages.resx">
+      <DependentUpon>201801142340525_AddMessages.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801150127380_AddMessagesUpdate.resx">
+      <DependentUpon>201801150127380_AddMessagesUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801151705560_FinalGradesUpdate.resx">
+      <DependentUpon>201801151705560_FinalGradesUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801152154413_LittleChanges.resx">
+      <DependentUpon>201801152154413_LittleChanges.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

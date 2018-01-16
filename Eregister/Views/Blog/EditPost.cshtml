@@ -8,142 +8,155 @@
 @using (Html.BeginForm("EditPost", "Blog", FormMethod.Post, new { role = "form" }))
 {
     @Html.AntiForgeryToken()
-    <div class="editPostContainer">
-        <table>
-            <tr>
-                <td>Id :</td>
-                <td colspan="2" class="editPostId">@Html.TextBoxFor(m => m.ID, new { @class = "editPostIdInp", @readonly = "readonly" })</td>
-            </tr>
-            <tr>
-                <td>Tytuł :</td>
-                <td colspan="2" class="editPostTitle">@Html.TextBoxFor(m => m.Title, new { @class = "editPostTitleInp" })</td>
-            </tr>
-            <tr>
-                <td>Dla grupy :</td>
-                @if (Model.GroupDirect != "" || Model.GroupDirect != null)
-                {
-                    <td colspan="2" class="editPostTitle">@Html.TextBoxFor(m => m.GroupDirect, new { @class = "editPostGroupDirect" })</td>
-                }
-                else
-                {
-                    <td colspan="2" class="editPostTitle">Dla wszystkich</td>
-                }
 
-            </tr>
 
-            @if (Model.Videos.Count() > 0)
-            {
-                <tr>
-                    @if (Model.Videos.Count() == 1)
+
+<div class="box box-info">
+    <div class="box-header with-border">
+        <h3 class="box-title">Dodaj nowy post</h3>
+    </div>
+    <form class="form-horizontal">
+        <div class="box-body">
+            @Html.HiddenFor(m => m.ID)
+            <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label" style="margin-bottom: 20px;">Dla grupy</label>
+                <div class="col-sm-10" style="margin-bottom: 20px;">
+                 
+                    @if (Model.GroupDirect != "" || Model.GroupDirect != null)
                     {
-                        <td>URL filmu :</td>
+                        @Html.TextBoxFor(m => m.GroupDirect, new { @class = "form-control" })
                     }
                     else
                     {
-                        <td>Scieżki URL filmów :</td>
+                        <t>Dla wszystkich</t>
                     }
-                    @*<td style="width:30px;"><a href="@Url.Action("AddVideoToPost", "Blog", new { postid = Model.ID,slug=Model.UrlSeo})" class="addremoveBtn" title="Add Video"><img src="@Url.Content("~/Content/images/post/add.png")" width="25" height="25" alt="add" /></a></td>*@
-                    <td style="width:30px;"><a href="@Url.Action("AddVideoToPost", "Blog", new { postid = Model.ID,slug=Model.UrlSeo})" class="addremoveBtn" title="Add Video"><i class="glyphicon glyphicon-plus-sign"></i></a></td>
-                    <td class="editPostVideo">
-                        @foreach (var video in Model.Videos)
-                        {
-                            <div class="editPostVidCont">
-                                <a href="@video.VideoUrl" class="editPostVideoInp" style="text-decoration:none;color:blue;float:left;">@video.VideoUrl</a>
-                                @*<a href="@Url.Action("RemoveVideoFromPost", "Blog", new { postid = Model.ID,slug=Model.UrlSeo,videoUrl=video.VideoUrl })" class="addremoveBtn" title="Remove Video"><img src="@Url.Content("~/Content/images/post/remove.png")" width="25" height="25" alt="remove" /></a>*@
-                                <a href="@Url.Action("RemoveVideoFromPost", "Blog", new { postid = Model.ID,slug=Model.UrlSeo,videoUrl=video.VideoUrl })" class="addremoveBtn" title="Remove Video"><i class="glyphicon glyphicon-remove"></i></a>
-                            </div>
-                        }
-                    </td>
-                </tr>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword3" class="col-sm-2 control-label" style="margin-bottom: 20px;">Tytuł</label>
+                <div class="col-sm-10" style="margin-bottom: 20px;">
+                    @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+                </div>
+            </div>
+
+            @if (Model.Videos.Count() > 0)
+            {
+                <div class="form-group">
+                    @if (Model.Videos.Count() == 1)
+                    {
+                        <label for="inputPassword3" class="col-sm-2 control-label" style="margin-bottom: 20px;">URL filmu</label>
+                    }
+                    else
+                    {
+                        <label for="inputPassword3" class="col-sm-2 control-label" style="margin-bottom: 20px;">Ścieżki URL filmów</label>
+                    }
+                    <div class="col-sm-10" style="margin-bottom: 20px;">
+                        <a href="@Url.Action("AddVideoToPost", "Blog", new { postid = Model.ID, slug = Model.UrlSeo })" class="addremoveBtn" title="Add Video"><i class="glyphicon glyphicon-plus-sign"></i></a>
+                            @foreach (var video in Model.Videos)
+                            {
+                                <div class="editPostVidCont">
+                                    <a href="@video.VideoUrl" class="editPostVideoInp" style="text-decoration:none;color:blue;float:left;">@video.VideoUrl</a>
+                                    <a href="@Url.Action("RemoveVideoFromPost", "Blog", new { postid = Model.ID, slug = Model.UrlSeo, videoUrl = video.VideoUrl })" class="addremoveBtn" title="Remove Video"><i class="glyphicon glyphicon-remove"></i></a>
+                                </div>
+                            }                     
+                    </div>
+                </div>
             }
             else
             {
-                <tr>
-                    <td>URL filmu :</td>
-                    @*<td colspan="2"><a href="@Url.Action("AddVideoToPost", "Blog", new { postid = Model.ID,slug=Model.UrlSeo})" class="addremoveBtn" title="Add Video"><img src="@Url.Content("~/Content/images/post/add.png")" width="25" height="25" alt="add" /></a></td>*@
-                    <td colspan="2"><a href="@Url.Action("AddVideoToPost", "Blog", new { postid = Model.ID,slug=Model.UrlSeo})" class="addremoveBtn" title="Add Video"><i class="glyphicon glyphicon-plus-sign"></i></a></td>
-                </tr>
+                <div class="form-group">
+                        <label for="inputPassword3" class="col-sm-2 control-label" style="margin-bottom: 20px;">URL filmu</label>               
+                    <div class="col-sm-10" style="margin-bottom: 20px;">
+                        <a href="@Url.Action("AddVideoToPost", "Blog", new { postid = Model.ID, slug = Model.UrlSeo })" class="addremoveBtn" title="Add Video"><i class="glyphicon glyphicon-plus-sign"></i></a>
+                    </div>
+                </div>
             }
 
             @if (Model.PostCategories.Count() > 0)
             {
-                <tr>
+                <div class="form-group">
                     @if (Model.PostCategories.Count() == 1)
                     {
-                        <td>Kategoria :</td>
+                        <label for="inputPassword3" class="col-sm-2 control-label" style="margin-bottom: 20px;">Kategoria</label>
                     }
                     else
                     {
-                        <td>Kategorie :</td>
+                        <label for="inputPassword3" class="col-sm-2 control-label" style="margin-bottom: 20px;">Kategorie</label>
                     }
-                    @*<td style="width:30px;"><a href="@Url.Action("AddCategoryToPost", "Blog", new { postid = Model.ID})" class="addremoveBtn" title="Add Video"><img src="@Url.Content("~/Content/images/post/add.png")" width="25" height="25" alt="add" /></a></td>*@
-                    <td style="width:30px;"><a href="@Url.Action("AddCategoryToPost", "Blog", new { postid = Model.ID})" class="addremoveBtn" title="Add Video"><i class="glyphicon glyphicon-plus-sign"></i></a></td>
-                    <td class="editPostCategories">
-                        @foreach (var cat in Model.PostCategories)
-                        {
-                            <div class="editPostCatInp">
-                                <div class="catName">@cat.Name</div>
-                                @*<a href="@Url.Action("RemoveCategoryFromPost", "Blog", new { postid = Model.ID,slug=Model.UrlSeo,catName=cat.Name })" class="addremoveBtn" title="Add Video"><img src="@Url.Content("~/Content/images/post/remove.png")" width="25" height="25" alt="add" /></a>*@
-                                <a href="@Url.Action("RemoveCategoryFromPost", "Blog", new { postid = Model.ID,slug=Model.UrlSeo,catName=cat.Name })" class="addremoveBtn" title="Add Video"><i class="glyphicon glyphicon-remove"></i></a>
-                            </div>
-                        }
-                    </td>
-                </tr>
+                    <div class="col-sm-10" style="margin-bottom: 20px;">
+                        <a href="@Url.Action("AddCategoryToPost", "Blog", new { postid = Model.ID })" class="addremoveBtn" title="Add Video"><i class="glyphicon glyphicon-plus-sign"></i></a>
+                            @foreach (var cat in Model.PostCategories)
+                            {
+                                if (cat != null)
+                                {
+                                    <div class="editPostCatInp">
+                                        <div class="catName">@cat.Name</div>
+                                        <a href="@Url.Action("RemoveCategoryFromPost", "Blog", new { postid = Model.ID, slug = Model.UrlSeo, catName = cat.Name })" class="addremoveBtn" title="Add Video"><i class="glyphicon glyphicon-remove"></i></a>
+                                    </div>
+                                }
+                            }                   
+                    </div>
+                </div>
             }
             else
             {
-                <tr>
-                    <td>Kategoria :</td>
-                    @*<td colspan="2"><a href="@Url.Action("AddCategoryToPost", "Blog", new { postid = Model.ID})" class="addremoveBtn" title="Add Category"><img src="@Url.Content("~/Content/images/post/add.png")" width="25" height="25" alt="add" /></a></td>*@
-                    <td colspan="2"><a href="@Url.Action("AddCategoryToPost", "Blog", new { postid = Model.ID})" class="addremoveBtn" title="Add Category"><i class="glyphicon glyphicon-plus-sign"></i></a></td>
-                </tr>
-            }
-            @if (Model.PostTags != null)
-            {
-                <tr>
-                    @if (Model.PostTags.Count() == 1)
-                    {
-                        <td>Tag :</td>
-                    }
-                    else
-                    {
-                        <td>Tagi :</td>
-                    }
-                    @*<td style="width:30px;"><a href="@Url.Action("AddTagToPost", "Blog", new { postid = Model.ID})" class="addremoveBtn" title="Add Video"><img src="@Url.Content("~/Content/images/post/add.png")" width="25" height="25" alt="add" /></a></td>*@
-                    <td style="width:30px;"><a href="@Url.Action("AddTagToPost", "Blog", new { postid = Model.ID})" class="addremoveBtn" title="Dodaj film"><i class="glyphicon glyphicon-plus-sign"></i></a></td>
-                    <td class="editPostTags">
-                        @foreach (var tag in Model.PostTags)
-                        {
-                            <div class="editPostTagInp">
-                                <div class="tagName">@tag.Name</div>
-                                @*<a href="@Url.Action("RemoveTagFromPost", "Blog", new { postid = Model.ID,slug=Model.UrlSeo,tagName=tag.Name })" class="addremoveBtn" title="Add Video"><img src="@Url.Content("~/Content/images/post/remove.png")" width="25" height="25" alt="add" /></a>*@
-                                <a href="@Url.Action("RemoveTagFromPost", "Blog", new { postid = Model.ID,slug=Model.UrlSeo,tagName=tag.Name })" class="addremoveBtn" title="Dodaj film"><i class="glyphicon glyphicon-remove"></i></a>
-                               
-                            </div>
-                        }
-                    </td>
-                </tr>
-            }
-            else
-            {
-                <tr>
-                    <td>Tag :</td>
-                    @*<td colspan="2"><a href="@Url.Action("AddTagToPost", "Blog", new { postid = Model.ID})" class="addremoveBtn" title="Add Tag"><img src="@Url.Content("~/Content/images/post/add.png")" width="25" height="25" alt="add" /></a></td>*@
-                    <td colspan="2"><a href="@Url.Action("AddTagToPost", "Blog", new { postid = Model.ID})" class="addremoveBtn" title="Add Tag"><i class="glyphicon glyphicon-plus-sign"></i></a></td>
-                </tr>
+                <div class="form-group">
+                    <label for="inputPassword3" class="col-sm-2 control-label" style="margin-bottom: 20px;">Kategoria </label>
+                    <div class="col-sm-10" style="margin-bottom: 20px;">
+                        <a href="@Url.Action("AddCategoryToPost", "Blog", new { postid = Model.ID })" class="addremoveBtn" title="Add Category"><i class="glyphicon glyphicon-plus-sign"></i></a>
+                    </div>
+                </div>
             }
 
-            <tr>
-                <td>Meta :</td>
-                <td colspan="2">@Html.TextBoxFor(m => m.Meta, new { @class = "editPostMeta" })</td>
-            </tr>
-            <tr>
-                <td>UrlSeo :</td>
-                <td colspan="2">@Html.TextBoxFor(m => m.UrlSeo, new { @class = "editPostSeo" })</td>
-            </tr>
-            <tr>
-                <td>Krótki opis :</td>
-                <td colspan="2" class="editPostDesc">
+            @if (Model.PostTags != null)
+            {
+                <div class="form-group">
+                    @if (Model.PostTags.Count() == 1)
+                    {
+                        <label for="inputPassword3" class="col-sm-2 control-label" style="margin-bottom: 20px;">Tag </label>
+                    }
+                    else
+                    {
+                        <label for="inputPassword3" class="col-sm-2 control-label style="margin-bottom: 20px;"">Tagi </label>
+                    }
+                    <div class="col-sm-10" style="margin-bottom: 20px;">
+                        <a href="@Url.Action("AddTagToPost", "Blog", new { postid = Model.ID })" class="addremoveBtn" title="Dodaj tag"><i class="glyphicon glyphicon-plus-sign"></i></a>
+                            @foreach (var tag in Model.PostTags)
+                            {
+                                @*<div class="editPostTagInp">*@
+                                    <div class="tagName">@tag.Name</div>                               
+                                    <a href="@Url.Action("RemoveTagFromPost", "Blog", new { postid = Model.ID, slug = Model.UrlSeo, tagName = tag.Name })" class="addremoveBtn" title="Dodaj film"><i class="glyphicon glyphicon-remove"></i></a>
+                                @*</div>*@
+                            }                                             
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <label for="inputPassword3" class="col-sm-2 control-label" style="margin-bottom: 20px;">Tag </label>
+                    <div class="col-sm-10" style="margin-bottom: 20px;">
+                        <a href="@Url.Action("AddTagToPost", "Blog", new { postid = Model.ID })" class="addremoveBtn" title="Add Tag"><i class="glyphicon glyphicon-plus-sign"></i></a>
+                    </div>
+                </div>
+            }
+
+            <div class="form-group">
+                <label for="inputPassword3" class="col-sm-2 control-label" style="margin-bottom: 20px;">Meta</label>
+                <div class="col-sm-10" style="margin-bottom: 20px;">
+                    @Html.TextBoxFor(m => m.Meta, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword3" class="col-sm-2 control-label" style="margin-bottom: 20px;">Url SEO</label>
+                <div class="col-sm-10" style="margin-bottom: 20px;">
+                    @Html.TextBoxFor(m => m.UrlSeo, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword3" class="col-sm-2 control-label" style="margin-bottom: 20px;">Opis</label>
+
+                <div class="col-sm-10" style="margin-bottom: 20px;">
                     @Html.TextAreaFor(m => m.ShortDescription, new { @id = "editor1", Value = Model.ShortDescription })
                     <script>
                         CKEDITOR.replace('editor1',
@@ -151,11 +164,11 @@
                                 customConfig: '/Scripts/ckEditorConfigComments.js'
                             });
                     </script>
-                </td>
-            </tr>
-            <tr>
-                <td>Body :</td>
-                <td colspan="2" class="editPostBody">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword3" class="col-sm-2 control-label" style="margin-bottom: 20px;">Treść</label>
+                <div class="col-sm-10" style="margin-bottom: 20px;">
                     @Html.TextAreaFor(m => m.Body, new { @id = "editor2", Value = Model.Body })
                     <script>
                         CKEDITOR.replace('editor2',
@@ -163,14 +176,12 @@
                                 customConfig: '/Scripts/ckEditorConfigComments.js'
                             });
                     </script>
-                </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td colspan="3" class="editPostBody"><input class="comTextBtn" type="submit" value="&#x27a5;" /></td>
-            </tr>
-        </table>
-    </div>
+                </div>
+            </div>
+        </div>
+        <div class="box-footer">
+            <input class="comTextBtn" type="submit" value="&#x27a5;" />
+        </div>
+    </form>
+</div>
 }
-
-

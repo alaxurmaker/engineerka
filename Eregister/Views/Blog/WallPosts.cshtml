@@ -11,7 +11,7 @@
 <div style="overflow:hidden;width:100%;">
     <table style="float:right;">
         <tr>
-            <th>Sort by :</th>
+            <th>Sortuj :</th>
             <th>
                 @using (Html.BeginForm("Wall", "Blog", FormMethod.Get))
             {
@@ -31,7 +31,7 @@
                     }
                     <input type="hidden" name="searchString" value="@ViewBag.CurrentSearchString" />
                     <input type="hidden" name="sortOrder" value="@ViewBag.DateSortParm" />
-                    <input class="submitBtnLink" type="submit" value="Date" />
+                    <input class="submitBtnLink" type="submit" value="Data" />
                 }
             </th>
             <th class="tableTitle">
@@ -53,7 +53,7 @@
                     }
                     <input type="hidden" name="searchString" value="@ViewBag.CurrentSearchString" />
                     <input type="hidden" name="sortOrder" value="@ViewBag.TitleSortParm" />
-                    <input class="submitBtnLink" type="submit" value="Title" />
+                    <input class="submitBtnLink" type="submit" value="Tytuł" />
                 }
             </th>
         </tr>
@@ -74,8 +74,8 @@
     //var timeAgo = blgCtrler.TimeAgo(post.PostedOn);
     string postedAgo = blgCtrler.TimeAgo(post.PostedOn);
 
-    <div class="container">
-        <div class="col-md-5">
+    @*<div class="container">*@
+        <div class="col-md-5" style="margin-left: 100px; width: 70.66666667%; margin-top: 50px;">
             <div class="panel panel-default">
                 <div class="panel-body">
                     <section class="post-heading">
@@ -84,7 +84,7 @@
                                 <div class="media">
                                     <div class="media-left">
                                         <a href="#">
-                                            <img class="media-object photo-profile" src="http://0.gravatar.com/avatar/38d618563e55e6082adf4c8f8c13f3e4?s=40&d=mm&r=g" width="40" height="40" alt="...">
+                                            <img class="media-object photo-profile" src="@Url.Action("UserCommentPhotos", "UserProfile", new { id = post.Post.UserName } )" width="40" height="40" alt="...">
                                         </a>
                                     </div>
                                     <div class="media-body">
@@ -135,12 +135,14 @@
                                     var postVideos = blogCtrl.GetPostVideos(post.Post);
                                     if (postVideos != null)
                                     {
-                                        <div class="postVidCont">
-                                            @foreach (var video in postVideos)
+
+                                            foreach (var video in postVideos)
                                             {
-                                                <a href="@video.VideoUrl" class="postVidThumb" target="_blank"><img src="@Url.Content(video.VideoThumbnail)" width="200" height="160" /></a>
+                                                <div class="postVidCont" style="height:280px;">
+                                                    <iframe title='YouTube video' src=@video.VideoUrl frameborder='0' allowfullscreen='1' style="position: initial;top: 0;left: 0; width: 100%;height: 100%;"></iframe>
+                                                </div>
                                             }
-                                        </div>
+                                        
                                     }
                                 }
                                 @Html.Raw(post.ShortDescription)
@@ -162,62 +164,44 @@
                         <a href="#" class="anchor-time">@post.PostedOn.ToShortDateString()</a> <!-- data dodania -->
                     </div>
 
-                    <section class="post-footer">
-                        <hr>
-                        <div class="post-footer-option container">
-                            <div>
-                                @if (total >= 0)
-                                {
-                                    <ul @*class="list-unstyled"*@>
-                                        <li>
-                                            <a href="#">
-                                                <i class="glyphicon glyphicon-thumbs-up"></i>                                            
-                                               Podziękowało: <font color="green">@total</font>
-                                                @*<h4 style="color:green;">@total</h4>*@
-                                            </a>
-                                        </li>
-                                    </ul>
-                                }
-                                else
-                                {
-                                    <ul @*class="list-unstyled"*@>
-                                        <li>
-                                            <a href="#">
-                                                <i class="glyphicon glyphicon-thumbs-up"></i>
-                                                Podziękowało: <font color:#b50000>@total</font>
-                                                @*<h4 style="color:#b50000;">@total</h4>*@
-                                            </a>
-                                        </li>
-                                    </ul>    
-                                }
-                            </div>
-                            <div>
-                                <ul class="list-unstyled">
-                                    <li><a href="#"><i class="glyphicon glyphicon-comment"></i> Komentarz</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="post-footer-comment-wrapper">
-                            <div class="comment-form">
+                    <section class="post-footer" style="margin-top:50px;">
+                        @if (total >= 0)
+                        {
+                           
+                                    <a>
+                                        <h4>
+                                            <i class="glyphicon glyphicon-thumbs-up"></i>
+                                            Podziękowało: <font color="green">@total</font>
+                                        </h4>
+                                    </a>
 
+                            
+                        }
+                        else
+                        {
+                            <ul>
+                                @*class="list-unstyled"*@
+                                <li>
+                                    <a>
+                                        <i class="glyphicon glyphicon-thumbs-up"></i>
+                                        Podziękowało: <font color:#b50000>@total</font>
+       
+                                    </a>
+                                </li>
+                            </ul>
+                        }
+                      
+
+                        @*<div class="post-footer-option container">
+                            <div>
                             </div>
-                            <div class="comment">
-                                <div class="media">
-                                    <div class="media-left">
-                                        <a href="#">
-                                            <img class="media-object photo-profile" src="http://0.gravatar.com/avatar/38d618563e55e6082adf4c8f8c13f3e4?s=40&d=mm&r=g" width="32" height="32" alt="...">
-                                        </a>
-                                    </div>
-                                    @*@{Html.RenderPartial("WallComments", Model.CommentViewModel);}*@  <!--dodalem by wyswietlac komentarze pod postem-->
-                                      
-                                </div>
-                            </div>
-                        </div>
+                        </div>*@
+
                     </section>
                 </div>
             </div>
         </div>
-    </div>
+    @*</div>*@
 }
 <div id="spacer"></div>
 <div class="paging">

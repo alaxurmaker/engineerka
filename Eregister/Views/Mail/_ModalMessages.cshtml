@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Eregister.Message>
+
+<div class="modal-body">
+        <div class="box box-info">
+            <div class="box-header with-border">
+                <h3 class="box-title">Twoje wiadomości</h3>
+            </div>
+            <form class="form-horizontal">
+                <div class="box-body">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th>Od</th>
+                                <th>E-mail</th>
+                                <th>Tytuł</th>
+                                <th>Treść</th>
+                            </tr>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.UserFrom)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.From)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Title)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Body)
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    </div>
+                <div class="box-footer">
+                    <button type="submit" class="btn btn-default pull-right" data-dismiss="modal">Powrót</button>
+                </div>
+            </form>
+        </div>    
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#approve-btn').click(function () {
+            $('#modal-container').modal('hide');
+        });
+    });
+</script>

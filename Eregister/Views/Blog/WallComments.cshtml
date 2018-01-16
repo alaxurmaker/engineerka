@@ -4,12 +4,12 @@
 @using Microsoft.AspNet.Identity
 @using System.Web
 <div class="bottomContainer">
-    <div class="commentContainer">
+    <div class="commentContainer" style="width: 90%;">
         <div class="commHeader">
             <table class="commentSort">
                 <tr>
-                    <td>@Html.ActionLink("Best", "Post", "Blog", new { slug = Model.UrlSeo, sortOrder = ViewBag.BestSortParm }, new { @id = ViewBag.BestSortLink })</td>
-                    <td>@Html.ActionLink("Date", "Post", "Blog", new { slug = Model.UrlSeo, sortOrder = ViewBag.DateSortParm }, new { @id = ViewBag.DateSortLink })</td>
+                    <td>@Html.ActionLink("Najlepsze", "Post", "Blog", new { slug = Model.UrlSeo, sortOrder = ViewBag.BestSortParm }, new { @id = ViewBag.BestSortLink })</td>
+                    <td>@Html.ActionLink("Data", "Post", "Blog", new { slug = Model.UrlSeo, sortOrder = ViewBag.DateSortParm }, new { @id = ViewBag.DateSortLink })</td>
                 </tr>
             </table>
             @*<img src="@Url.Content("~/Content/images/post/comment.png")" width="30" height="20" alt="like" />*@
@@ -28,7 +28,7 @@
             <table class="newComment">
                 <tr>
                     @*<td style="width:50px;vertical-align: top;"><div class="comImg"><img src="@imgUrl" height="50" width="50" /></div></td>*@     <!-- PO WPROWADZENIU ZDJEC-->
-                    <td style="width:50px;vertical-align: top;"><div class="comImg"><img class="media-object photo-profile" src="http://0.gravatar.com/avatar/38d618563e55e6082adf4c8f8c13f3e4?s=40&d=mm&r=g" width="45" height="45" alt="..."/></div></td>
+                    <td style="width:50px;vertical-align: top;"><div class="comImg"><img class="media-object photo-profile" src="@Url.Action("UserPhotos", "UserProfile" )" width="45" height="45" alt="..."/></div></td>
                     <td style="vertical-align:middle; min-height:40px;" class="comText" id="@ncmDetails[0]">
                         @using (Html.BeginForm("NewComment", "Blog", FormMethod.Post, new { @class = "comTextdivParent", role = "form"}))
                         {
@@ -63,17 +63,12 @@
             var dislikes = blgCtrl.LikeDislikeCount("commentdislike", comment.Id);
          
             <div class="userComment" id="@cmDetails[4]">
-                <div class="maincomment" id="@cmDetails[5]">
+                <div class="panel-body" style="background-color:white;" id="@cmDetails[5]">
                     <table class="commentControl" id="@cmDetails[15]">
-                        <tr>                            
-                            @*<td><a class="commentFlagCtrl" id="@cmDetails[9]"><img src="@Url.Content("~/Content/images/post/report.png")" width="10" height="10" alt="report" /></a></td>*@
-                            <td><a class="commentFlagCtrl" id="@cmDetails[9]"><i class="glyphicon glyphicon-flag"></i></a></td>
-                            <td> Zgłoś</td> 
-                        </tr>
-                    </table>
+                    </table> 
                     @*<div class="userImage"><img src="@cmDetails[1]" height="50" width="50" /></div>*@  <!-- ZDJECIE USERA Z BAZY-->
-                    <div class="userImage"><img class="media-object photo-profile" src="http://0.gravatar.com/avatar/38d618563e55e6082adf4c8f8c13f3e4?s=40&d=mm&r=g" width="45" height="45" alt="..." /></div>
-                    <div class="commentUserName"><strong>@cmDetails[0]</strong>&nbsp;&nbsp;<span class="cmntTime">-- @cmDetails[2]</span></div>
+                    <div class="userImage"><img class="media-object photo-profile" src="@Url.Action("UserCommentPhotos", "UserProfile", new { id = cmDetails[1] } )" width="45" height="45" alt="..." /></div>
+                    <div class="commentUserName"><strong>@cmDetails[0]</strong>&nbsp;&nbsp;<span class="cmntTime">~ @cmDetails[2]</span></div>
                     <div class="commentDate">@cmDetails[3]</div>
                     <div class="commentExp" id="@cmDetails[7]">
                         <div class="commentBody">@Html.Raw(comment.Body)</div>
@@ -85,6 +80,7 @@
                                 <a href="@Url.Action("UpdateCommentLike", "Blog", new { commentid = comment.Id, username = User.Identity.GetUserName(), likeordislike = "dislike", slug = Model.UrlSeo,sortorder = ViewBag.CurrentSort})"><i class="glyphicon glyphicon-thumbs-down"></i>   @*<img src="@Url.Content("~/Content/images/post/dislike.png")" alt="dislike" />*@</a>
                                 <a class="likecount" style="color:red;">@dislikes</a>
                                 <a style="cursor:pointer;" class="comReplyParent" id="@cmDetails[14]">Odpowiedz</a>
+                               
 
                                 @if (comment.UserName == User.Identity.GetUserName())
                                 {
@@ -99,13 +95,14 @@
                                     </table>
                                 }
                             </div>
-                            if (Request.IsAuthenticated)
+                            //if (Request.IsAuthenticated)
+                            if(!String.IsNullOrEmpty(User.Identity.GetUserId()))
                             {
                                 //var imgUrl = Url.Content("~/Content/images/profile/" + User.Identity.GetUserName() + ".png") + "?time=" + DateTime.Now.ToString();
                                 <table class="newComment collapseComment" id="">
                                     <tr>
                                         @*<td style="width:50px;vertical-align: top;"><div class="comImg"><img src="@imgUrl" height="50" width="50" /></div></td>*@
-                                        <td style="width:50px;vertical-align: top;"><div class="comImg"><img class="media-object photo-profile" src="http://0.gravatar.com/avatar/38d618563e55e6082adf4c8f8c13f3e4?s=40&d=mm&r=g" width="45" height="45" alt="..." /></div></td>
+                                        <td style="width:50px;vertical-align: top;"><div class="comImg"><img class="media-object photo-profile" src="@Url.Action("UserPhotos", "UserProfile" )" width="45" height="45" alt="..." /></div></td>
                                         <td style="vertical-align:middle; min-height:40px;" class="comText" id="@cmDetails[12]">
                                             @using (Html.BeginForm("NewParentReply", "Blog", FormMethod.Post, new { @class = "comTextdivParent", role = "form" }))
                                             {

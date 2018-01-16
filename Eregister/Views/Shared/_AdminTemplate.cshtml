@@ -1,49 +1,30 @@
-﻿@using Eregister.Controllers
-@*@using Microsoft.AspNet.Identity*@
-<!DOCTYPE html>
-<!--
-This is a starter template page. Use this page to start your new project from
-scratch. This page gets rid of all links and provides the needed markup only.
--->
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Eregister</title>
-    <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    @*<link rel="stylesheet" href="~/Content/admin/bower_components/bootstrap/dist/css/bootstrap.min.css">        <- BYLO*@ 
     <link rel="stylesheet" href="~/Content/admin/bower_components/bootstrap/dist/css/mybootstrap.min.css">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="~/Content/admin/bower_components/font-awesome/css/font-awesome.min.css">
-    <!-- Ionicons -->
     <link rel="stylesheet" href="~/Content/admin/bower_components/Ionicons/css/ionicons.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="~/Content/admin/dist/css/AdminLTE.min.css">
     <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
           page. However, you can choose any other skin. Make sure you
           apply the skin class to the body tag so the changes take effect. -->
-    <link rel="stylesheet" href="~/Content/admin/dist/css/skins/skin-green-light.min.css">
-
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="~/Content/admin/https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="~/Content/admin/https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-    <!-- Google Font -->
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-
+    <!--<link rel="stylesheet" href="~/Content/admin/dist/css/skins/skin-green-light.min.css"> -->
+    <link rel="stylesheet" href="~/Content/admin/dist/css/skins/_all-skins.min.css">  
+    <!--MODALE-->
+    <style>
+        .modal-content {
+            width: 600px !important;
+            margin: 30px auto !important;
+        }
+    </style>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic" />
     <link href="~/Content/Siteold.css" rel="stylesheet" />
     <script src="~/ckeditor/ckeditor.js"></script> <!-- ckeditor-->
-    @*//ZAKOMENTOWALEM \/*@
-
-    @*@Styles.Render("~/Content/css")*@
-    @*@Scripts.Render("~/bundles/modernizr")*@
-    @*@RenderSection("Style", required: false)*@
-
 </head>
 <!--
 BODY TAG OPTIONS:
@@ -65,103 +46,140 @@ desired effect
 |               | sidebar-mini                            |
 |---------------------------------------------------------|
 -->
+@{
+    var skinClass = "hold-transition skin-green-light sidebar-mini";
+    if (ViewData["Skin"] != null)
+    {
+        var skin = ViewData["Skin"] as string;
 
-<body class="hold-transition skin-green-light sidebar-mini">
+        if (skin == "purple")
+        {
+            skinClass = "hold-transition skin-purple-light sidebar-mini";
+        }
+        else if (skin=="red")
+        {
+            skinClass = "hold-transition skin-red-light sidebar-mini";
+        }
+        else
+        {
+            skinClass = "hold-transition skin-green-light sidebar-mini";
+        }
+    }
+}
+
+<body class="@skinClass">
     <div class="wrapper">
-
-        <!-- Main Header -->
         <header class="main-header">
-
-            <!-- Logo -->
             <a href="/Home/Index" class="logo">
-                <!-- mini logo for sidebar mini 50x50 pixels -->
                 <span class="logo-mini"><b>E</b>Reg</span>
-                <!-- logo for regular state and mobile devices -->
                 <span class="logo-lg"><b>E</b>Register</span>
             </a>
+            <nav class="navbar navbar-static-top" role="navigation">
+                <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                </a>
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        @if (!String.IsNullOrEmpty(User.Identity.Name))
+                        {
+                            <li class="dropdown messages-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-envelope-o"></i>
+                                    @if (ViewData["MessagesCount"] != null)
+                                    {
+                                        <span class="label label-info">@ViewData["MessagesCount"]</span>
+                                    }
+                                </a>
+                                <ul class="dropdown-menu" style="min-width: 300px;">
+                                    @if (ViewData["MessagesCount"] != null)
+                                    {
+                                        <li class="header">Ilość nowych wiadomości: @ViewData["MessagesCount"]</li>
+                                    }
+                                    <li>
+                                        <ul class="menu">
+                                            <li>
+                                                @{
+                                                    var messagesList = ViewData["MessagesContent"] as List<string>;
+                                                    if (messagesList != null)
+                                                    {
+                                                        int counter = 0;
+                                                        if (messagesList.Count > 0 && counter < 4)
+                                                        {
+                                                            foreach (var msg in messagesList)
+                                                            {
+                                                                string[] words = msg.Split(',');
+                                                                string date = words[0] + " | ";
+                                                                string from = words[1];
+                                                                string title = words[2];
+                                                                string body = words[3];
 
-                    <!-- Header Navbar -->
-                    <nav class="navbar navbar-static-top" role="navigation">
-                        <!-- Sidebar toggle button-->
-                        <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-                            <span class="sr-only">Toggle navigation</span>
-                        </a>
-                        <!-- Navbar Right Menu -->
-                        <div class="navbar-custom-menu">
+                                                                <a href="#">
+                                                                    <div class="pull-left">
+                                                                        <img src="https://lh3.ggpht.com/wiZx8Jz_felMUyXx5olKS2Rhmqfk4SlaRLW5taM_jLqRPOkQN_chpMmy8k9xgXHNPEuy=w300" class="img-circle" alt="User Image">
+                                                                    </div>
+                                                                    <h5>
+                                                                        @from
+                                                                        <small><i class="fa fa-clock-o"></i> @date</small>
+                                                                    </h5>
+                                                                    <h6>@title</h6>
+                                                                    <p>@body</p>
+                                                                </a>
+                                                                counter++;
+                                                            }
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <a href="#"><i class="fa fa-users text-aqua"></i> Brak nowych wiadomomści.</a>
+                                                    }
+                                                }
 
-                            <ul class="nav navbar-nav">
+                                            </li>
+                                        </ul>
+                                    </li>
+                                   
+                                    @if(ViewData["MessagesCount"] != null)
+                                    {
+                                        @Html.ActionLink("Zobacz wszystkie", "ModalMessages", "Mail", null, new { @class = "modal-link btn btn-success", @style = "margin-top: 10px; margin-bottom: 1px; color: white !important; min-width: 80px; max-width: 350px; background-color: #4CAF50; padding: 7px 20px; margin: 8px 10px; border: none; border-radius: 20px; cursor: pointer;" })
+                                        using (Html.BeginForm("ClearMessages", "Mail"))
+                                        {
+                                            @Html.Hidden("go")
+                                            <li class="footer">
+                                                <input type="submit" value="Wyczyść wiadomości" />
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+                            </li>
 
+                            <li class="dropdown tasks-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="font-size: 16px;">
+                                    <i class="fa fa-commenting-o"></i>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li class="header">Wysyłanie wiadomości</li>
+                                    <li class="footer">
+                                        @Html.ActionLink("Nowa wiadomość ", "ModalMail", "Mail", null, new { @class = "modal-link btn btn-success", @style = "margin-top: 10px; margin-bottom: 1px; color: white !important; min-width: 80px; max-width: 350px; background-color: #4CAF50; padding: 7px 20px; margin: 8px 10px; border: none; border-radius: 20px; cursor: pointer;" })
+                                    </li>
+                                </ul>
+                            </li>
 
-
-@if (!String.IsNullOrEmpty(User.Identity.Name))
-{
-
-                                <!-- Messages: style can be found in dropdown.less-->
-                                <li class="dropdown messages-menu">
-                                    <!-- Menu toggle button -->
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                        <i class="fa fa-envelope-o"></i>
-                                        <span class="label label-success">4</span>
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li class="header">You have 4 messages</li>
-                                        <li>
-                                            <!-- inner menu: contains the messages -->
-                                            <ul class="menu">
-                                                <li>
-                                                    <!-- start message -->
-                                                    <a href="#">
-                                                        <div class="pull-left">
-                                                            <!-- User Image -->
-                                                            <img src="~/Content/admin/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-                                                        </div>
-                                                        <!-- Message title and timestamp -->
-                                                        <h4>
-                                                            Support Team
-                                                            <small><i class="fa fa-clock-o"></i> 5 mins</small>
-                                                        </h4>
-                                                        <!-- The message -->
-                                                        <p>Why not buy a new awesome theme?</p>
-                                                    </a>
-                                                </li>
-                                                <!-- end message -->
-                                            </ul>
-                                            <!-- /.menu -->
-                                        </li>
-                                        <li class="footer"><a href="#">See All Messages</a></li>
-                                    </ul>
-                                </li>
-
-                                <!-- /.messages-menu -->
-                                <!-- Notifications Menu -->
                                 <li class="dropdown notifications-menu">
-                                    <!-- Menu toggle button -->
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                         <i class="fa fa-bell-o"></i>
-                                       
                                         @if (ViewData["NotificationsCount"] != null)
                                         {
                                             <span class="label label-warning">@ViewData["NotificationsCount"]</span>
                                         }
-
-
-                                        
-
-
                                     </a>
                                     <ul class="dropdown-menu">
                                         @if (ViewData["NotificationsCount"] != null)
                                         {
-                                            <li class="header">Masz @ViewData["NotificationsCount"] nowych powiadomień</li>
+                                            <li class="header">Ilość nowych powiadomień: @ViewData["NotificationsCount"]</li>
                                         }
-                                      
-
                                         <li>
-                                            <!-- Inner Menu: contains the notifications -->
                                             <ul class="menu">
                                                 <li>
-                                                    <!-- start notification -->
-
                                                     @{
                                                         var notificationList = ViewData["NotificationsContent"] as List<string>;
                                                         if (notificationList != null)
@@ -170,393 +188,226 @@ desired effect
                                                             {
                                                                 foreach (var notify in notificationList)
                                                                 {
-                                                                    <a href="#">
-                                                                        <i class="fa fa-users text-aqua"></i> @notify
-                                                                    </a>
+                                                                    <a href="#"><i class="fa fa-bell-o"></i> @notify</a>
                                                                 }
                                                             }
-                                                            else
-                                                            {
-                                                                <a href="#">
-                                                                    <i class="fa fa-users text-aqua"></i> Brak nowych powiadomień
-                                                                </a>
-                                                            }
-
                                                         }
-
+                                                        else
+                                                        {
+                                                            <a href="#"><i class="fa fa-users text-aqua"></i> Brak nowych powiadomień</a>
+                                                        }
                                                     }
-                                                    
-
                                                 </li>
-                                                <!-- end notification -->
                                             </ul>
                                         </li>
-@{
-    if (ViewData["NotificationsCount"] != null)
-    {
+                                        @{
+                                            if (ViewData["NotificationsCount"] != null)
+                                            {
 
-        using (Html.BeginForm("ClearNotifications", "Home"))
-        {
-           @Html.Hidden("go", 2)
-              <li class="footer">
-                   <input type="submit" value="Wyczyść powiadomienia" />
-             </li>
-
-        }
-    }
-
-}
-
-@*<li class="footer"><a href="@Html.Action("ClearNotifications", "Home")"><i class="fa fa-link"></i><span>Wyczyść powiadomienia</span></a></li>*@
-                                        @*<li class="footer"><a href="@Html.Action("ClearNotifications", "Home")"><i class="fa fa-link"></i><span>Wyczyść powiadomienia</span></a></li>*@
-                                       
+                                                using (Html.BeginForm("ClearNotifications", "Home"))
+                                                {
+                                                    @Html.Hidden("go")
+                                                    <li class="footer">
+                                                        <input type="submit" value="Wyczyść powiadomienia." />
+                                                    </li>
+                                                }
+                                            }
+                                        }
                                     </ul>
                                 </li>
-                                <!-- Tasks Menu -->
-                                <li class="dropdown tasks-menu">
-                                    <!-- Menu Toggle Button -->
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                        <i class="fa fa-flag-o"></i>
-                                        <span class="label label-danger">9</span>
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li class="header">You have 9 tasks</li>
-                                        <li>
-                                            <!-- Inner menu: contains the tasks -->
-                                            <ul class="menu">
-                                                <li>
-                                                    <!-- Task item -->
-                                                    <a href="#">
-                                                        <!-- Task title and progress text -->
-                                                        <h3>
-                                                            Design some buttons
-                                                            <small class="pull-right">20%</small>
-                                                        </h3>
-                                                        <!-- The progress bar -->
-                                                        <div class="progress xs">
-                                                            <!-- Change the css width attribute to simulate progress -->
-                                                            <div class="progress-bar progress-bar-aqua" style="width: 20%" role="progressbar"
-                                                                 aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                                                                <span class="sr-only">20% Complete</span>
-                                                            </div>
-                                                        </div>
-                                                    </a>
-                                                </li>
-                                                <!-- end task item -->
-                                            </ul>
-                                        </li>
-                                        <li class="footer">
-                                            <a href="#">View all tasks</a>
-                                        </li>
-                                    </ul>
-                                </li>
-         }
-                                <!-- User Account Menu -->
-                                <li class="dropdown user user-menu">
-                                    <!-- Menu Toggle Button -->
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                        <!-- The user image in the navbar-->
-                                        <img src="~/Content/admin/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-                                        <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                                        @*<span class="hidden-xs">Jan Nowak</span>*@
-                                        @*<span class="hidden-xs">@User.Identity.GetUserName()</span>*@
-                                        <span class="hidden-xs">@ViewData["FullName"]</span>
-                                    </a>
+                         }
+                        <!-- User Account Menu -->
+                        <li class="dropdown user user-menu">
+                            <!-- Menu Toggle Button -->
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding-bottom: 15px;">
+                                @if (String.IsNullOrEmpty(User.Identity.Name))
+                                {
+                                    <img src="http://www.freeiconspng.com/uploads/profile-icon-28.png" class="user-image" alt="User Image" />
+                                }
+                                else
+                                {
+                                    <img src="@Url.Action("UserPhotos", "UserProfile" )" class="user-image" alt="User Image">
+                                }
+                                <span class="hidden-xs">@ViewData["FullName"]</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                @if (!String.IsNullOrEmpty(User.Identity.Name))
+                                {
+                                    <li class="user-header">
+                                        <img src="@Url.Action("UserPhotos", "UserProfile" )" class="img-circle" alt="User Image">
 
-    <ul class="dropdown-menu">
-        
-        <!-- The user image in the menu -->
-@if (!String.IsNullOrEmpty(User.Identity.Name))//.GetUserId() != null)
-{
-        <li class="user-header">
-            <img src="~/Content/admin/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-
-            <p>
-                @*Jan Nowak - student*@
-                @*@User.Identity.GetUserName()*@
-
-                @ViewData["FullName"]
-                <small>Jesteś z nami od @ViewData["JoinDate"]</small>
-
-            </p>
-        </li>
-}
-        <!-- Menu Body -->
-        <li class="user-body">
-            <div class="row">
-                <div class="col-xs-4 text-center">
-                    <a href="#">Followers</a>
-                </div>
-                <div class="col-xs-4 text-center">
-                    <a href="#">Sales</a>
-                </div>
-                <div class="col-xs-4 text-center">
-                    <a href="#">Friends</a>
-                </div>
-            </div>
-            <!-- /.row -->
-        </li>
-        <!-- Menu Footer-->
-        <li class="user-footer">
-            @*<div class="pull-left">
-                    <a href="#" class="btn btn-default btn-flat">Profile</a>
-                </div>*@
-
-            @Html.Partial("_LoginPartial")
-
-
-            @*<div class="pull-right">
-                    <a href="#" class="btn btn-default btn-flat">Sign out</a>
-                </div>*@
-        </li>
-    </ul>
-
-
-                                </li>
-                                <!-- Control Sidebar Toggle Button -->
-                                <li>
-                                    <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                                        <p>
+                                            @ViewData["FullName"]
+                                            <small>Jesteś z nami od @ViewData["JoinDate"]</small>
+                                        </p>
+                                    </li>
+                                }
+                                <li class="user-footer">
+                                    @Html.Partial("_LoginPartial")
                                 </li>
                             </ul>
-               
-                        </div>
-                    </nav>
-</header>
-        <!-- Left side column. contains the logo and sidebar -->
-        <aside class="main-sidebar">
-
-            <!-- sidebar: style can be found in sidebar.less -->
-            <section class="sidebar">
-
-                <!-- Sidebar user panel (optional) -->
-                <div class="user-panel">
-                    <div class="pull-left image">
-                        <img src="~/Content/admin/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-                    </div>
-                    <div class="pull-left info">
-                        @*<p>@User.Identity.GetUserName()</p>*@                    
-                        <!-- Status -->
-                        @*<p>@User.Identity.Name</p>*@
-                        
-                        @if(!String.IsNullOrEmpty(User.Identity.Name))
-                        { 
-                            <p>
-                               @ViewData["FirstName"]
-                                       @ViewData["LastName"]
-                            </p>
-                             <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                        </li>
+                        @if (!String.IsNullOrEmpty(User.Identity.Name))
+                        {
+                            <li>
+                                <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                            </li>
                         }
-                        @*<a href="#"><i class="fa fa-circle text-success"></i> Online</a>*@
-                    </div>
+                    </ul>
                 </div>
+            </nav>
+        </header>
 
-                <!-- search form (Optional) -->
-                <form action="#" method="get" class="sidebar-form">
-                    <div class="input-group">
-                        <input type="text" name="q" class="form-control" placeholder="Search...">
-                        <span class="input-group-btn">
-                            <button type="submit" name="search" id="search-btn" class="btn btn-flat">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </span>
+        <aside class="main-sidebar">
+            <section class="sidebar">
+                @if (!String.IsNullOrEmpty(User.Identity.Name))
+                {
+                    <div class="user-panel">
+                        <div class="pull-left image" style="height:50px;">
+                            <img src="@Url.Action("UserPhotos", "UserProfile")" class="img-circle" style="max-height:50px;max-width:50px" alt="User Image">
+                        </div>
+                        <div class="pull-left info">
+                            @if (!String.IsNullOrEmpty(User.Identity.Name))
+                            {
+                                <p>
+                                    @ViewData["FirstName"]
+                                    @ViewData["LastName"]
+                                </p>
+                                <a href="#" style="position:absolute;"><i class="fa fa-circle text-success"></i> Online</a>
+                            }
+                        </div>
                     </div>
-                </form>
-                <!-- /.search form -->
-                <!-- Sidebar Menu -->
+                }
+                @if (User.IsInRole("Candidate"))
+                {
+                    <div class="alert alert-warning alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <h4><i class="icon fa fa-warning"></i> Uwierzytelnij konto!</h4>
+                        Przejdź do rejestracji by potwierdzić swoją tożsamość i uzyskać uprawnienia.
+                        @Html.ActionLink("Uwierzytelnij ", "ModalAuthorize", "Home", null, new { @class = "modal-link btn btn-success", @style = "margin-left: 75px; background-color: #ffffff; border-color: #333; margin-top:  10px;" })
+                    </div>
+                }
+
+
                 <ul class="sidebar-menu" data-widget="tree">
                     <li class="header">E-Register</li>
-                    <!-- Optionally, you can add icons to the links -->
-                    @*<li class="active"><a href="#"><i class="fa fa-link"></i> <span>Home</span></a></li>*@
-
                     @if (User.IsInRole("Teacher"))
                     {
-                                            <li><a href="/Home/Index"><i class="fa fa-link"></i><span>Home</span></a> </li>
-                                            <li><a href="/Blog/Wall"><i class="fa fa-link"></i><span>My Wall</span></a> </li>
-                                            <li><a href="#"><i class="fa fa-link"></i> <span>Wall grupy</span></a></li>
-                                            <li><a href="/Groups/Index"><i class="fa fa-link"></i> <span>Zarządzaj grupami</span></a></li>
+                        <li><a href="/Blog/Wall"><i class="fa fa-link"></i><span>Główna tablica</span></a> </li>
+                            <li><a href="/Groups/Index"><i class="fa fa-link"></i> <span>Zarządzaj grupami</span></a></li>
                                             <li><a href="/Subjects/Index"><i class="fa fa-link"></i> <span>Przedmioty</span></a></li>
-                                            <li><a href="/StudentGrades/IndexForTeacher"><i class="fa fa-link"></i> <span>Wystaw oceny</span></a></li>
-                                            <li><a href="/TeacherSubjects/Index"><i class="fa fa-link"></i> <span>Przedmioty nauczyciela</span></a></li>
-                                            
-                                            <li><a href="/Home/About"><i class="fa fa-link"></i><span>About</span></a> </li>
-                                            <li><a href="/Home/Contact"><i class="fa fa-link"></i><span>Contact</span></a> </li>
-                                            <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
+                                            <li><a href="/StudentGrades/IndexForTeacher"><i class="fa fa-pencil"></i><span>Wystaw oceny</span></a></li>
+                                            <li><a href="/TeacherSubjects/Index"><i class="fa fa-server"></i><span>Przedmioty nauczyciela</span></a></li>
+                                            <li><a href="@Url.Action("Timetables", "Timetable")"><i class="fa fa-table"></i><span>Plan zajęć</span></a></li>
+                                            <li><a href="/Home/TeachersList"><i class="fa fa-user-secret"></i><span>Nauczyciele</span></a></li>
+                                            <li><a href="StudentParents/Index"><i class="fa fa-link"></i><span>Rodzice i uczniowie</span></a></li>
+                                            <li><a href="/UserProfile/View"><i class="fa fa-user-circle"></i><span>Twój profil</span></a></li>
 
                     }
                     else if (User.IsInRole("Student"))
                     {
-                                            <li><a href="/Home/Index"><i class="fa fa-link"></i><span>Home</span></a> </li>
-                                            <li><a href="/Blog/Wall"><i class="fa fa-link"></i><span>My Wall</span></a> </li>
-                                            <li><a href="@Url.Action("WallPostsGroups", "Blog")"><i class="fa fa-link"></i><span>Wall mojej grupy</span></a></li>
-                                            <li><a href="#"><i class="fa fa-link"></i> <span>Oceny</span></a></li>
-                                            <li><a href="#"><i class="fa fa-link"></i> <span>Plan zajęć</span></a></li>
-                                            <li><a href="/Home/About"><i class="fa fa-link"></i><span>About</span></a> </li>
-                                            <li><a href="/Home/Contact"><i class="fa fa-link"></i><span>Contact</span></a> </li>
-                                            <li><a href="#"><i class="fa fa-link"></i> <span>Wall grupy</span></a></li>
-
-                                            <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
+                                            <li><a href="/Blog/Wall"><i class="fa fa-link"></i><span>Główna tablica</span></a> </li>
+                                            <li><a href="@Url.Action("WallPostsGroups", "Blog")"><i class="fa fa-link"></i><span>Grupowa tablica</span></a></li>
+                                            <li><a href="@Url.Action("Timetables", "Timetable")"><i class="fa fa-link"></i><span>Plan zajęć</span></a></li>
+                                            <li><a href="/StudentGrades/IndexForStudent"><i class="fa fa-link"></i> <span>Moje oceny</span></a></li>
+                                            <li><a href="/Home/TeachersList"><i class="fa fa-link"></i> <span>Nauczyciele</span></a></li>
+                                            <li><a href="/UserProfile/View"><i class="fa fa-user-circle"></i><span>Twój profil</span></a></li>
                     }
                     else if (User.IsInRole("Parent"))
                     {
-                                             <li><a href="/Home/Index"><i class="fa fa-link"></i><span>Home</span></a> </li>
-                                             <li><a href="/Blog/Wall"><i class="fa fa-link"></i><span>My Wall</span></a> </li>
-                                             <li><a href="/Home/About"><i class="fa fa-link"></i><span>About</span></a> </li>
-                                             <li><a href="/Home/Contact"><i class="fa fa-link"></i><span>Contact</span></a> </li>
-                                             <li><a href="#"><i class="fa fa-link"></i> <span>Tu będzie DZIENNIK UCZNIA dla RODZICA</span></a></li>
-                                             <li><a href="#"><i class="fa fa-link"></i> <span>Tu będzie PLAN LEKCJI dla RODZICA</span></a></li>
-                                             <li><a href="#"><i class="fa fa-link"></i> <span>Tu będzie KONTAKT NAUCZYCIEL dla RODZICA</span></a></li>
+                                          <li><a href="/Blog/Wall"><i class="fa fa-link"></i><span>Główna tablica</span></a> </li>
+                                          <li><a href="/StudentParents/IndexForParent"><i class="fa fa-link"></i><span>Oceny dziecka</span></a></li>
+                                          <li><a href="@Url.Action("Timetables", "Timetable")"><i class="fa fa-link"></i><span>Plan zajęć</span></a></li>
+                                          <li><a href="/Home/TeachersList"><i class="fa fa-link"></i> <span>Nauczyciele</span></a></li>
+                                        <li><a href="/UserProfile/View"><i class="fa fa-user-circle"></i><span>Twój profil</span></a></li>
                     }
                     else if (User.IsInRole("Admin"))
                     {
-                                             <li><a href="/Home/Index"><i class="fa fa-link"></i><span>Home</span></a> </li>
-                                             <li><a href="/Blog/Wall"><i class="fa fa-link"></i><span>My Wall</span></a> </li>
-                                             <li><a href="/Home/About"><i class="fa fa-link"></i><span>About</span></a> </li>
-                                             <li><a href="/Home/Contact"><i class="fa fa-link"></i><span>Contact</span></a> </li>
-                                            <li><a href="#"><i class="fa fa-link"></i> <span>Tu będzie ADMIN PANEL</span></a></li>
-
+                        <li><a href="/Blog/Wall"><i class="fa fa-link"></i><span>Główna tablica</span></a> </li>
+                        <li><a href="/UserProfile/View"><i class="fa fa-user-circle"></i><span>Twój profil</span></a></li>                       
+                            <li class="treeview">
+                                <a href="#">
+                                    <i class="fa fa-key"></i><span>Panel administracyjny</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li><a href="/Admin"><span>Zarządzanie użytkownikami</span></a></li>
+                                    <li><a href="/Admin/Tokens"><span>Kody uwierzytelniające</span></a></li>
+                                    <li><a href="/StudentParents/Index"><span>Edycja rodziców i uczniów</span></a></li>
+                                </ul>
+                            </li>
                     }
                     else
                     {
-                                             <li><a href="/Home/Index"><i class="fa fa-link"></i><span>Home</span></a> </li>
-                                             <li><a href="/Home/About"><i class="fa fa-link"></i><span>About</span></a> </li>
-                                             <li><a href="/Home/Contact"><i class="fa fa-link"></i><span>Contact</span></a> </li>
+                        <li><a href="/Home/Index"><i class="fa fa-link"></i><span>Home</span></a> </li>
+                        <li><a href="/Home/About"><i class="fa fa-link"></i><span>About</span></a> </li>
+                        <li><a href="/Home/Contact"><i class="fa fa-link"></i><span>Contact</span></a> </li>
                     }
                     <li class="treeview">
                         <a href="#">
-                            <i class="fa fa-link"></i> <span>Multilevel</span>
+                            <i class="fa fa-spinner"></i> <span>Więcej</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
                         <ul class="treeview-menu">
                             <li>@Html.ActionLink("Home", "Index", "Home")</li>
-
-                            @*<li>@Html.ActionLink("MyWall", "Wall", "Blog")</li>*@
-                            <li>@Html.ActionLink("Teachers", "TeachersList", "Blog")</li>
-                            @*<li>@Html.ActionLink("Teachers", "TeachersList", "Blog")</li> to bedzie w nowym kontrolerze, przenies widok i dodaj prawdziwych nauczycieli*@                         
                             <li>@Html.ActionLink("About", "About", "Home")</li>
                             <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                            <li>@Html.ActionLink("Profil", "Index", "UserProfile")</li>
-                            <li><a href="#">Link in level 2</a></li>
-                            <li><a href="#">Link in level 2</a></li>
                         </ul>
                     </li>
                 </ul>
-                <!-- /.sidebar-menu -->
             </section>
-            <!-- /.sidebar -->
         </aside>
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-            @*<section class="content-header">*@
-                @*<h1>
-                    Page Header
-                    <small>Optional description</small>
-                </h1>*@
-                @*<ol class="breadcrumb">
-                    <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-                    <li class="active">Here</li>
-                </ol>
-            </section>*@
-
-            <!-- Main content -->
             <section class="content container-fluid">
-
-
-
                 <div>
                     @RenderBody()
                 </div>
-                <!--------------------------
-                  | Your Page Content Here |
-                  -------------------------->
-
             </section>
-            <!-- /.content -->
         </div>
-        <!-- /.content-wrapper -->
         <!-- Main Footer -->
         <footer class="main-footer">
-            <!-- To the right -->
-            @*<div class="pull-right hidden-xs">
-                Anything you want
-            </div>*@
-            <!-- Default to the left -->
-            <strong>Copyright &copy; 2017 <a href="#">Eregister</a>.</strong> Internetowy dziennik szkolny.
+            <strong>Copyright &copy; 2018 <a href="#">Eregister</a>.</strong> Internetowy dziennik szkolny.
         </footer>
-
         <!-- Control Sidebar -->
         <aside class="control-sidebar control-sidebar-dark">
             <!-- Create the tabs -->
             <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
-                <li class="active"><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-home"></i></a></li>
-                <li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-gears"></i></a></li>
+                <li class="active"><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-gears"></i></a></li>
             </ul>
             <!-- Tab panes -->
             <div class="tab-content">
                 <!-- Home tab content -->
-                <div class="tab-pane active" id="control-sidebar-home-tab">
-                    <h3 class="control-sidebar-heading">Recent Activity</h3>
-                    <ul class="control-sidebar-menu">
-                        <li>
-                            <a href="javascript:;">
-                                <i class="menu-icon fa fa-birthday-cake bg-red"></i>
-
-                                <div class="menu-info">
-                                    <h4 class="control-sidebar-subheading">Langdon's Birthday</h4>
-
-                                    <p>Will be 23 on April 24th</p>
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
-                    <!-- /.control-sidebar-menu -->
-
-                    <h3 class="control-sidebar-heading">Tasks Progress</h3>
-                    <ul class="control-sidebar-menu">
-                        <li>
-                            <a href="javascript:;">
-                                <h4 class="control-sidebar-subheading">
-                                    Custom Template Design
-                                    <span class="pull-right-container">
-                                        <span class="label label-danger pull-right">70%</span>
-                                    </span>
-                                </h4>
-
-                                <div class="progress progress-xxs">
-                                    <div class="progress-bar progress-bar-danger" style="width: 70%"></div>
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
-                    <!-- /.control-sidebar-menu -->
-
-                </div>
-                <!-- /.tab-pane -->
-                <!-- Stats tab content -->
-                <div class="tab-pane" id="control-sidebar-stats-tab">Stats Tab Content</div>
-                <!-- /.tab-pane -->
-                <!-- Settings tab content -->
-                <div class="tab-pane" id="control-sidebar-settings-tab">
+                <div class="tab-pane active" id="control-sidebar-settings-tab">
                     <form method="post">
                         <h3 class="control-sidebar-heading">Ustawienia</h3>
 
                         <div class="form-group">
                             <label class="control-sidebar-subheading">
-                               Edycja profilu
-                                <input type="checkbox" class="pull-right" checked>
+                                <a href="@Url.Action("View", "UserProfile")"><i class="fa fa-user-circle"></i><span> Pokaż profil</span></a>
                             </label>
                             <p>
-                                Zarządzaj swoim profilem, zmień zdjęcie.
+                                Sprawdź swój profil oraz czy Twoje dane są poprawne.
                             </p>
                         </div>
 
                         <div class="form-group">
                             <label class="control-sidebar-subheading">
-                                Adres
-                                <input type="checkbox" class="pull-right" checked>
+                                <a href="@Url.Action("Edit", "UserProfile")"><i class="fa fa-user-o"></i><span> Edycja profilu</span></a>
+                            </label>
+                            <p>
+                                Zarządzaj swoim profilem, edytuj dane bądź zmień zdjęcie.
+                            </p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-sidebar-subheading">
+                                <a href="#"><i class="fa fa-address-book"></i><span> Adres</span></a>
                             </label>
                             <p>
                                 Dopilnuj by podany przez Ciebie adres był poprawny.
@@ -565,37 +416,73 @@ desired effect
 
                         <div class="form-group">
                             <label class="control-sidebar-subheading">
-                                Zmień skórkę
-                                <input type="checkbox" class="pull-right" checked>
+                                <a href="#"><i class="fa fa-paint-brush"></i><span> Zmień skórkę</span></a>
                             </label>
-
                             <p>
                                 Dopasuj kolor i motyw wyglądu strony pod własne upodobania.
                             </p>
+                            <ul class="list-unstyled clearfix">
+                                <li style="float:left; width: 33.33333%; padding: 5px;"><a href="@Url.Action("ChangeSkin","Home", new {skin= "purple"})" data-skin="skin-purple-light" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover"><div><span style="display:block; width: 20%; float: left; height: 7px;" class="bg-purple-active"></span><span class="bg-purple" style="display:block; width: 80%; float: left; height: 7px;"></span></div><div><span style="display:block; width: 20%; float: left; height: 20px; background: #f9fafc"></span><span style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7"></span></div></a><p class="text-center no-margin" style="font-size: 12px">Fioletowy</p></li>
+                                <li style="float:left; width: 33.33333%; padding: 5px;"><a href="/Home/ChangeSkin?skin=green" data-skin="skin-green-light" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover"><div><span style="display:block; width: 20%; float: left; height: 7px;" class="bg-green-active"></span><span class="bg-green" style="display:block; width: 80%; float: left; height: 7px;"></span></div><div><span style="display:block; width: 20%; float: left; height: 20px; background: #f9fafc"></span><span style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7"></span></div></a><p class="text-center no-margin" style="font-size: 12px">Zielony</p></li>
+                                <li style="float:left; width: 33.33333%; padding: 5px;"><a href="/Home/ChangeSkin?skin=red" data-skin="skin-red-light" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover"><div><span style="display:block; width: 20%; float: left; height: 7px;" class="bg-red-active"></span><span class="bg-red" style="display:block; width: 80%; float: left; height: 7px;"></span></div><div><span style="display:block; width: 20%; float: left; height: 20px; background: #f9fafc"></span><span style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7"></span></div></a><p class="text-center no-margin" style="font-size: 12px">Czerwony</p></li>
+                            </ul>
                         </div>
-                        <!-- /.form-group -->
                     </form>
                 </div>
                 <!-- /.tab-pane -->
+                <!-- Stats tab content -->
+                @*<div class="tab-pane" id="control-sidebar-stats-tab">Stats Tab Content</div>*@
+
+                <div class="tab-pane" id="control-sidebar-settings-tab">
+                    
+                </div>
             </div>
         </aside>
-        <!-- /.control-sidebar -->
-        <!-- Add the sidebar's background. This div must be placed
-        immediately after the control sidebar -->
         <div class="control-sidebar-bg"></div>
     </div>
-    <!-- ./wrapper -->
-    <!-- REQUIRED JS SCRIPTS -->
-    <!-- jQuery 3 -->
     <script src="~/Content/admin/bower_components/jquery/dist/jquery.min.js"></script>
-    <!-- Bootstrap 3.3.7 -->
     <script src="~/Content/admin/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <!-- AdminLTE App -->
     <script src="~/Content/admin/dist/js/adminlte.min.js"></script>
-
-    <!-- Optionally, you can add Slimscroll and FastClick plugins.
-         Both of these plugins are recommended to enhance the
-         user experience. -->
     @RenderSection("scripts", required: false)
+
+
+    <!-- MODALE-->
+    <div id="modal-container" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-content" style="width: 613px !important;">
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(function () {
+            // Initialize numeric spinner input boxes
+            //$(".numeric-spinner").spinedit();
+
+            // Initalize modal dialog
+            // attach modal-container bootstrap attributes to links with .modal-link class.
+            // when a link is clicked with these attributes, bootstrap will display the href content in a modal dialog.
+            $('body').on('click', '.modal-link', function (e) {
+                e.preventDefault();
+                $(this).attr('data-target', '#modal-container');
+                $(this).attr('data-toggle', 'modal');
+            });
+
+            // Attach listener to .modal-close-btn's so that when the button is pressed the modal dialog disappears
+            $('body').on('click', '.modal-close-btn', function () {
+                $('#modal-container').modal('hide');
+            });
+
+            //clear modal cache, so that new content can be loaded
+            $('#modal-container').on('hidden.bs.modal', function () {
+                $(this).removeData('bs.modal');
+            });
+
+            $('#CancelModal').on('click', function () {
+                return false;
+            });
+        });
+    </script>
+
+
+
 </body>
 </html>

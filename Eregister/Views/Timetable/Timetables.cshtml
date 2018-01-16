@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Eregister.Group>
+
+@{
+    ViewBag.Title = "TeacherTimetables";
+}
+
+<h2 style="text-align:center">Plany zajęć</h2>
+
+
+<div class="box">
+    <div class="box-body">
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <th>Grupa</th>
+                    <th>Rocznik</th>
+                    <th>Krótki opis</th>
+                    <th></th>
+                </tr>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Year)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ShortDescription)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Przejdź do planu", "ChosenGroup", new { id = item.GroupID })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

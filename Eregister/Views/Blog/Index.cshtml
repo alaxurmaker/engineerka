@@ -46,12 +46,10 @@
                     }
                 }
                 <input type="hidden" name="sortOrder" value="@ViewBag.CurrentSort" />
-                <input type="search" name="searchString" value="@ViewBag.CurrentSearchString" placeholder="Search..." />
+                <input type="search" name="searchString" value="@ViewBag.CurrentSearchString" placeholder="Szukaj..." />
                     <input type="submit" value="&#128270;" style="background:none;border:none;" />
             }
-            @{
-                var rssUrl = Request.Url.Scheme + "://" + Request.Url.Host + "/Blog/feed";
-            }
+
             @*<div style="margin:10px;"><a href="@rssUrl" style="text-decoration:none;color:blue;" title="RSS">RSS Feed</a></div>*@
             <div style="margin:10px;"><a href="@Url.Action("AllPosts", "Blog")" style="text-decoration:none;color:blue;" title="Posts">Post List</a></div>
             <div style="color:blue;cursor:pointer;float:left;width:300px;margin:10px;" id="indexFilterBtn">Filter</div>

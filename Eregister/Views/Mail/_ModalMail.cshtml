@@ -1,0 +1,67 @@
+﻿@model Eregister.Models.Mail.MailModel
+@{
+    ViewBag.Title = "_ModalMail";
+}
+
+<div class="modal-body">
+    @using (Html.BeginForm("Send", "Mail"))
+    {
+        @Html.AntiForgeryToken()
+        <div class="box box-info">
+            <div class="box-header with-border">
+                <h3 class="box-title">Wyślij e-mail</h3>
+            </div>
+            <form class="form-horizontal">
+                <div class="box-body">
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 control-label">Imię</label>
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(m => m.Name)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 control-label">Nazwisko</label>
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(m => m.Surname)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 control-label">Email od</label>
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(m=>m.From)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword3" class="col-sm-2 control-label">Email do</label>
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(m => m.To)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword3" class="col-sm-2 control-label">Temat</label>
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(m => m.Subject)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword3" class="col-sm-2 control-label">Treść</label>
+                        <div class="col-sm-10">
+                           @Html.TextBoxFor(m => m.Body)
+                        </div>
+                    </div>
+                </div>
+                <div class="box-footer">
+                    <button type="submit" class="btn btn-info" id="approve-btn">Wyślij</button>
+                    <button type="submit" class="btn btn-default pull-right" data-dismiss="modal">Powrót</button>
+                </div>
+            </form>
+        </div>
+    }
+</div>
+<script type="text/javascript">
+    $(function () {
+        $('#approve-btn').click(function () {
+            $('#modal-container').modal('hide');
+        });
+    });
+</script>

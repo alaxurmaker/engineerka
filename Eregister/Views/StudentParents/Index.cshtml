@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Eregister.StudentParent>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2 style="text-align:center">Rodzice i uczniowie</h2>
+<p>
+    @Html.ActionLink("Przypisz rodzica do ucznia", "Create", "StudentParents", null, new { @style = "margin-top: 10px; margin-bottom: 1px; color: white !important; min-width: 80px; max-width: 350px; background-color: #4CAF50; padding: 7px 20px; margin: 8px 10px; border: none; border-radius: 20px; cursor: pointer;" })
+</p>
+<div class="box">
+    <div class="box-body">
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <th>Imię rodzica</th>
+                    <th>Data urodzenia</th>
+                    <th>Numer telefonu</th>
+                    <th>Imię dziecka</th>
+                    <th>Data urodzenia</th>
+                    <th>Pesel</th>
+                    <th></th>
+                </tr>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Parent.ApplicationUser.NameSurname)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Parent.ApplicationUser.BirthDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Parent.ApplicationUser.PhoneNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Student.ApplicationUser.NameSurname)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Student.ApplicationUser.BirthDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Student.Pesel)
+                        </td>                        
+                        <td>
+                            @Html.ActionLink("Edycja", "Edit", new { id = item.StudentParentID }) |
+                            @Html.ActionLink("Usuń", "Delete", new { id = item.StudentParentID })
+                        </td>                        
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

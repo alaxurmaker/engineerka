@@ -8,26 +8,25 @@
     var tags = BlogController.checkTagList;  
 }
 
-<div class="blogContainer">
 
-    @if (User.IsInRole("Student"))
-    {
-        <div>
-            <h3>Przejdz na stronę swojej grupy</h3>
-            <a href="@Url.Action("WallPostsGroups", "Blog")">Przejdź</a>
-        </div>
-    }
-    @if (ViewBag.Alert != null)
-    {
-        <script>
+@if (User.IsInRole("Student"))
+{
+    <div class="alert alert-info alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h4><i class="icon fa fa-info"></i>Informacja</h4>
+        Przejdz na stronę swojej grupy.
+        <a href="@Url.Action("WallPostsGroups", "Blog")">Twoja tablica</a>
+    </div>
+}
+@if (ViewBag.Alert != null)
+{
+    <script>
             $(document).ready(function(){
             alert('@ViewBag.Message');
             });
-        </script>
-
-    }
-
-
+    </script>
+}
+<div class="blogContainer">
     <div class="mainblogview">
 
         @{Html.RenderPartial("WallPosts", Model.PagedBlogViewModel);}
@@ -40,10 +39,10 @@
             <div class="adminBlogCtrl">
                 <table>
                     <tr>
-                        <td><a href="@Url.Action("AddNewPost","Blog")">Add New Post</a></td>
+                        <td><a href="@Url.Action("AddNewPost","Blog")">Dodaj nowy post</a></td>
                     </tr>
                     <tr>
-                        <td><a href="@Url.Action("CategoriesAndTags","Blog")">Categories And Tags</a></td>
+                        <td><a href="@Url.Action("CategoriesAndTags","Blog")">Kategorie i tagi</a></td>
                     </tr>
                 </table>
             </div>
@@ -51,7 +50,7 @@
 
         <!--TABELKA  KATEGORIE, SEARCH-->
         @*<div class="blogControlPanel">*@
-       <div class="panel panel-default"; style="width:500px; margin:0 auto;">
+       <div class="panel panel-default"; style="margin:0 auto;">
             @using (Html.BeginForm("Wall", "Blog", FormMethod.Get, new { @class = "indexSearchForm" }))
             {
                 if (ViewBag.CurrentSearchCategory != null)
@@ -69,66 +68,84 @@
                     }
                 }
                 <input type="hidden" name="sortOrder" value="@ViewBag.CurrentSort" />
-                <input type="search" name="searchString" value="@ViewBag.CurrentSearchString" placeholder="Szukaj..." />
-                <input type="submit" value="&#128270;" style="background:none;border:none;" />
-            }
+                @*<input type="search" name="searchString" value="@ViewBag.CurrentSearchString" placeholder="Szukaj..." />*@
 
-            <div style="margin:10px;"><a href="@Url.Action("AllPosts", "Blog")" style="text-decoration:none;color:blue;" title="Posts">Wszystkie posty</a></div>
-            <div style="color:blue;cursor:pointer;float:left;width:300px;margin:10px;" id="indexFilterBtn">Filter</div>
-            @using (Html.BeginForm("Wall", "Blog", FormMethod.Get, new { @class = "indexFilterForm" }))
-            {
-                <table class="blogCtrlTable">
-                    <tr>
-                        <td><a class="blgCtrlPnl" title="Categories">Kategorie</a></td>
-                    </tr>
-                    <tr>
-                        <td style="width:100%;">
-                            @foreach (var cat in categories)
-                            {
-                                <div style="width:45%;float:left;">
-                                    @if (cat.Checked)
-                                    {
-                                        <input type="checkbox" name="searchCategory" value="@cat.Category.Name" checked="checked" /> @cat.Category.Name
-                                    }
-                                    else
-                                    {
-                                        <input type="checkbox" name="searchCategory" value="@cat.Category.Name" /> @cat.Category.Name
-                                    }
-                                </div>
-                            }
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><a class="blgCtrlPnl" title="Tags">Tagi</a></td>
-                    </tr>
-                    <tr>
-                        <td style="width:100%;">
-                            @foreach (var tag in tags)
-                            {
-                                <div style="width:45%;float:left;">
-                                    @if (tag.Checked)
-                                    {
-                                        <input type="checkbox" name="searchTag" value="@tag.Tag.Name" checked="checked" /> @tag.Tag.Name
-                                    }
-                                    else
-                                    {
-                                        <input type="checkbox" name="searchTag" value="@tag.Tag.Name" /> @tag.Tag.Name
-                                    }
-                                </div>
-                            }
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <input type="hidden" name="page" value="1" />
-                            <input type="hidden" name="sortOrder" value="@ViewBag.CurrentSort" />
-                            <input type="hidden" name="searchString" value="@ViewBag.CurrentSearchString" />
-                            <input class="indexFiltBtn" type="submit" value="Filtruj" />
-                        </td>
-                    </tr>
-                </table>
-            }
-        </div>
+                @*<input type="search" name="searchString" value="@ViewBag.CurrentSearchString" class="form-control" placeholder="Szukaj..." />*@
+
+               <form action="#" class="sidebar-form">
+                   <div class="input-group">
+                       <input type="search" name="searchString" value="@ViewBag.CurrentSearchString" class="form-control" placeholder="Szukaj..." />
+                       <span class="input-group-btn">
+                           <button type="submit" name="search" id="search-btn" class="btn btn-flat">
+                               <i class="fa fa-search"></i>
+                           </button>
+                       </span>
+                   </div>
+                   </form>
+
+
+                   @*<input type="submit" value="&#128270;" style="background:none;border:none;" />*@
+                   } 
+
+                   <div style="margin:10px;"><a href="@Url.Action("AllPosts", "Blog")" style="text-decoration:none;color:#337ab7;" title="Posts">Wszystkie posty</a></div>
+                   <div style="color:#337ab7;cursor:pointer;float:left;width:300px;margin:10px;" id="indexFilterBtn">Filtr</div>
+
+                   @using (Html.BeginForm("Wall", "Blog", FormMethod.Get, new { @class = "indexFilterForm" }))
+                   {
+                       <div>
+                           <table class="blogCtrlTable" style="color: #337ab7; cursor: pointer; width: 300px; margin: 10px;">
+                               <tr>
+                                   <td><a class="blgCtrlPnl" title="Categories">Kategorie</a></td>
+                               </tr>
+                               <tr>
+                                   <td style="width:100%;">
+                                       @foreach (var cat in categories)
+                                       {
+                                           <div style="width:45%;float:left;">
+                                               @if (cat.Checked)
+                                               {
+                                                   <input type="checkbox" name="searchCategory" value="@cat.Category.Name" checked="checked" /> @cat.Category.Name
+                                               }
+                                               else
+                                               {
+                                                   <input type="checkbox" name="searchCategory" value="@cat.Category.Name" /> @cat.Category.Name
+                                               }
+                                           </div>
+                                       }
+                                   </td>
+                               </tr>
+                               <tr>
+                                   <td><a class="blgCtrlPnl" title="Tags">Tagi</a></td>
+                               </tr>
+                               <tr>
+                                   <td style="width:100%;">
+                                       @foreach (var tag in tags)
+                                       {
+                                           <div style="width:45%;float:left; white-space:nowrap; padding-top: 10px;">
+                                               @if (tag.Checked)
+                                               {
+                                                   <input type="checkbox" name="searchTag" value="@tag.Tag.Name" checked="checked" /> @tag.Tag.Name
+                                               }
+                                               else
+                                               {
+                                                   <input type="checkbox" name="searchTag" value="@tag.Tag.Name" /> @tag.Tag.Name
+                                               }
+                                           </div>
+                                       }
+                                   </td>
+                               </tr>
+                               <tr>
+                                   <td colspan="2">
+                                       <input type="hidden" name="page" value="1" />
+                                       <input type="hidden" name="sortOrder" value="@ViewBag.CurrentSort" />
+                                       <input type="hidden" name="searchString" value="@ViewBag.CurrentSearchString" />
+                                       <input class="indexFiltBtn" type="submit" value="Filtruj" style="margin: 10px 0;float: left;" />
+                                   </td>
+                               </tr>
+                           </table>
+                       </div>
+                   }
+</div>
 
     </div>
 

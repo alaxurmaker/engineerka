@@ -81,7 +81,7 @@
             }
         }
         <input type="hidden" name="sortOrder" value="@ViewBag.CurrentSort" />
-        <input type="search" name="searchString" value="@ViewBag.CurrentSearchString" placeholder="Search..." />
+        <input type="search" name="searchString" value="@ViewBag.CurrentSearchString" placeholder="Szukaj..." />
     }
 </div>
 
@@ -107,7 +107,7 @@
                 }
                 <input type="hidden" name="searchString" value="@ViewBag.CurrentSearchString" />
                 <input type="hidden" name="sortOrder" value="@ViewBag.DateSortParm" />
-                <input class="submitBtnLink" type="submit" value="Date" />
+                <input class="submitBtnLink" type="submit" value="Data" />
             }
         </th>
         <th class="tableTitle">
@@ -129,16 +129,16 @@
                 }
                 <input type="hidden" name="searchString" value="@ViewBag.CurrentSearchString" />
                 <input type="hidden" name="sortOrder" value="@ViewBag.TitleSortParm" />
-                <input class="submitBtnLink" type="submit" value="Title" />
+                <input class="submitBtnLink" type="submit" value="Tytuł" />
             }
         </th>
-        <th>Description</th>
-        <th>Categories</th>
-        <th>Tags</th>
+        <th>Opis</th>
+        <th>Kategorie</th>
+        <th>Tagi</th>
         @if (User.IsInRole("Admin"))
             {
-            <th>Edit</th>
-            <th>Delete</th>
+            <th>Edytuj</th>
+            <th>Usuń</th>
         }
     </tr>
     @foreach (var post in Model)
@@ -163,8 +163,8 @@
             </td>
             @if (User.IsInRole("Admin"))
                 {
-                <td><a href="@Url.Action("EditPost","Blog",new {slug = post.UrlSlug })" title="Edit">Edit</a></td>
-                <td><a href="@Url.Action("DeletePost","Blog",new {postid = post.PostId })" title="Delete">Delete</a></td>
+                <td><a href="@Url.Action("EditPost","Blog",new {slug = post.UrlSlug })" title="Edit">Edytuj</a></td>
+                <td><a href="@Url.Action("DeletePost","Blog",new {postid = post.PostId })" title="Delete">Usuń</a></td>
             }
         </tr>
     }

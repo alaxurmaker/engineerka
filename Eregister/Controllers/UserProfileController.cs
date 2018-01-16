@@ -1,5 +1,4 @@
-﻿//using DBModels;
-using Eregister.Models;
+﻿using Eregister.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using System;
@@ -17,10 +16,45 @@ namespace Eregister.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: UserProfile
-        public ActionResult Index()
+        public ActionResult View()
         {
-            return View();//db.Users);
+            var userId = User.Identity.GetUserId();
+            ApplicationUser user = db.Users.Where(x => x.Id == userId).FirstOrDefault();
+            var role = UserManager.GetRoles(userId).FirstOrDefault();
+
+            int? roleAddress = null;
+
+            if (role=="Student")
+            {
+                var student = db.Students?.Where(x => x.ApplicationUser.Id == userId)?.FirstOrDefault()?.AddressID;
+                roleAddress = student;
+            }
+            else if (role == "Teacher")
+            {
+                var teacher = db.Teachers?.Where(x => x.ApplicationUser.Id == userId)?.FirstOrDefault()?.AddressID;
+                roleAddress = teacher;
+            }
+            else if (role == "Parent")
+            {
+                var parent = db.Parents?.Where(x => x.ApplicationUser.Id == userId)?.FirstOrDefault()?.AddressID;
+                roleAddress = parent;
+            }
+
+            Address address = db.Addresses?.Where(x => x.AddressID == roleAddress)?.FirstOrDefault();
+
+            UserProfileViewModel userVM = new UserProfileViewModel();
+            userVM.UserId = user.Id;
+            userVM.Name = user.FirstName;
+            userVM.Surname = user.LastName;
+            userVM.Email = user.Email;
+
+            userVM.Street = address!=null ? address.Street : "brak";
+            userVM.City = address != null ? address.City : "brak";
+            userVM.PostalCode = address != null ? address.PostalCode : "brak";
+            userVM.Country = address != null ? address.Country : "brak";
+            userVM.Phone = address != null ? address.Phone : "brak";
+
+            return View(userVM);
         }
 
         public ActionResult Edit()
@@ -39,7 +73,7 @@ namespace Eregister.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Exclude = "ImageByte")]UserProfileViewModel editUser)
+        public ActionResult Edit([Bind(Exclude = "ImageByte")]UserProfileViewModel editUser)
         {
             if (ModelState.IsValid)
             {
@@ -53,8 +87,6 @@ namespace Eregister.Controllers
                         imageData = binary.ReadBytes(poImgFile.ContentLength);
                     }
                 }
-
-
                 var usrId = User.Identity.GetUserId();
                 ApplicationUser user = db.Users.Where(x => x.Id == usrId).FirstOrDefault();
                 user.ImageByte = imageData;
@@ -68,7 +100,6 @@ namespace Eregister.Controllers
                 address.PostalCode = editUser.PostalCode;
                 address.Street = editUser.Street;
                 db.Addresses.Add(address);
-
 
                 if(User.IsInRole("Student"))
                 {
@@ -88,15 +119,10 @@ namespace Eregister.Controllers
                     if (parentAddress.AddressID != null & parentAddress.AddressID != 0)
                         parentAddress.AddressID = address.AddressID;
                 }
-
-
-
-                //db.Entry(editUser).State = EntityState.Modified;
                 db.SaveChanges();
             }
-
-
-            return RedirectToAction("Index", "Home");
+            //return RedirectToAction("Index", "Home");
+            return Redirect(Request.UrlReferrer.ToString());
         }
 
         public FileContentResult UserPhotos()
@@ -117,17 +143,15 @@ namespace Eregister.Controllers
                     imageData = br.ReadBytes((int)imageFileLength);
 
                     return File(imageData, "image/png");
-
                 }
-                // to get the user details to load user Image
-                var bdUsers = HttpContext.GetOwinContext().Get<ApplicationDbContext>();
-                var userImage = bdUsers.Users.Where(x => x.Id == userId).FirstOrDefault();
+                var Users = HttpContext.GetOwinContext().Get<ApplicationDbContext>();
+                var userImage = Users.Users.Where(x => x.Id == userId).FirstOrDefault();
 
                 return new FileContentResult(userImage.ImageByte, "image/jpeg");
             }
             else
             {
-                string fileName = HttpContext.Server.MapPath(@"~/Images/noImg.png");
+                string fileName = HttpContext.Server.MapPath(@"~/Content/images/pic.png");
 
                 byte[] imageData = null;
                 FileInfo fileInfo = new FileInfo(fileName);
@@ -136,7 +160,27 @@ namespace Eregister.Controllers
                 BinaryReader br = new BinaryReader(fs);
                 imageData = br.ReadBytes((int)imageFileLength);
                 return File(imageData, "image/png");
+            }
+        }
 
+        public FileContentResult UserCommentPhotos(string id)
+        {
+            var Users = HttpContext.GetOwinContext().Get<ApplicationDbContext>();
+            var userImage = Users.Users?.Where(x => x.NameSurname == id)?.FirstOrDefault();
+
+            if (userImage != null)
+                return new FileContentResult(userImage.ImageByte, "image/jpeg");
+            else
+            {
+                string fileName = HttpContext.Server.MapPath(@"~/Content/images/pic.png");
+
+                byte[] imageData = null;
+                FileInfo fileInfo = new FileInfo(fileName);
+                long imageFileLength = fileInfo.Length;
+                FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+                BinaryReader br = new BinaryReader(fs);
+                imageData = br.ReadBytes((int)imageFileLength);
+                return File(imageData, "image/png");
             }
         }
     }

@@ -12,19 +12,18 @@ namespace Eregister
     {
         public int FinalGradeID { get; set; }
 
-        public int GradeValue { get; set; }
-        public string TextValue { get; set; }
+        public string GradeValue { get; set; }
         public ConductGrade? ConductGrade { get; set; }
-        public string Description { get; set; }
+        public DateTime AddDate { get; set; }
 
         [ForeignKey("StudentGrade")]
         public int StudentGradeID { get; set; }
 
-        [ForeignKey("Season")]
-        public int SeasonID { get; set; }
+        //[ForeignKey("Season")]
+        //public int SeasonID { get; set; }
 
         public virtual StudentGrade StudentGrade { get; set; }
-        public virtual Season Season { get; set; }
+       // public virtual Season Season { get; set; }
     }
 
     public enum ConductGrade

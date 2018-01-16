@@ -1,96 +1,89 @@
 ﻿@model Eregister.Models.GroupViewModel
 
-<h2>Zarządzanie klasą</h2>
+<h2 style="text-align:center">Zarządzanie klasą</h2>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-
-    <table class="table">
-        @*<table class="form-group">*@
-        <tr>
-
-                <th>
-                    Klasa
-                </th>
-                <th>
-                    Wychowawca
-                </th>
-                <th>
-                    Rocznik
-                </th>
-                <th>
-                    Opis
-                </th>
-</tr>
-        <tr>
-            <td>
-                @Html.DisplayFor(model => Model.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(model => Model.Teacher)
-            </td>
-            <td>
-                @Html.DisplayFor(model => Model.Year)
-            </td>
-            <td>
-                @Html.DisplayFor(model => Model.ShortDescription)
-            </td>
-        </tr>
-    </table>
-
-        <div class="form-group">
-          Dodaj ucznia
-            <p>
-                @Html.DropDownListFor(m => m.SelectedStudent, Model.StudentsSelectList, "--Wybierz ucznia--")
-                @Html.HiddenFor(model => Model.Name)
-                @Html.HiddenFor(model => Model.GroupID)
-            </p>         
+    <div class="box">
+        <div class="box-header with-border">
+            <h3 class="box-title">Grupy</h3>
         </div>
-        @*</div>*@
-    <div></div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Dodaj" class="btn btn-default" />
+        <div class="box-body">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th>Grupa</th>
+                        <th>Rocznik</th>
+                        <th>Krótki opis</th>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(model => Model.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => Model.Teacher)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => Model.Year)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => Model.ShortDescription)
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="form-group">
+                Dodaj ucznia
+                <p>
+                    @Html.DropDownListFor(m => m.SelectedStudent, Model.StudentsSelectList, "--Wybierz ucznia--")
+                    @Html.HiddenFor(model => Model.Name)
+                    @Html.HiddenFor(model => Model.GroupID)
+                </p>
             </div>
-        </div>
-}
+            @*</div>*@
+            <div></div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Dodaj" class="btn btn-default" />
+                </div>
+            </div>
 
+        </div>
+    </div>
+}
 
 @if (Model.StudentsListView != null)
 {
-   <p>Lista uczniów klasy @Html.DisplayFor(model => model.Name)</p>
-
-   <table class="table">     
-       <tr>
-
-           <th>
-              Imię i Nazwisko
-           </th>
-           <th>
-              Pesel
-           </th>
-           <th>
-               Data dołączenia do grupy
-           </th>
-       </tr>
-
-    @foreach (var item in Model.StudentsListView)
-    {
-        <tr>
-            @Html.Partial("_ClassList", item)
-        </tr>
-    }
-   </table>
+<div class="box">
+    <div class="box-header with-border">
+        <h3 class="box-title">Lista uczniów klasy @Html.DisplayFor(model => model.Name)</h3>
+    </div>
+    <div class="box-body">
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <th>Imię i nazwisko</th>
+                    <th>PESEL</th>
+                    <th>Data dołączenia</th>
+                </tr>
+                @foreach (var item in Model.StudentsListView)
+                {
+                    <tr>
+                        @Html.Partial("_ClassList", item)
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 }
-
-
-
-@*<div>
-    @{Html.RenderPartial("ClassList", Model.GroupID);}
-    
-</div>*@
 
 <div>
     @Html.ActionLink("Powrót", "Index")
 </div>
+
+
+

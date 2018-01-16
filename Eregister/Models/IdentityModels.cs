@@ -30,7 +30,9 @@ namespace Eregister.Models
         public string LastName { get; internal set; }
         public string PersonSex { get; internal set; }
         public string TokenValue { get; internal set; }
+        public string TokenValueAdv { get; internal set; }
         public bool TokenIsValid { get; internal set; }
+        public bool TokenAdvIsValid { get; internal set; }
         public string CustomSkin { get; internal set; }
         public string NameSurname { get; internal set; }
 
@@ -61,6 +63,7 @@ namespace Eregister.Models
         public string UserId { get; set; }
 
         public string Title { get; set; }
+        public string Pesel { get; set; }
 
         [ForeignKey("Address")]
         public int? AddressID { get; set; }
@@ -220,23 +223,23 @@ namespace Eregister.Models
         public DbSet<StudentHistory> StudentHistories { get; set; }
         public DbSet<StudentGrade> StudentGrades { get; set; }
         public DbSet<Student> Students { get; set; }
-        public DbSet<Season> Seasons { get; set; }
+       // public DbSet<Season> Seasons { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Parent> Parents { get; set; }
         public DbSet<Group> Groups { get; set; }
-        public DbSet<GradeRating> GradeRatings { get; set; }
+       // public DbSet<GradeRating> GradeRatings { get; set; }
         public DbSet<FinalGrade> FinalGrades { get; set; }
         //public DbSet<Educator> Educators { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Alert> Alerts { get; set; }
         public DbSet<AlertContent> AlertContents { get; set; }
         public DbSet<StudentSubject> StudentSubjects { get; set; }
-
-        // UNCOMENT!!!!!!!!!!!!!!!!!!!!
+        public DbSet<Token> Tokens { get; set; }
+        public DbSet<Message> Messages { get; set; }
         public DbSet<TeacherSubject> TeacherSubjects { get; set; }
 
         public DbSet<Quiz> Quizzes { get; set; }
-
+        public DbSet<Event> Events { get; set; }
         /// <summary>
         /// ERegister Wall
         /// </summary>
@@ -265,7 +268,6 @@ namespace Eregister.Models
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
             modelBuilder.Conventions.Remove<ManyToManyCascadeDeleteConvention>();
         }
-
 
 
         //protected override void OnModelCreating(DbModelBuilder modelBuilder)

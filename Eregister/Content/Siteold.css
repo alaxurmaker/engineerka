@@ -1,7 +1,28 @@
 ﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+    padding-top: 0px; /*bylo 50px*/
+    padding-bottom: 1px /*bylo 20px*/
 }
+
+/*zmiana submit buttonow*/
+input[type=submit] {
+    min-width: 80px;
+    max-width: 300px;
+    background-color: #4CAF50;
+    color: white;
+    padding: 7px 20px;
+    margin: 8px 10px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+    input[type=submit]:hover {
+        background-color: #45a049;
+    }
+
+
+
+
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
@@ -74,14 +95,21 @@ textarea {
             }
 
     .mainblogbar .adminBlogCtrl {
-        background-color: rgba(255, 255, 255, 0.50);
+        /*background-color: rgba(255, 255, 255, 0.50);
         border: solid #750000 0.5px;
         -moz-box-shadow: 0 1px 4px #999;
         -webkit-box-shadow: 0 1px 4px #999;
         box-shadow: 0 1px 4px #999;
         width: 99%;
         margin-bottom: 5px;
-        overflow: hidden;
+        overflow: hidden;*/
+
+           margin-bottom: 5px;
+           overflow: hidden;
+           background-color: #fff;
+           border-radius: 4px;
+           box-shadow: 0 1px 1px rgba(0,0,0,.05);
+           border: 1px solid gainsboro;
     }
 
         .mainblogbar .adminBlogCtrl table {
@@ -90,7 +118,7 @@ textarea {
 
             .mainblogbar .adminBlogCtrl table td a {
                 text-decoration: none;
-                color: blue;
+                /*color: blue;*/
             }
 
 /*#endregion Blog*/
@@ -390,7 +418,7 @@ blockquote {
 }
 
 .newComment {
-    width: 93%;
+    width: 96%;
     margin: 0 auto;
     margin-bottom: 5px;
     overflow: hidden;
@@ -497,7 +525,7 @@ blockquote {
     }
 
 .commentContainer .commentDate {
-    color: #5f80ff;
+    color: #337ab7;
     font-style: italic;
 }
 
@@ -518,7 +546,7 @@ blockquote {
     .replySubMenu a {
         text-decoration: none;
         font-style: italic;
-        color: #7575fb;
+        color: #337ab7;
         line-height: 25px;
         margin: 0 5px;
         float: left;

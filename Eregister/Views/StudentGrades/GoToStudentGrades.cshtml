@@ -1,0 +1,66 @@
+﻿@model Eregister.Models.StudentGradeViewModel
+
+@{
+    ViewBag.Title = "GoToStudentGrades";
+}
+
+<h2 style="text-align:center">Twoje oceny</h2>
+<br /><br />
+<h3>@Html.DisplayFor(model => model.GroupName)</h3>
+
+<div class="box">
+    <div class="box-header with-border">
+        <h3 class="box-title">Spis</h3>
+    </div>
+    <div class="box-body">
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <th>
+                        Imię i Naziwsko:
+                    </th>
+                    <th>
+                        Klasa:
+                    </th>
+                    <th>
+                        Oceny:
+                    </th>
+                    <th>
+                        Średnia ocen:
+                    </th>
+                    <th>
+                        Ocena końcowa:
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(Model => Model.UserName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(Model => Model.Group)
+                    </td>
+                    <td>
+                        @if (Model.Grades != null && Model.Grades != "brak")
+                        {
+                            string grades="";
+                            foreach (var i in Model.Grades)
+                            {
+                                grades += i + " ";
+                            }
+                           <a>@grades</a>
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(Model => Model.Grade)
+                    </td>
+                    @if (Model.Grades != null)
+                    {
+                        <td>
+                            @Html.DisplayFor(modelItem => Model.EndGrade)
+                        </td>
+                    }
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,55 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Plan zajec</title>
+    <style>
+        body {
+            background-color: #eee;
+        }
+    </style>    
+</head>
+<body>
+    <div style="height:700px;width:900px;margin:0 auto">
+        <script src="/Scripts/dhtmlxScheduler/dhtmlxscheduler.js" type="text/javascript" charset="utf-8"></script><script src="~/Scripts/dhtmlxScheduler/locale/locale_pl.js" type="text/javascript" charset="utf-8"></script><link rel="stylesheet" href="/Scripts/dhtmlxScheduler/dhtmlxscheduler.css" type="text/css" charset="utf-8"> <div id='scheduler_here' class='dhx_cal_container' style='width:100%;height:100%;'>
+            <div class='dhx_cal_navline'>
+                @*<div class='dhx_cal_prev_button'>&nbsp;</div>
+                    <div class='dhx_cal_next_button'>&nbsp;</div>
+                    <div class='dhx_cal_today_button'></div>*@
+                @*<div class='dhx_cal_date'></div>*@@*<div class='dhx_cal_tab' name='week_tab' style='left:140px;'></div>*@
+                <div class="dhx_cal_date"></div> @*aria-label="8 Jan 2018 &amp;ndash; 14 Jan 2018">Plan zajęć</div>*@
+            </div>
+
+            <div class='dhx_cal_header'>
+            </div>
+            @*<div class="dhx_cal_header" style="width: 832px; height: 20px; left: 50px; top: 60px;"><div class="dhx_scale_bar" aria-label="Poniedziałek" style="width: 117px; height: 18px; left: 0px; top: 0px;">Poniedziałek</div><div class="dhx_scale_bar" aria-label="Wtorek" style="width: 118px; height: 18px; left: 118px; top: 0px;">Wtorek</div><div class="dhx_scale_bar" aria-label="Środa" style="width: 118px; height: 18px; left: 237px; top: 0px;">Środa</div><div class="dhx_scale_bar" aria-label="Czwartek" style="width: 118px; height: 18px; left: 356px; top: 0px;">Czwartek</div><div class="dhx_scale_bar" aria-label="Piątek" style="width: 118px; height: 18px; left: 475px; top: 0px;">Piątek</div><div class="dhx_scale_bar" aria-label="Sobota" style="width: 118px; height: 18px; left: 594px; top: 0px;">Sobota</div><div class="dhx_scale_bar" aria-label="Niedziela" style="width: 118px; height: 18px; left: 713px; top: 0px;">Niedziela</div></div>*@
+
+            <div class='dhx_cal_data'>
+                <p>
+                    @Html.ActionLink("Powrót", "Timetables")
+                </p>
+            </div>
+
+        </div>
+        <script>
+            scheduler.config.serverLists = {};
+            scheduler.config.fix_tab_position = false;
+            scheduler.config.details_on_create = true;
+            scheduler.config.details_on_dblclick = true;
+            scheduler.config.prevent_cache = true;
+            scheduler.config.readonly = false;
+            scheduler.config.first_hour = 8;
+            scheduler.config.last_hour = 16;
+
+            scheduler.init('scheduler_here', new Date(2018, 0, 11));
+            dp = scheduler.dataProcessor = new dataProcessor("/Timetable/Save");
+            dp.init(scheduler);
+            dp.setTransactionMode("POST", false);
+            scheduler.load("/Timetable/Data", "json");
+        </script>
+    </div>
+</body>
+</html>
+

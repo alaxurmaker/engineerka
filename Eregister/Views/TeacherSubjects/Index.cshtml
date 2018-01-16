@@ -4,45 +4,42 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Nauczyciele i przedmioty</h2>
+<h2 style="text-align:center">Nauczyciele i Przedmioty</h2>
 
 <p>
-    @Html.ActionLink("Stwórz nowy", "Create")
+    @Html.ActionLink("Stwórz nowy", "Create2")
 </p>
-<p>
-    @Html.ActionLink("Stwórz nowy2!!!!", "Create2")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @*@Html.DisplayNameFor(model => model.Subject.Name)*@ Przedmiot
-        </th>
-        <th>
-            @*@Html.DisplayNameFor(model => model.Teacher.Title)*@ Nauczyciel
-        </th>
-        <th>
-            @*@Html.DisplayNameFor(model => model.Teacher.Title)*@ Email nauczyciela
-        </th>
-        <th></th>
-    </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Subject.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Teacher.ApplicationUser.NameSurname)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Teacher.ApplicationUser.Email)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.TeacherSubjectID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.TeacherSubjectID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.TeacherSubjectID })
-        </td>
-    </tr>
-}
-
-</table>
+<div class="box">
+    <div class="box-body">
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <th>Przedmiot</th>
+                    <th>Nauczyciel</th>
+                    <th>Email nauczyciela</th>
+                    <th></th>
+                </tr>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Subject.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Teacher.ApplicationUser.NameSurname)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Teacher.ApplicationUser.Email)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edycja", "Edit", new { id = item.TeacherSubjectID }) |
+                            @Html.ActionLink("Szczegóły", "Details", new { id = item.TeacherSubjectID }) |
+                            @Html.ActionLink("Usuń", "Delete", new { id = item.TeacherSubjectID })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

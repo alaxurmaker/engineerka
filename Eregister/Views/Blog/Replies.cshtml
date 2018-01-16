@@ -3,7 +3,7 @@
 @using Microsoft.AspNet.Identity
 @{
     BlogController blgCtrl = new BlogController();
-    var parentReplies = Model.Comment.Replies; //Model.Comment.Replies;
+    var parentReplies = Model.Comment.Replies;
     if (parentReplies != null)
     {
         foreach (var pReply in parentReplies)
@@ -13,42 +13,28 @@
                 var prDetails = blgCtrl.ReplyDetails(pReply.Id);
                 var likes = blgCtrl.LikeDislikeCount("replylike", pReply.Id);
                 var dislikes = blgCtrl.LikeDislikeCount("replydislike", pReply.Id);
-                //var twshareUrl = "https://twitter.com/intent/tweet?text=" + pReply.Body + "  -- " + pReply.UserName + "&url=" + Url.Encode(HttpContext.Current.Request.Url.AbsoluteUri);
 
                 <div class="parentReply" id="@prDetails[4]">
-                    <div class="mainreply" id="@prDetails[5]">
-                        <table class="commentControl" id="@prDetails[15]">
-                            <tr>
-                                @*<td><a class="commentFlagCtrl" id="@prDetails[9]"><img src="@Url.Content("~/Content/images/post/report.png")" width="10" height="10" alt="report" /></a></td>*@
-                                <td><a class="commentFlagCtrl" id="@prDetails[9]"><i class="glyphicon glyphicon-flag"></i></a></td>
-                                <td> Zgłoś</td> 
-                            </tr>
-                        </table>
-                        <div class="userImage"><img src="@prDetails[1]" height="50" width="50" /></div>
-                        <div class="commentUserName"><strong>@prDetails[0]</strong>&nbsp;&nbsp;<span class="cmntTime">-- @prDetails[2]</span></div>
+                    <div class="mainreply" id="@prDetails[5]" style="background-color: white;padding: 10px;margin-bottom: 10px;">
+                        <table class="commentControl" id="@prDetails[15]"></table>
+                        <div class="userImage"><img src="@Url.Action("UserCommentPhotos", "UserProfile", new { id = prDetails[1] } )" height="50" width="50" /></div>
+                        <div class="commentUserName"><strong>@prDetails[0]</strong>&nbsp;&nbsp;<span class="cmntTime">~ @prDetails[2]</span></div>
                         <div class="commentDate">@prDetails[3]</div>
 
                         <div class="commentExp" id="@prDetails[7]">
                             <div class="commentBody">@Html.Raw(pReply.Body)</div>
 
                             @if (!blgCtrl.ReplyDeleteCheck(pReply.Id))
-            {
+                            {
                                 <div class="replySubMenu">
                                     <a class="likecount" style="color:green;">@likes</a>
-                                    @*<a href="@Url.Action("UpdateReplyLike", "Blog", new { replyid = pReply.Id,username = User.Identity.GetUserName(), likeordislike = "like",sortorder = ViewBag.CurrentSort })"><img src="@Url.Content("~/Content/images/post/like.png")" alt="like" /></a>
-                                    <a href="@Url.Action("UpdateReplyLike", "Blog", new { replyid = pReply.Id,username = User.Identity.GetUserName(), likeordislike = "dislike",sortorder = ViewBag.CurrentSort })"><img src="@Url.Content("~/Content/images/post/dislike.png")" alt="dislike" /></a>*@
                                     <a href="@Url.Action("UpdateReplyLike", "Blog", new { replyid = pReply.Id,username = User.Identity.GetUserName(), likeordislike = "like",sortorder = ViewBag.CurrentSort })"><i class="glyphicon glyphicon-thumbs-up"></i></a>
                                     <a href="@Url.Action("UpdateReplyLike", "Blog", new { replyid = pReply.Id,username = User.Identity.GetUserName(), likeordislike = "dislike",sortorder = ViewBag.CurrentSort })"><i class="glyphicon glyphicon-thumbs-down"></i></a>
                                     <a class="likecount" style="color:red;">@dislikes</a>
-                                    <a style="cursor:pointer;" class="comReplyParent" id="@prDetails[14]">Reply</a>
-                                    @*<div class="shareParent" id="@prDetails[10]">
-                                        <a style="cursor:pointer;">Share&#x27a3;</a>
-                                        <div>
-                                            <a class="shareChild" id="@prDetails[11]" href="@twshareUrl" target="_blank" title="Tweet"><img src="@Url.Content("~/Content/images/post/twitter.png")" width="25" height="25" alt="twshare" /></a>
-                                        </div>
-                                    </div>*@
+                                    <a style="cursor:pointer;" class="comReplyParent" id="@prDetails[14]">Odpowiedz</a>
+
                                     @if (pReply.UserName == User.Identity.GetUserName())
-            {
+                                    {
                                         <table class="commentMenu" id="@prDetails[16]">
                                             <tr>
                                                 <td><a href="@Url.Action("EditReply", "Blog", new { replyid = pReply.Id })" title="Edit"><img src="@Url.Content("~/Content/images/post/edit.png")" alt="edit" /></a></td>
@@ -58,12 +44,12 @@
                                     }
                                 </div>
 
-                                if (Request.IsAuthenticated)
+                                //if (Request.IsAuthenticated)
+                                if (!String.IsNullOrEmpty(User.Identity.GetUserName()))
                                 {
-                                    var imgUrl = Url.Content("~/Content/images/profile/" + User.Identity.GetUserName() + ".png") + "?time=" + DateTime.Now.ToString();
                                     <table class="newComment collapseComment">
                                         <tr>
-                                            <td style="width:50px;vertical-align: top;"><div class="comImg"><img src="@imgUrl" height="50" width="50" /></div></td>
+                                            <td style="width:50px;vertical-align: top;"><div class="comImg"><img src="@Url.Action("UserCommentPhotos", "UserProfile", new { id = prDetails[1] } )" height="50" width="50" /></div></td>
 
                                             <td style="vertical-align:middle; min-height:40px;" class="comText" id="@prDetails[12]">
                                                 @using (Html.BeginForm("NewChildReply", "Blog", FormMethod.Post, new { @class = "comTextdivParent", role = "form" }))
@@ -73,7 +59,6 @@
                                                     <script>
                                                         CKEDITOR.replace('@prDetails[13]',
                                                             {
-                                                              //  customConfig: '/Scripts/ckEditorConfig1.js'
                                                                 customConfig: '/Scripts/ckEditorConfigComments.js'
                                                             });
                                                     </script>
@@ -101,7 +86,6 @@
 
                         </div>
                     </div>
-
                     <div class="commentreplies" id="@prDetails[6]">
                         @{
                             Model.ChildReplies = blgCtrl.GetChildReplies(pReply);
@@ -109,7 +93,7 @@
                         }
                     </div>
                 </div>
-                                    }
-                                }
-                            }
+            }
+        }
+    }
 }

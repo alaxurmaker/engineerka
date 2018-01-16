@@ -16,8 +16,6 @@ using System.Web.Hosting;
 using System.Web.Mvc;
 using Eregister.App_Start;
 using System.Net;
-//using Facebook;
-
 
 namespace Eregister.Controllers
 {
@@ -220,26 +218,29 @@ namespace Eregister.Controllers
                     LastLoginDate = DateTime.Now,
                     NameSurname = model.FirstName + " " + model.LastName,
 
-                    CustomSkin = "~/Views/Shared/_AdminTemplate.cshtml",
-                    TokenValue = "123456",
+                    CustomSkin = "green",
+                    TokenValue = GetAuthorizationTokenValue("Student"),
+                    TokenValueAdv = GetAuthorizationTokenValue("Teacher"),
                     TokenIsValid = true,
+                    TokenAdvIsValid = true,
                     PersonSex = model.Sex,
-                    EmailConfirmed = true, // <- wylaczone EmailConfirm
+                    EmailConfirmed = true,
                     ImageByte = imageBytes
                 };
 
                 var result = await UserManager.CreateAsync(user, model.RegisterPassword);
-                if(result.Succeeded)
+                if (result.Succeeded)
                 {
-                    UserManager.AddToRole(user.Id, "Candidate");
+                    await UserManager.AddToRoleAsync(user.Id, "Candidate");
 
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 }
-                return RedirectToAction("Success", "Home");
+                return RedirectToAction("Index", "Home");
             }
 
-        else
-            return RedirectToAction("Fail", "Home");
+            else
+                return View();
+            //return RedirectToAction("Fail", "Home");
         }
         //    if (custEmail == null && custUserName == null)
         //    {
@@ -405,189 +406,6 @@ namespace Eregister.Controllers
 
         #endregion SendEmail
 
-        //#region ExternalLogin
-
-        ////
-        //// POST: /Account/ExternalLogin
-        //[HttpPost]
-        //[AllowAnonymous]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult ExternalLogin(string provider, string returnUrl)
-        //{
-        //    // Request a redirect to the external login provider
-        //    return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
-        //}
-
-        ////
-        //// GET: /Account/ExternalLoginCallback
-        //[HttpGet]
-        //[AllowAnonymous]
-        //public async Task<ActionResult> ExternalLoginCallback(string returnUrl = null)
-        //{
-        //    string userid = null; //to get userId
-        //    bool custEmailConf = false; //to check if email is confirmed
-        //    string custUserName = null; //to check if username exists in the database
-        //    var info = await AuthenticationManager.GetExternalLoginInfoAsync();
-        //    if (info == null)
-        //    {
-        //        return RedirectToAction("Index", "Home");
-        //    }
-        //    string userprokey = info.Login.ProviderKey;
-        //    userid = FindUserId(userprokey); //get userId
-        //    if (userid != null)
-        //    {
-        //        //check if email is confirmed
-        //        custEmailConf = EmailConfirmationById(userid);
-        //        //get username
-        //        custUserName = FindUserNameById(userid);
-        //    }
-        //    //if email hasn't been confirmed yet, don't allow members
-        //    //to log in.
-        //    if (custEmailConf == false && custUserName != null)
-        //    {
-        //        EConfUser = custUserName;
-        //        return RedirectToAction("EmailConfirmationFailed", "Account");
-        //    }
-        //    else
-        //    {
-        //        // Sign in the user with this external login provider if the user already has a login.
-        //        var result = await SignInManager.ExternalSignInAsync(info, isPersistent: false);
-        //        switch (result)
-        //        {
-        //            case SignInStatus.Success:
-        //                UpdateLastLoginDate(custUserName);
-        //                return RedirectToLocal(returnUrl);
-        //            case SignInStatus.LockedOut:
-        //                return View("Lockout");
-        //            case SignInStatus.RequiresVerification:
-        //                return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = false });
-        //            case SignInStatus.Failure:
-        //            default:
-        //                // If the user does not have an account, then prompt the user to create an account
-        //                ViewBag.ReturnUrl = returnUrl;
-        //                ViewBag.LoginProvider = info.Login.LoginProvider;
-        //                if (info.Login.LoginProvider == "Facebook")
-        //                {
-        //                    var identity = AuthenticationManager.GetExternalIdentity(DefaultAuthenticationTypes.ExternalCookie);
-        //                    var access_token = identity.FindFirstValue("FacebookAccessToken");
-        //                    var fb = new FacebookClient(access_token);
-        //                    dynamic uEmail = fb.Get("/me?fields=email");
-        //                    dynamic uBirthDate = fb.Get("/me?fields=birthday");
-        //                    dynamic uFname = fb.Get("/me?fields=first_name");
-        //                    dynamic uLname = fb.Get("/me?fields=last_name");
-        //                    OEmail = uEmail.email;
-        //                    OBirthday = uBirthDate.birthday;
-        //                    OFname = uFname.first_name;
-        //                    OLname = uLname.last_name;
-        //                }
-        //                else if (info.Login.LoginProvider == "Google")
-        //                {
-        //                    OEmail = info.ExternalIdentity.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
-        //                    OFname = info.ExternalIdentity.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname").Value;
-        //                    OLname = info.ExternalIdentity.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname").Value;
-        //                }
-        //                else if (info.Login.LoginProvider == "Microsoft")
-        //                {
-        //                    string bday = info.ExternalIdentity.Claims.FirstOrDefault(c => c.Type == "urn:microsoft:birth_day").Value;
-        //                    string bmonth = info.ExternalIdentity.Claims.FirstOrDefault(c => c.Type == "urn:microsoft:birth_month").Value;
-        //                    string byear = info.ExternalIdentity.Claims.FirstOrDefault(c => c.Type == "urn:microsoft:birth_year").Value;
-        //                    OEmail = info.ExternalIdentity.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
-        //                    OBirthday = bmonth + "/" + bday + "/" + byear;
-        //                    OFname = info.ExternalIdentity.Claims.FirstOrDefault(c => c.Type == "urn:microsoft:first_name").Value;
-        //                    OLname = info.ExternalIdentity.Claims.FirstOrDefault(c => c.Type == "urn:microsoft:last_name").Value;
-        //                }
-        //                else
-        //                {
-        //                    OEmail = null;
-        //                    OBirthday = null;
-        //                    OFname = null;
-        //                    OLname = null;
-        //                }
-        //                return View("ExternalLoginConfirmation");
-        //        }
-        //    }
-        //}
-
-
-        ////
-        //// POST: /Account/ExternalLoginConfirmation
-        //[HttpPost]
-        //[AllowAnonymous]
-        //[ValidateAntiForgeryToken]
-        //public async Task<ActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl = null)
-        //{
-        //    if (User.Identity.IsAuthenticated)
-        //    {
-        //        return RedirectToAction("Index", "Manage");
-        //    }
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        // Get the information about the user from the external login provider
-        //        var info = await AuthenticationManager.GetExternalLoginInfoAsync();
-        //        if (info == null)
-        //        {
-        //            return View("ExternalLoginFailure");
-        //        }
-        //        var custEmail = FindEmail(model.Email);
-        //        var custUserName = FindUserName(model.ExtUsername);
-        //        var user = new ApplicationUser
-        //        {
-        //            UserName = model.ExtUsername,
-        //            Email = model.Email,
-        //            FirstName = model.ExtFirstName,
-        //            LastName = model.ExtLastName,
-        //            Country = model.ExtCountry,
-        //            BirthDate = model.ExtBirthDate,
-        //            JoinDate = DateTime.Now,
-        //            LastLoginDate = DateTime.Now,
-        //            EmailLinkDate = DateTime.Now
-        //        };
-
-        //        if (custEmail == null && custUserName == null)
-        //        {
-        //            var result = await UserManager.CreateAsync(user);
-        //            if (result.Succeeded)
-        //            {
-        //                UserManager.AddToRole(user.Id, "Candidate");
-        //                result = await UserManager.AddLoginAsync(user.Id, info.Login);
-        //                if (result.Succeeded)
-        //                {
-        //                    codeType = "EmailConfirmation";
-        //                    await SendEmail("ConfirmEmail", "Account", user, model.Email, "WelcomeEmail", "Confirm your account");
-        //                    return RedirectToAction("ConfirmationEmailSent", "Account");
-        //                }
-        //            }
-        //            AddErrors(result);
-        //        }
-        //        else
-        //        {
-        //            if (custEmail != null)
-        //            {
-        //                ModelState.AddModelError("", "Email is already registered.");
-        //            }
-        //            if (custUserName != null)
-        //            {
-        //                ModelState.AddModelError("", "Username " + model.ExtUsername.ToLower() + " is already taken.");
-        //            }
-        //        }
-        //    }
-        //    ViewBag.ReturnUrl = returnUrl;
-        //    return View("ExternalLoginConfirmation");
-        //}
-
-
-
-
-
-        ////
-        //// GET: /Account/ExternalLoginFailure
-        //[AllowAnonymous]
-        //public ActionResult ExternalLoginFailure()
-        //{
-        //    return View();
-        //}
-        //#endregion ExternalLogin
 
         #region VerifyCode
 
@@ -1070,6 +888,17 @@ namespace Eregister.Controllers
             return nameAdded;
         }
 
+
         #endregion
+
+        #region Token
+        public string GetAuthorizationTokenValue(string role)
+        {
+            var context = new ApplicationDbContext();
+            var token = context.Tokens.Where(x => x.Role == role).FirstOrDefault();
+            return token.Code;
+        }
+        #endregion
+
     }
 }

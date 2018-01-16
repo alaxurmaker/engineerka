@@ -12,15 +12,14 @@ using Eregister.App_Start;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using System.Globalization;
-
-
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 //using System.ServiceModel.Syndication;
 
 
 namespace Eregister.Controllers
 {
-    public class BlogController : BaseController//Controller
+    public class BlogController : BaseController
     {
         private IBlogRepository _blogRepository;
         public static List<BlogViewModel> postList = new List<BlogViewModel>();
@@ -89,7 +88,6 @@ namespace Eregister.Controllers
         #endregion Wall
 
         #region WallPostsGroups
-        // Główny wall dla danych grup
         [HttpGet]
         [AllowAnonymous]
         public ActionResult WallPostsGroups(int? page, string sortOrder, string searchString, string[] searchCategory, string[] searchTag)
@@ -98,7 +96,7 @@ namespace Eregister.Controllers
             var groupName = _blogRepository.GetStudentGroupName(userId);
             if(String.IsNullOrEmpty(groupName))
             {
-                TempData["Alert"] = "Strona Twojej grupy jeszcze nie istnieje";
+                TempData["msg"] = "<script>alert('Strona Twojej grupy jeszcze nie istnieje!');</script>";
                 return RedirectToAction("Index", "Home");
             }
 
@@ -107,8 +105,8 @@ namespace Eregister.Controllers
             CreateCatAndTagList();
 
             BlogViewModel model = new BlogViewModel();
-            //   model.ID = 2;
-            //       model.UrlSlug = "groupWall";
+            // model.ID = 2;
+            // model.UrlSlug = "groupWall";
             // groupWall4b2017
             string groupWall = "groupWall" + groupName + DateTime.Now.Year.ToString();// User.Identity.GetUserId());// + DateTime.Now.Year.ToString();
 
@@ -134,14 +132,6 @@ namespace Eregister.Controllers
         }
         #endregion WallPosts
 
-
-        #region TeachersList       
-        public ActionResult TeachersList()
-        {
-            return View();
-        }
-
-        #endregion TeachersList
 
         #region WallComments
         [ChildActionOnly]
@@ -189,7 +179,7 @@ namespace Eregister.Controllers
             ViewBag.CurrentSearchCategory = searchCategory;
             ViewBag.CurrentSearchTag = searchTag;
             ViewBag.DateSortParm = string.IsNullOrEmpty(sortOrder) ? "date_desc" : "";
-            ViewBag.TitleSortParm = sortOrder == "Title" ? "title_desc" : "Title";
+            ViewBag.TitleSortParm = sortOrder == "Tytuł" ? "title_desc" : "Tytuł";
 
 
             var posts = _blogRepository.GetPosts();
@@ -258,7 +248,7 @@ namespace Eregister.Controllers
                 case "date_desc":
                     postList = postList.OrderByDescending(x => x.PostedOn).ToList();
                     break;
-                case "Title":
+                case "Tytuł":
                     postList = postList.OrderBy(x => x.Title).ToList();
                     break;
                 case "title_desc":
@@ -285,7 +275,7 @@ namespace Eregister.Controllers
             ViewBag.CurrentSearchCategory = searchCategory;
             ViewBag.CurrentSearchTag = searchTag;
             ViewBag.DateSortParm = string.IsNullOrEmpty(sortOrder) ? "date_desc" : "";
-            ViewBag.TitleSortParm = sortOrder == "Title" ? "title_desc" : "Title";
+            ViewBag.TitleSortParm = sortOrder == "Tytuł" ? "title_desc" : "Tytuł";
 
             // User.Identity.
             //dodalem
@@ -358,7 +348,7 @@ namespace Eregister.Controllers
                 case "date_desc":
                     postList = postList.OrderByDescending(x => x.PostedOn).ToList();
                     break;
-                case "Title":
+                case "Tytuł":
                     postList = postList.OrderBy(x => x.Title).ToList();
                     break;
                 case "title_desc":
@@ -388,7 +378,7 @@ namespace Eregister.Controllers
             ViewBag.CurrentSearchCategory = searchCategory;
             ViewBag.CurrentSearchTag = searchTag;
             ViewBag.DateSortParm = string.IsNullOrEmpty(sortOrder) ? "date_desc" : "";
-            ViewBag.TitleSortParm = sortOrder == "Title" ? "title_desc" : "Title";
+            ViewBag.TitleSortParm = sortOrder == "Tytuł" ? "title_desc" : "Tytuł";
 
             var posts = _blogRepository.GetPosts();
             foreach (var post in posts)
@@ -456,7 +446,7 @@ namespace Eregister.Controllers
                 case "date_desc":
                     allPostsList = allPostsList.OrderByDescending(x => x.Date).ToList();
                     break;
-                case "Title":
+                case "Tytuł":
                     allPostsList = allPostsList.OrderBy(x => x.Title).ToList();
                     break;
                 case "title_desc":
@@ -549,8 +539,8 @@ namespace Eregister.Controllers
             {
                 _blogRepository.AddNotifications("wszyscy", 1);
             }
-
             //  return RedirectToAction("Post", new { slug = model.UrlSeo });
+
             return RedirectToAction("Wall", "Blog");
         }
 
@@ -571,6 +561,15 @@ namespace Eregister.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddVideoToPost(string postid, string slug, string videoUrl)
         {
+            if(!String.IsNullOrEmpty(videoUrl))
+            {
+                const string pattern = @"(?:https?:\/\/)?(?:www\.)?(?:(?:(?:youtube.com\/watch\?[^?]*v=|youtu.be\/)([\w\-]+))(?:[^\s?]+)?)";
+                const string replacement = "http://www.youtube.com/embed/$1";
+
+                var rgx = new Regex(pattern);
+                var result = rgx.Replace(videoUrl, replacement);
+                videoUrl = result;
+            }
             CreatePostViewModel(slug);
             _blogRepository.AddVideoToPost(postid, videoUrl);
             return RedirectToAction("EditPost", new { slug = slug });
@@ -854,24 +853,16 @@ namespace Eregister.Controllers
             {
                 num = 1;
             }
-
-           //var userIdentity = (ClaimsIdentity)User.Identity;
-           //var claims = userIdentity.Claims;
-           //var roleClaimType = userIdentity.RoleClaimType;
-           //var roles = claims.Where(c => c.Type == ClaimTypes.Role).ToList();
-            // if (Roles(User.Identity))
-
             var newid = num.ToString();
-          
-            // var roles = Roles((ClaimsIdentity)User.Identity);
-
-            //if (User.IsInRole("Teacher"))
-            //{
-            //    newid = "groupWall" + newid;
-            //}
-
+        
             PostViewModel model = new PostViewModel();
             model.ID = newid;
+            if(User.IsInRole("Student"))
+            {
+                ApplicationDbContext db = new ApplicationDbContext();
+                var studentGroup = db.Students.Find(User.Identity.GetUserId()).Group.Name;
+                model.GroupDirect = studentGroup;
+            }
             return View(model);
         }
 
@@ -882,24 +873,17 @@ namespace Eregister.Controllers
         [ValidateInput(false)]
         public ActionResult AddNewPost(PostViewModel model)
         {
-            //var userIdentity = (ClaimsIdentity)User.Identity;
-            //var claims = userIdentity.Claims;
-            //var roleClaimType = userIdentity.RoleClaimType;
-            //var roles = claims.Where(c => c.Type == ClaimTypes.Role).ToList();
-
             string userName = _blogRepository.GetUserFullName(User.Identity.GetUserId());
 
             if (model.GroupDirect != null && model.GroupDirect.Length<=2)
             {
-                // model.ID = "groupWall" + model.GroupDirect + String.Format("{yyyy}", thisDate)  + "_" + model.ID ;//dodac nie model.ID
-                model.ID = "groupWall" + model.GroupDirect + DateTime.Now.Year.ToString() + "_" + model.ID;
-                
+                model.ID = "groupWall" + model.GroupDirect + DateTime.Now.Year.ToString() + "_" + model.ID;              
             }
            
             var post = new Post
             {
                 Id = model.ID,
-                UserName = userName,// User.Identity.GetUserName(),
+                UserName = userName,
                 Body = model.Body,
                 Meta = model.Meta,
                 PostedOn = thisDate,
@@ -912,41 +896,7 @@ namespace Eregister.Controllers
             return RedirectToAction("EditPost", "Blog", new { slug = model.UrlSeo });
         }
 
-
         #endregion Post
-
-        #region Rss
-
-        //public ActionResult Feed()
-        //{
-        //    var blogTitle = "Your Blog Title";
-        //    var blogDescription = " Your Blog Description.";
-        //    var blogUrl = "http://yourblog.com ";
-
-        //    var posts = _blogRepository.GetPosts().Select(
-        //        p => new SyndicationItem(
-        //            p.Title,
-        //            p.ShortDescription,
-        //          new Uri(blogUrl)
-        //        )
-        //        );
-
-        //    // Create an instance of SyndicationFeed class passing the SyndicationItem collection
-        //    var feed = new SyndicationFeed(blogTitle, blogDescription, new Uri(blogUrl), posts)
-        //    {
-        //        Copyright = new TextSyndicationContent(string.Format("Copyright © {0}", blogTitle)),
-        //        Language = "en-US"
-        //    };
-
-        //    // Format feed in RSS format through Rss20FeedFormatter formatter
-        //    var feedFormatter = new Rss20FeedFormatter(feed);
-
-        //    // Call the custom action that write the feed to the response
-        //    return new FeedResult(feedFormatter);
-
-        //}
-
-        #endregion Rss
 
         [ChildActionOnly]
         public ActionResult Comments(string pageId, string sortOrder)
@@ -960,7 +910,7 @@ namespace Eregister.Controllers
 
             ViewBag.CurrentSort = sortOrder;
             ViewBag.DateSortParm = string.IsNullOrEmpty(sortOrder) ? "date_asc" : "";
-            ViewBag.BestSortParm = sortOrder == "Best" ? "best_desc" : "Best";
+            ViewBag.BestSortParm = sortOrder == "Najlepsze" ? "best_desc" : "Najlepsze";
 
             // komentarze pod postem maja id>15 liter, te na glownej stronie grupy maja rowno 15
             // Gdy kierujemy na walla konkretnej grupy to zbieramy komentarze z pageid danej grupy końcówką informującą o Id postu (pageId>15 słowa groupWall+klasa+rok+id>15), nie chcemy groupWall3b2017, tylko groupwWall3b2017xxx
@@ -968,7 +918,6 @@ namespace Eregister.Controllers
             if (pageId.Contains("groupWall") && pageId.Length > 15) comments = _blogRepository.GetCommentsByPageIdForGroupWalls(pageId+DateTime.Now.Year.ToString()).OrderByDescending(d => d.DateTime).ToList();
             else comments = _blogRepository.GetCommentsByPageId(pageId).OrderByDescending(d => d.DateTime).ToList();
 
-            // var comments = _blogRepository.GetCommentsByPageId(pageId).OrderByDescending(d => d.DateTime).ToList();
             foreach (var comment in comments)
             {
                 var likes = LikeDislikeCount("commentlike", comment.Id);
@@ -982,22 +931,19 @@ namespace Eregister.Controllers
                     comment.Replies.Add(rep);
                 }
             }
-            if (pageId.Contains("post"))
+            if (pageId.Contains("groupWall") && pageId.Length > 16 || pageId.Contains("post") && !pageId.Contains("main"))//15)
             {
                 model.UrlSeo = _blogRepository.GetPostById(pageId).UrlSeo;
             }
+            //else if (pageId.Contains("post") || !pageId.Contains("main"))
+            //{
+            //    model.UrlSeo = _blogRepository.GetPostById(pageId).UrlSeo;
+            //}
 
-            //  model.UrlSeo!!!!
-            // !!!!!!!!
-            else if (pageId.Contains("groupWall") && pageId.Length>15)
-            {
-                model.UrlSeo = _blogRepository.GetPostById(pageId).UrlSeo;
-            }
-            else if (!pageId.Contains("main"))
-            {
-                model.UrlSeo = _blogRepository.GetPostById(pageId).UrlSeo;
-            }
-
+            //else if (!pageId.Contains("main"))
+            //{
+            //    model.UrlSeo = _blogRepository.GetPostById(pageId).UrlSeo;
+            //}
 
             switch (sortOrder)
             {
@@ -1005,7 +951,7 @@ namespace Eregister.Controllers
                     comments = comments.OrderBy(x => x.DateTime).ToList();
                     ViewBag.DateSortLink = "active";
                     break;
-                case "Best":
+                case "Najlepsze":
                     comments = comments.OrderByDescending(x => x.NetLikeCount).ToList();
                     ViewBag.BestSortLink = "active";
                     break;
@@ -1018,7 +964,6 @@ namespace Eregister.Controllers
                     ViewBag.DateSortLink = "active";
                     break;
             }
-
             model.Comments = comments;
             return model;
         }
@@ -1029,7 +974,7 @@ namespace Eregister.Controllers
 
             ViewBag.CurrentSort = sortOrder;
             ViewBag.DateSortParm = string.IsNullOrEmpty(sortOrder) ? "date_asc" : "";
-            ViewBag.BestSortParm = sortOrder == "Best" ? "best_desc" : "Best";
+            ViewBag.BestSortParm = sortOrder == "Najlepsze" ? "best_desc" : "Najlepsze";
 
             var comments = _blogRepository.GetCommentsByPageId(pageId).OrderByDescending(d => d.DateTime).ToList();
             foreach (var comment in comments)
@@ -1054,14 +999,13 @@ namespace Eregister.Controllers
                 model.UrlSeo = _blogRepository.GetPostById(pageId).UrlSeo;
             }
 
-
             switch (sortOrder)
             {
                 case "date_asc":
                     comments = comments.OrderBy(x => x.DateTime).ToList();
                     ViewBag.DateSortLink = "active";
                     break;
-                case "Best":
+                case "Najlepsze":
                     comments = comments.OrderByDescending(x => x.NetLikeCount).ToList();
                     ViewBag.BestSortLink = "active";
                     break;
@@ -1086,13 +1030,15 @@ namespace Eregister.Controllers
         {
             return PartialView();
         }
-
-
         public ActionResult UpdateCommentLike(string commentid, string username, string likeordislike, string slug, string sortorder)
         {
             if (username != null)
             {
                 _blogRepository.UpdateCommentLike(commentid, username, likeordislike);
+            }
+            if(String.IsNullOrEmpty(slug))
+            {
+                return RedirectToAction("Wall", "Blog");
             }
             return RedirectToAction("Post", new { slug = slug, sortorder = sortorder });
         }
@@ -1105,7 +1051,6 @@ namespace Eregister.Controllers
             var slug = _blogRepository.GetPostByReply(replyid).UrlSeo;
             return RedirectToAction("Post", "Blog", new { slug = slug, sortorder = sortorder });
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -1120,9 +1065,8 @@ namespace Eregister.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            if (!String.IsNullOrEmpty(slug) && !String.IsNullOrEmpty(pageId)) pageId = _blogRepository.GetPostIdBySlug(slug);
-
-            if (!String.IsNullOrEmpty(slug) && String.IsNullOrEmpty(pageId)) pageId = _blogRepository.GetPostIdBySlug(slug); //dodalem
+            if ((!String.IsNullOrEmpty(slug) && !String.IsNullOrEmpty(pageId)) || (!String.IsNullOrEmpty(slug) && String.IsNullOrEmpty(pageId))) pageId = _blogRepository.GetPostIdBySlug(slug);
+            //if (!String.IsNullOrEmpty(slug) && String.IsNullOrEmpty(pageId)) pageId = _blogRepository.GetPostIdBySlug(slug); //dodalem
 
             if (User.IsInRole("Student"))
             {
@@ -1160,18 +1104,14 @@ namespace Eregister.Controllers
                 Id = newid,
                 PageId = pageId,
                 DateTime = thisDate,
-                UserName = userName,// ? User.Identity.GetUserName() : "Anonimowy",// User.Identity.GetUserName(), //comUserName,
+                UserName = userName,
                 Body = commentBody,
                 NetLikeCount = 0
             };
-
-               
-
-
-            // DODAWANIE
+              
             _blogRepository.AddNewComment(comment);
 
-            if (pageId.Contains("post"))
+            if (pageId.Contains("post") || !pageId.Contains("main"))
             {
                 return RedirectToAction("Post", new { slug = slug });
             }
@@ -1181,10 +1121,10 @@ namespace Eregister.Controllers
                 //return RedirectToAction("Post", new { slug = slug });
                 return RedirectToAction("WallPostsGroups", "Blog");
             }
-            else if (!pageId.Contains("main"))
-            {
-                return RedirectToAction("Post", new { slug = slug });
-            }
+            //else if (!pageId.Contains("main"))
+            //{
+            //    return RedirectToAction("Post", new { slug = slug });
+            //}
             else
             {
                 return RedirectToAction("Wall", "Blog");
@@ -1227,7 +1167,7 @@ namespace Eregister.Controllers
                     CommentId = commentid,
                     ParentReplyId = null,
                     DateTime = thisDate,
-                    UserName = userName,//!String.IsNullOrEmpty(User.Identity.GetUserName()) ? User.Identity.GetUserName() : "Anonimowy", //comUserName,
+                    UserName = userName,
                     Body = replyBody,
                 };
                 _blogRepository.AddNewReply(reply);
@@ -1240,11 +1180,9 @@ namespace Eregister.Controllers
             }
             else
             {
-                // return RedirectToAction("Index", "Blog");
                 return RedirectToAction("Wall", "Blog");
             }
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -1282,7 +1220,7 @@ namespace Eregister.Controllers
                     CommentId = preply.CommentId,
                     ParentReplyId = preply.Id,
                     DateTime = thisDate,
-                    UserName = userName,//!String.IsNullOrEmpty(User.Identity.GetUserName()) ? User.Identity.GetUserName() : "Anonimowy",//comUserName,
+                    UserName = userName,
                     Body = replyBody,
                 };
                 _blogRepository.AddNewReply(reply);
@@ -1292,14 +1230,15 @@ namespace Eregister.Controllers
             {
                 return RedirectToAction("Post", new { slug = _blogRepository.GetUrlSeoByReply(preply) });
             }
+            else if(Int32.TryParse(pageId, out int resultId))
+            {
+                return RedirectToAction("Post", new { slug = _blogRepository.GetUrlSeoByReply(preply) });
+            }
             else
             {
-                //return RedirectToAction("Index", "Blog");
                 return RedirectToAction("Wall", "Blog");
             }
         }
-
-
 
         [HttpGet]
         public async Task<ActionResult> EditComment(CommentViewModel model, string commentid)
@@ -1331,7 +1270,6 @@ namespace Eregister.Controllers
             return RedirectToAction("Post", new { slug = _blogRepository.GetPosts().Where(x => x.Id == comment.PageId).FirstOrDefault().UrlSeo });
         }
 
-
         [HttpGet]
         public async Task<ActionResult> DeleteComment(CommentViewModel model, string commentid)
         {
@@ -1347,7 +1285,6 @@ namespace Eregister.Controllers
                 return RedirectToAction("Post", new { slug = _blogRepository.GetPosts().Where(x => x.Id == comment.PageId).FirstOrDefault().UrlSeo });
             }
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -1370,7 +1307,6 @@ namespace Eregister.Controllers
             return RedirectToAction("Post", new { slug = _blogRepository.GetPosts().Where(x => x.Id == postid).FirstOrDefault().UrlSeo });
         }
 
-
         [HttpGet]
         public async Task<ActionResult> EditReply(CommentViewModel model, string replyid)
         {
@@ -1388,7 +1324,6 @@ namespace Eregister.Controllers
             }
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
@@ -1400,7 +1335,6 @@ namespace Eregister.Controllers
             _blogRepository.Save();
             return RedirectToAction("Post", new { slug = _blogRepository.GetUrlSeoByReply(reply) });
         }
-
 
         [HttpGet]
         public async Task<ActionResult> DeleteReply(CommentViewModel model, string replyid)
@@ -1439,10 +1373,6 @@ namespace Eregister.Controllers
             return RedirectToAction("Post", new { slug = _blogRepository.GetPosts().Where(x => x.Id == postid).FirstOrDefault().UrlSeo });
         }
 
-
-
-
-
         #region Helpers
 
         private async Task<ApplicationUser> GetCurrentUserAsync()
@@ -1450,23 +1380,20 @@ namespace Eregister.Controllers
             return await UserManager.FindByIdAsync(User.Identity.GetUserId());
         }
 
-
         public List<CommentViewModel> GetChildReplies(Reply parentReply)
         {
             return _blogRepository.GetChildReplies(parentReply);
         }
 
-
         public bool CommentDeleteCheck(string commentid)
         {
             return _blogRepository.CommentDeleteCheck(commentid);
         }
+
         public bool ReplyDeleteCheck(string replyid)
         {
             return _blogRepository.ReplyDeleteCheck(replyid);
         }
-
-
 
         public static string TimePassed(DateTime postDate)
         {
@@ -1482,49 +1409,47 @@ namespace Eregister.Controllers
             if (Math.Floor(yearPassed) > 0)
             {
                 dateDiff = Math.Floor(yearPassed);
-                date = dateDiff == 1 ? dateDiff + " year ago" : dateDiff + " years ago";
+                date = dateDiff == 1 ? dateDiff + " rok temu" : dateDiff + " lat temu";
             }
             else
             {
                 if (Math.Floor(monthPassed) > 0)
                 {
                     dateDiff = Math.Floor(monthPassed);
-                    date = dateDiff == 1 ? dateDiff + " month ago" : dateDiff + " months ago";
+                    date = dateDiff == 1 ? dateDiff + " miesiąc temu" : dateDiff + " miesiące temu";
                 }
                 else
                 {
                     if (Math.Floor(dayPassed) > 0)
                     {
                         dateDiff = Math.Floor(dayPassed);
-                        date = dateDiff == 1 ? dateDiff + " day ago" : dateDiff + " days ago";
+                        date = dateDiff == 1 ? dateDiff + " dzień temu" : dateDiff + " dni temu";
                     }
                     else
                     {
                         if (Math.Floor(hourPassed) > 0)
                         {
                             dateDiff = Math.Floor(hourPassed);
-                            date = dateDiff == 1 ? dateDiff + " hour ago" : dateDiff + " hours ago";
+                            date = dateDiff == 1 ? dateDiff + " godzinę temu" : dateDiff + " godzin temu";
                         }
                         else
                         {
                             if (Math.Floor(minutePassed) > 0)
                             {
                                 dateDiff = Math.Floor(minutePassed);
-                                date = dateDiff == 1 ? dateDiff + " minute ago" : dateDiff + " minutes ago";
+                                date = dateDiff == 1 ? dateDiff + " minutę temu" : dateDiff + " minut temu";
                             }
                             else
                             {
                                 dateDiff = Math.Floor(secondPassed);
-                                date = dateDiff == 1 ? dateDiff + " second ago" : dateDiff + " seconds ago";
+                                date = dateDiff == 1 ? dateDiff + " sekundę temu" : dateDiff + " sekund temu";
                             }
                         }
                     }
                 }
             }
-
             return date;
         }
-
 
         public string[] NewCommentDetails(string username)
         {
@@ -1539,7 +1464,7 @@ namespace Eregister.Controllers
         {
             string[] commentDetails = new string[17];
             commentDetails[0] = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(comment.UserName);//username
-            commentDetails[1] = "/Content/images/profile/" + commentDetails[0] + ".png?time=" + thisDate.ToString();//imgUrl
+            commentDetails[1] = comment.UserName; //userName
             commentDetails[2] = TimePassed(comment.DateTime);//passed time
             commentDetails[3] = comment.DateTime.ToLongDateString().Replace(comment.DateTime.DayOfWeek.ToString() + ", ", "");//comment date
             commentDetails[4] = "gp" + comment.Id; //grandparentid
@@ -1563,7 +1488,7 @@ namespace Eregister.Controllers
             string[] replyDetails = new string[17];
             var reply = _blogRepository.GetReplyById(replyId);
             replyDetails[0] = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(reply.UserName);//username
-            replyDetails[1] = "/Content/images/profile/" + replyDetails[0] + ".png?time=" + thisDate.ToString(); //imgUrl
+            replyDetails[1] = reply.UserName; //userName
             replyDetails[2] = TimePassed(reply.DateTime); //passed time
             replyDetails[3] = reply.DateTime.ToLongDateString().Replace(reply.DateTime.DayOfWeek.ToString() + ", ", ""); //reply date
             replyDetails[4] = "gp" + replyId; //grandparentid
@@ -1614,73 +1539,68 @@ namespace Eregister.Controllers
             if (Math.Floor(yearPassed) > 0)
             {
                 dateDiff = Math.Floor(yearPassed);
-                date = dateDiff == 1 ? dateDiff + " year ago" : dateDiff + " years ago";
+                date = dateDiff == 1 ? dateDiff + " rok temu" : dateDiff + " lata temu";
             }
             else
             {
                 if (Math.Floor(monthPassed) > 0)
                 {
                     dateDiff = Math.Floor(monthPassed);
-                    date = dateDiff == 1 ? dateDiff + " month ago" : dateDiff + " months ago";
+                    date = dateDiff == 1 ? dateDiff + " miesiąc temu" : dateDiff + " miesiące temu";
                 }
                 else
                 {
                     if (Math.Floor(dayPassed) > 0)
                     {
                         dateDiff = Math.Floor(dayPassed);
-                        date = dateDiff == 1 ? dateDiff + " day ago" : dateDiff + " days ago";
+                        date = dateDiff == 1 ? dateDiff + " dzień temu" : dateDiff + " dni temu";
                     }
                     else
                     {
                         if (Math.Floor(hourPassed) > 0)
                         {
                             dateDiff = Math.Floor(hourPassed);
-                            date = dateDiff == 1 ? dateDiff + " hour ago" : dateDiff + " hours ago";
+                            date = dateDiff == 1 ? dateDiff + " godzinę temu" : dateDiff + " godzin temu";
                         }
                         else
                         {
                             if (Math.Floor(minutePassed) > 0)
                             {
                                 dateDiff = Math.Floor(minutePassed);
-                                date = dateDiff == 1 ? dateDiff + " minute ago" : dateDiff + " minutes ago";
+                                date = dateDiff == 1 ? dateDiff + " minutę temu" : dateDiff + " minut temu";
                             }
                             else
                             {
                                 dateDiff = Math.Floor(secondPassed);
-                                date = dateDiff == 1 ? dateDiff + " second ago" : dateDiff + " seconds ago";
+                                date = dateDiff == 1 ? dateDiff + " sekundę temu" : dateDiff + " sekund temu";
                             }
                         }
                     }
                 }
             }
-
             return date;
         }
-
-        ////w celu wydobycia id w Blog/Post
-        //public string GetPostIdFromUrlSeo(string slug)
-        //{
-        //    return _blogRepository.GetPostIdBySlug(slug);           
-        //}
-
-
 
         public IList<Post> GetPosts()
         {
             return _blogRepository.GetPosts();
         }
+
         public IList<Category> GetPostCategories(Post post)
         {
             return _blogRepository.GetPostCategories(post);
         }
+
         public IList<Tag> GetPostTags(Post post)
         {
             return _blogRepository.GetPostTags(post);
         }
+
         public IList<PostVideo> GetPostVideos(Post post)
         {
             return _blogRepository.GetPostVideos(post);
         }
+
         public void CreateCatAndTagList()
         {
             foreach (var ct in _blogRepository.GetCategories())
@@ -1700,7 +1620,7 @@ namespace Eregister.Controllers
             PostViewModel model = new PostViewModel();
             var postid = _blogRepository.GetPostIdBySlug(slug);
             var post = _blogRepository.GetPostById(postid);
-            model.Username = userName;// User.Identity.GetUserName();
+            model.Username = userName;
             model.ID = postid;
             model.Title = post.Title;
             model.Body = post.Body;
@@ -1712,23 +1632,6 @@ namespace Eregister.Controllers
             model.ShortDescription = post.ShortDescription;
             return model;
         }
-
         #endregion
-
-
-        #region IdentityUser
-
-           
-     
-            //public static List<string> Roles(this ClaimsIdentity identity)
-            //{
-            //    return identity.Claims
-            //                   .Where(c => c.Type == ClaimTypes.Role)
-            //                   .Select(c => c.Value)
-            //                   .ToList();
-            //}
-        
-
-        #endregion IdentityUser
     }
 }

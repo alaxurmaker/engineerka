@@ -12,7 +12,7 @@ using Microsoft.AspNet.Identity;
 
 namespace Eregister.Controllers
 {
-    public class TeacherSubjectsController : BaseController//Controller
+    public class TeacherSubjectsController : BaseController
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
@@ -21,10 +21,6 @@ namespace Eregister.Controllers
         {
             var teacherSubjects = db.TeacherSubjects.Include(t => t.Subject).Include(t => t.Teacher);
 
-            //foreach(var i in teacherSubjects)
-            //{
-            //    i.
-            //}
             return View(teacherSubjects.ToList());
         }
 
@@ -47,9 +43,6 @@ namespace Eregister.Controllers
         public ActionResult Create2()
         {
             string id = User.Identity.GetUserId();
-            
-
-          //  TeacherSubject teacherSubject = db.TeacherSubjects.Find(id);
 
             var currentTeacherSubjects = db.TeacherSubjects.Where(x => x.UserId == id)?.ToList();
 
@@ -70,8 +63,6 @@ namespace Eregister.Controllers
                     var item = dbSubjects.Where(x => x.SubjectID == i).FirstOrDefault();
                     dbSubjects.Remove(item);
                 }                  
-                //if (subjectsIds.Any(x => x == y.SubjectID))
-                //    dbSubjects.Remove(y);
             }
 
             ViewBag.SubjectID = new SelectList(dbSubjects, "SubjectID", "Name");

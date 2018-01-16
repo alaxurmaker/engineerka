@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Eregister.Token>
+
+@{
+    ViewBag.Title = "Tokens";
+}
+
+<h2 style="text-align:center">Kody uwierzytelniające</h2>
+
+<div class="box">
+    <div class="box-body">
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.TokenId)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Role)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Code)
+                    </th>
+                    <th></th>
+                </tr>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TokenId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Role)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Code)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edycja", "EditToken", new { id = item.TokenId })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -5,6 +5,7 @@ using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Web;
 using System.Web.Mvc;
 
@@ -21,7 +22,6 @@ namespace Eregister.Controllers
         }
 
         private ApplicationUserManager _userManager;
-
         public ApplicationUserManager UserManager
         {
             get
@@ -39,79 +39,123 @@ namespace Eregister.Controllers
             if (User != null)
             {
                 var context = new ApplicationDbContext();
-                var username = User.Identity.Name;
-                // var userId = UserManager.FindByNameAsync(username); //UserManager.FindByNameAsync(username).ToString();
                 var userId = User.Identity.GetUserId();
 
-                if (!string.IsNullOrEmpty(username))
+                if (!string.IsNullOrEmpty(userId))
                 {
-                    var user = context.Users.SingleOrDefault(u => u.UserName == username); //walic po userId nie userLogin
-                    // Student student = new Student();
+                    var user = context.Users.SingleOrDefault(u => u.Id == userId);
                     int notsId = 0;
 
                     if (user.Teacher != null)
                     {
                         var userNots = context.Alerts.Where(x => x.TeacherUserId == userId).ToList();
-
-                      //  var alerts = context.AlertContents.Where(a => a.AlertContentID == notsId).ToList();
-
                         List<string> notificationsContent = new List<string>();
 
                         foreach (var i in userNots)
                         {
-                            if (i.IsOn==true)
+                            if (i.IsOn == true)
                             {
                                 notsId = i.AlertContentID;
 
                                 var alert = context.AlertContents.Where(a => a.AlertContentID == notsId).FirstOrDefault().Content;
                                 var alertDate = i.AddDate;
                                 string dateFormatted = "Brak daty";
-                              //  if (alertDate!=null) dateFormatted = alertDate.ToString();
-                                if (alertDate!=null) dateFormatted = alertDate.Value.ToString("ddMMyyyyHHmm");
-                                string content = dateFormatted + " " + alert;
+                                if (alertDate != null)
+                                {
+                                    var blgCtrl = new BlogController();
+                                    var dateNow = blgCtrl.TimeAgo(i.AddDate.Value);
+                                    dateFormatted = dateNow;
+                                }
+                                string content = dateFormatted + " |" +
+                                    " " + alert;
                                 notificationsContent.Add(content);
                             }
                         }
                         if (notificationsContent.Count > 0)
                         {
                             ViewData.Add("NotificationsCount", notificationsContent.Count);
-
                             ViewData.Add("NotificationsContent", notificationsContent);
                         }
-                        else ViewData["NotificationsCount"]=null;
+                        else ViewData["NotificationsCount"] = null;
 
 
                     }
-                    //else if (user.Student != null)
-                    //{
-                    //    if (user.Student.AlertID != 0)
-                    //    {
-                    //        notsId = user.Student.AlertID.Value;
-                    //        var isOn = user.Student.Alert.IsOn;
-                    //        var notsCount = user.Student.Alert.Count;
+                    else if (user.Student != null)
+                    {
+                        var userNots = context.Alerts.Where(x => x.StudentUserId == userId).ToList();
 
-                    //        if (notsId != 0 && isOn == true && notsCount > 0)//|| notsId != null)
-                    //        {
-                    //            var alerts = context.AlertContents.Where(a => a.AlertContentID == notsId).ToList();
-                    //            var notificationsCount = alerts.Count;
-                    //            List<string> notificationsContent = new List<string>();
-                    //            foreach (var item in alerts)
-                    //            {
-                    //                notificationsContent.Add(item.Content);
-                    //            }
-                    //            if (isOn == true && notsCount > 0) ViewData.Add("NotificationsCount", 9);// notificationsCount);
+                        List<string> notificationsContent = new List<string>();
 
-                    //            ViewData.Add("NotificationsContent", notificationsContent);
-                    //        }
-                    //    }
-                    //}
+                        foreach (var i in userNots)
+                        {
+                            if (i.IsOn == true)
+                            {
+                                notsId = i.AlertContentID;
+                                var alert = context.AlertContents.Where(a => a.AlertContentID == notsId).FirstOrDefault().Content;
+                                var alertDate = i.AddDate;
+                                string dateFormatted = "Brak daty";
+                                if (alertDate != null)
+                                {
+                                    var blgCtrl = new BlogController();
+                                    var dateNow = blgCtrl.TimeAgo(i.AddDate.Value);
+                                    dateFormatted = dateNow;
+                                }
+                                string content = dateFormatted + " | " + alert;
+                                notificationsContent.Add(content);
+                            }
+                        }
+                        if (notificationsContent.Count > 0)
+                        {
+                            ViewData.Add("NotificationsCount", notificationsContent.Count);
+                            ViewData.Add("NotificationsContent", notificationsContent);
+                        }
+                        else ViewData["NotificationsCount"] = null;
+                    }
+
+                    var userMsgs = context.Messages?.Where(x => x.ApplicationUser.Id == userId)?.ToList();
+                    if (userMsgs != null && userMsgs.Count > 0)
+                    {
+                        List<string> msgsContent = new List<string>();
+
+                        foreach (var i in userMsgs)
+                        {
+                            if (i.IsOn == true)
+                            {
+                                var msgDate = i.AddDate;
+                                string dateFormatted = "Brak daty";
+                                if (msgDate != null)
+                                {
+                                    var blgCtrl = new BlogController();
+                                    var dateNow = blgCtrl.TimeAgo(i.AddDate.Value);
+                                    dateFormatted = dateNow;
+                                }
+                                string msg = dateFormatted + ",";
+                                msg += i.UserFrom + ",";
+                                msg += i.Title + ",";
+                                msg += i.Body;
+
+                                msgsContent.Add(msg);
+                            }
+                        }
+                        if (msgsContent.Count > 0)
+                        {
+                            ViewData.Add("MessagesCount", msgsContent.Count);
+                            ViewData.Add("MessagesContent", msgsContent);
+                        }
+                        else ViewData["MessagesCount"] = null;
+                    }
+
 
 
                     string fullName = string.Concat(new string[] { user.FirstName, " ", user.LastName });
                     string joinDate = user.JoinDate.ToString();
 
-                    string mySkin = user.CustomSkin;
-                    mySkin = "~/Views/Shared/_AdminTemplate.cshtml";
+                    string mySkin = "green";
+                    if (!String.IsNullOrEmpty(user.CustomSkin))
+                    {
+                        mySkin = user.CustomSkin;
+                    }
+                   // mySkin = "~/Views/Shared/_AdminTemplate.cshtml";
 
                     ViewData.Add("FullName", fullName);
                     ViewData.Add("FirstName", user.FirstName);
@@ -120,9 +164,44 @@ namespace Eregister.Controllers
                     ViewData.Add("UserRank", user.Roles.FirstOrDefault());
                     ViewData.Add("Skin", mySkin);
 
+                    var userRole = context.Users.SingleOrDefault(u => u.Id == userId).Roles.FirstOrDefault().RoleId;
+                    string currentRole = "";
+                    switch (userRole)
+                    {
+                        case "1":
+                            currentRole = "Admin";
+                            break;
+                        case "2":
+                            currentRole = "Teacher";
+                            break;
+                        case "3":
+                            currentRole = "Parent";
+                            break;
+                        case "4":
+                            currentRole = "Student";
+                            break;
+                        case "5":
+                            currentRole = "Guest";
+                            break;
+                        case "6":
+                            currentRole = "Candidate";
+                            break;
+                    }
+
+                    var usr = User as ClaimsPrincipal;
+                    var identity = usr.Identity as ClaimsIdentity;
+                    var claim = (from c in usr.Claims
+                                 where c.Value == "Candidate"
+                                 select c).SingleOrDefault();
+                    if (claim != null)
+                    {
+                        identity.RemoveClaim(claim);
+                        identity.AddClaim(new Claim(ClaimTypes.Role, currentRole));
+                    }
                 }
             }
             base.OnActionExecuted(filterContext);
         }
     }
 }
+

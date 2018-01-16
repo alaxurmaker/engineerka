@@ -1,7 +1,7 @@
 ﻿@model Eregister.Models.RegisterViewModel
 @using Eregister.Controllers
     @{
-        ViewBag.Title = "Register";
+        ViewBag.Title = "Rejestracja";
     }
 
     <h2>@ViewBag.Title.</h2>
@@ -9,47 +9,47 @@
     @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
         @Html.AntiForgeryToken()
-        <h4>Create a new account.</h4>
+        <h4>Stwórz nowe konto.</h4>
         <hr />
         @Html.ValidationSummary("", new { @class = "text-danger" })
         <div class="form-group">
-            @Html.LabelFor(m => m.FirstName, new { @class = "col-md-2 control-label" })
+            Imię
             <div class="col-md-10">
                 @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(m => m.LastName, new { @class = "col-md-2 control-label" })
+            Nazwisko
             <div class="col-md-10">
                 @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(m => m.RegisterUsername, new { @class = "col-md-2 control-label" })
+            Login
             <div class="col-md-10">
                 @Html.TextBoxFor(m => m.RegisterUsername, new { @class = "form-control" })
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(m => m.RegisterEmail, new { @class = "col-md-2 control-label" })
+            E-mail
             <div class="col-md-10">
                 @Html.TextBoxFor(m => m.RegisterEmail, new { @class = "form-control" })
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(m => m.RegisterPassword, new { @class = "col-md-2 control-label" })
+            Hasło
             <div class="col-md-10">
                 @Html.PasswordFor(m => m.RegisterPassword, new { @class = "form-control" })
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
+            Powtórz hasło
             <div class="col-md-10">
                 @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(m => m.BirthDate, new { @class = "col-md-2 control-label" })
+            Data urodzenia
             <div class="col-md-10">
                 @Html.TextBoxFor(m => m.BirthDate, new { @class = "form-control" })
             </div>
@@ -59,7 +59,7 @@
             ViewBag.Country = AccountController.GetCountries();
         }
         <div class="form-group">
-            @Html.LabelFor(m => m.Country, new { @class = "col-md-2 control-label" })
+            Kraj
             <div class="col-md-10">
                 @Html.DropDownListFor(model => model.Country, (IEnumerable<SelectListItem>)ViewBag.Country, new { @class = "droplist" })
             </div>
@@ -71,7 +71,7 @@
             ViewBag.Sex = AccountController.GetSex();
         }
         <div class="form-group">
-            @Html.LabelFor(m => m.Sex, new { @class = "col-md-2 control-label" })
+            Płeć
             <div class="col-md-10">
                 @*@Html.DropDownList("Sex", (IEnumerable<SelectListItem>)ViewBag.Sex, new { @class = "form-control" })*@
                 @Html.DropDownListFor(model => model.Sex, (IEnumerable<SelectListItem>)ViewBag.Sex, new { @class = "droplist" })

@@ -247,9 +247,13 @@ namespace Eregister.DAL
                 Int32.TryParse(catid.Replace("cat", ""), out num);
                 numlist.Add(num);
             }
-            numlist.Sort();
-            num = numlist.Last();
-            num++;
+            if (numlist.Count > 0)
+            {
+                numlist.Sort();
+                num = numlist.Last();
+                num++;
+            }
+
             var newid = "cat" + num.ToString();
             var category = new Category { Id = newid, Name = catName, Description = catDesc, UrlSeo = catUrlSeo, Checked = false };
             _context.Categories.Add(category);

@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using Eregister;
 using Eregister.Models;
 using Microsoft.AspNet.Identity;
+using Eregister.Models.Mail;
 
 namespace Eregister.Controllers
 {
@@ -51,7 +52,13 @@ namespace Eregister.Controllers
             studentViewModel.UserName = userName;
             studentViewModel.UserId = id;
             studentViewModel.SubjectId = subjectId.Value;
-            studentViewModel.Grade = average != 0 ? average.ToString().Remove(4) : "brak";
+            if (average != 0)
+            {
+                string gradeFormat = average.ToString();
+                if (average.ToString().Length > 3) gradeFormat.Remove(4);
+                studentViewModel.Grade = gradeFormat;
+            }
+            else studentViewModel.Grade = "Brak";
 
             return View(studentViewModel);
         }
@@ -59,20 +66,36 @@ namespace Eregister.Controllers
         public ActionResult AddGrade(string id, string grade, int? subjectId)
         {
             StudentGrade studentGrade = db.StudentGrades.Where(x=>x.UserId==id).FirstOrDefault();
-            if(studentGrade==null)
+            var subjectName = db.Subjects.Where(x => x.SubjectID == subjectId.Value).FirstOrDefault().Name;
+
+            if (studentGrade==null)
             {
                 StudentGrade newGrade = new StudentGrade();
                 newGrade.UserId = id;
                 newGrade.SubjectID = subjectId.Value;
                 newGrade.Grades = grade;
                 db.StudentGrades.Add(newGrade);
+               
+                AddNotifications(id, grade, subjectName);
             }
             else
             {
                 string currentGrades = studentGrade.Grades != null ? studentGrade.Grades : "";
                 studentGrade.Grades = currentGrades + grade;
+
+                AddNotifications(id, grade, subjectName);
             }
-        
+
+            var studentParent = db.StudentParents?.Where(x => x.StudentID == id)?.ToList();
+            if (studentParent != null && studentParent.Count > 0)
+            {
+                foreach (var s in studentParent)
+                {
+                    var parent = db.Parents.Where(x => x.ApplicationUser.Id == s.ParentID).FirstOrDefault();
+                    SendGradeMessageToParentds(subjectName, grade, parent.ApplicationUser.Email);
+                }
+            }
+
             db.SaveChanges();
             return RedirectToAction("GoToGrades", new { id = subjectId });
         }
@@ -82,6 +105,42 @@ namespace Eregister.Controllers
             StudentGrade studentGrade = db.StudentGrades.Where(x => x.UserId == id).FirstOrDefault();
 
             studentGrade.Grade = grade;
+
+            FinalGrade finalGrade = new FinalGrade();
+
+            switch(grade)
+            {
+                case "1":
+                    finalGrade.ConductGrade = ConductGrade.niedostateczny;
+                    finalGrade.GradeValue = grade;
+                    break;
+                case "2":
+                    finalGrade.ConductGrade = ConductGrade.dopuszczający;
+                    finalGrade.GradeValue = grade;
+                    break;
+                case "3":
+                    finalGrade.ConductGrade = ConductGrade.dostateczny;
+                    finalGrade.GradeValue = grade;
+                    break;
+                case "4":
+                    finalGrade.ConductGrade = ConductGrade.dobry;
+                    finalGrade.GradeValue = grade;
+                    break;
+                case "5":
+                    finalGrade.ConductGrade = ConductGrade.bardzodobry;
+                    finalGrade.GradeValue = grade;
+                    break;
+                case "6":
+                    finalGrade.ConductGrade = ConductGrade.celujacy;
+                    finalGrade.GradeValue = grade;
+                    break;
+                default:
+                    break;                       
+            }
+            finalGrade.StudentGradeID = studentGrade.StudentGradeID;
+            DateTime now = new DateTime();
+            now = DateTime.Now;
+            finalGrade.AddDate = now;
 
             db.SaveChanges();
             return RedirectToAction("GoToGrades", new { id = subjectId });
@@ -136,6 +195,77 @@ namespace Eregister.Controllers
             return View(subjects);
         }
 
+        public ActionResult IndexForStudent()
+        {
+            var studentId = User.Identity.GetUserId();
+            var mySubjects = db.StudentSubjects.Where(x => x.UserId == studentId).ToList();
+            List<int> subjectsIds = new List<int>();
+
+            foreach (var i in mySubjects)
+            {
+                subjectsIds.Add(i.SubjectID);
+            }
+
+            List<Subject> subjects = new List<Subject>();
+
+            foreach (var i in subjectsIds)
+            {
+                var getSubject = db.Subjects.Where(x => x.SubjectID == i).FirstOrDefault();
+                subjects.Add(getSubject);
+            }
+            return View(subjects);
+        }
+
+        public ActionResult GoToStudentGrades(int? id)
+        {
+            var studentId = User.Identity.GetUserId();
+            var students = db.StudentSubjects?.Where(x => x.UserId == studentId)?.FirstOrDefault();
+            var subject = db.Subjects?.Where(x => x.SubjectID == id.Value)?.FirstOrDefault();
+            var subjectInfo = subject.Name + " Poziom: " + subject.Level;
+
+            StudentGradeViewModel result = new StudentGradeViewModel();
+
+            if (students!=null)
+            {
+                var stuGrade = db.StudentGrades.Where(x => x.UserId == studentId).FirstOrDefault();
+                int amount = 0;
+                double average = 0;
+                string Oceny = "brak";
+
+                if (stuGrade != null && stuGrade.Grades != null)
+                {
+                    string grades = stuGrade.Grades;
+                    int[] array = new int[grades.Length];
+                    int pos = 0;
+                    foreach (var s in grades)
+                    {
+                        int x = (int)Char.GetNumericValue(s);
+                        amount += x;
+                        array[pos] = x;
+                        pos++;
+                    }
+                    Oceny = grades;
+                    average = array.Average();
+                }
+
+                result.SubjectId = id.Value;
+                result.Grade = average != 0 ? average.ToString().Substring(0, Math.Min(average.ToString().Length, 4)) : "brak";
+                result.GroupName = subjectInfo;
+                var studentName = db.Students.Where(x => x.UserId == studentId).FirstOrDefault();
+                result.Grades = Oceny;
+                result.EndGrade = stuGrade.Grade;
+                result.UserName = studentName.ApplicationUser.NameSurname;
+                result.Group = studentName.GroupName;
+                result.UserId = studentId;
+            }
+            if (result == null)
+            {
+                result.GroupName = subjectInfo;
+                result.Grades = null;
+            }
+            return View(result);
+        }
+
         public ActionResult GoToGrades(int? id)
         {          
             var students = db.StudentSubjects.Where(x => x.SubjectID == id.Value).ToList();
@@ -186,7 +316,6 @@ namespace Eregister.Controllers
                 resultList.GroupBy(x => x.Group);
                 resultList.GroupBy(x => x.UserName);
             }
-
             return View(resultList);
         }
 
@@ -312,11 +441,48 @@ namespace Eregister.Controllers
         }
 
 
+        #region Notifications
+        public void AddNotifications(string studentId, string grade, string subject)
+        {
+            AlertContent newAlert = new AlertContent()
+            {
+                Content = subject + ": Masz nową ocenę: " + grade
+            };
+            db.AlertContents.Add(newAlert);
+            db.SaveChanges();
+
+            // var alertType = db.AlertContents.Where(c => c.AlertContentID == alert).FirstOrDefault().AlertContentID;
+            var dateNow = DateTime.Now;
+
+            var student = db.Students.Where(u => u.UserId == studentId).FirstOrDefault();
+
+            if (student != null)
+            {
+                db.Alerts.Add(new Alert() { IsOn = true, StudentUserId = studentId, AddDate = dateNow, AlertContentID = newAlert.AlertContentID });
+            }
+            db.SaveChanges();
+        }
+        #endregion
+
+        #region
+        public void SendGradeMessageToParentds(string subject, string grade, string to)
+        {
+            MailModel mail = new MailModel();
+            mail.From = "Informator ocen dziecka";
+            mail.Subject = "Nowa ocena w dzienniku, przedmiot: " + subject;
+            mail.Name = "Dziennik";
+            mail.Surname = "Szkolny";
+            mail.Body = "Twoje dziecko uzyskało ocenę: " + grade + " z przedmiotu " + subject;
+            mail.To = to;// parent.ApplicationUser.Email;
+
+            MailController mailCtrl = new MailController();
+            mailCtrl.Send(mail);
+        }
+        #endregion
 
 
 
-
-
+        #region ViewModel
         public List<StudentsListViewModel> CreateStudentsListViewModel(int? id)
         {
             List<Student> students = db.Students.Where(y => y.Group.GroupID == id).ToList();
@@ -343,5 +509,6 @@ namespace Eregister.Controllers
 
             return studentsListView;
         }
+        #endregion
     }
 }

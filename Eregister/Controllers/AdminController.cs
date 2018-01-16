@@ -8,6 +8,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Net;
+using System.Data.Entity;
 
 namespace Eregister.Controllers
 {
@@ -15,8 +17,8 @@ namespace Eregister.Controllers
     {
 
         #region Vars/Props
-   //     public UserManager<ApplicationUser> UserManager { get; set; }
-        public ApplicationDbContext context { get; set; }
+        //     public UserManager<ApplicationUser> UserManager { get; set; }
+        public ApplicationDbContext Context { get; set; }
 
         public static List<AdminUserViewModel> usrList = new List<AdminUserViewModel>();
         public static List<SelectListItem> roleList = new List<SelectListItem>();
@@ -30,8 +32,8 @@ namespace Eregister.Controllers
 
         public AdminController()
         {
-            context = new ApplicationDbContext();
-          //  UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+            Context = new ApplicationDbContext();
+            //  UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
         }
 
         [HttpGet]
@@ -62,7 +64,7 @@ namespace Eregister.Controllers
             ViewBag.CurrentSort = sortOrder;
             ViewBag.RankSortParm = string.IsNullOrEmpty(sortOrder) ? "rank_desc" : "";
             ViewBag.UsernameSortParm = sortOrder == "Username" ? "username_desc" : "Username";
-            IList<ApplicationUser> users = context.Users.ToList();
+            IList<ApplicationUser> users = Context.Users.ToList();
 
             foreach (var user in users)
             {
@@ -204,7 +206,7 @@ namespace Eregister.Controllers
 
                 AdmUsrRole = model.RankName;
                 AdmUsrName = model.UserName;
-                var userid = context.Users.Where(x => x.UserName == AdmUsrName).Select(x => x.Id).FirstOrDefault();
+                var userid = Context.Users.Where(x => x.UserName == AdmUsrName).Select(x => x.Id).FirstOrDefault();
                 var user = await UserManager.FindByIdAsync(userid);
                 var userRoles = await UserManager.GetRolesAsync(user.Id);
                 string[] roles = new string[userRoles.Count];
@@ -237,7 +239,7 @@ namespace Eregister.Controllers
             {
                 return RedirectToAction("Index", "Admin", new { Message = ManageMessageId.HighRankedUser });
             }
-            userid = context.Users.Where(x => x.UserName == AdmUsrName).Select(x => x.Id).FirstOrDefault();
+            userid = Context.Users.Where(x => x.UserName == AdmUsrName).Select(x => x.Id).FirstOrDefault();
             var user = await UserManager.FindByIdAsync(userid);
             var userClaims = await UserManager.GetClaimsAsync(user.Id);
             var userRoles = await UserManager.GetRolesAsync(user.Id);
@@ -262,7 +264,7 @@ namespace Eregister.Controllers
         #region Helpers
         public IEnumerable<SelectListItem> GetUserRoles(string usrrole)
         {
-            var roles = context.Roles.OrderBy(x => x.Name).ToList();
+            var roles = Context.Roles.OrderBy(x => x.Name).ToList();
             List<AdminRoleViewModel> rlList = new List<AdminRoleViewModel>();
             rlList.Add(new AdminRoleViewModel() { Role = "Admin", RoleId = "1" });
             rlList.Add(new AdminRoleViewModel() { Role = "Teacher", RoleId = "2" });
@@ -295,6 +297,45 @@ namespace Eregister.Controllers
             UserDeleted,
             UserUpdated
         }
+        #endregion
+
+        #region Token
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public ActionResult Tokens()
+        {
+            return View(Context.Tokens.ToList());
+        }
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult EditToken(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Token token = Context.Tokens.Find(id);
+            if (token == null)
+            {
+                return HttpNotFound();
+            }
+            return View(token);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditToken([Bind(Include = "TokenId,Role,Code")] Token token)
+        {
+            if (ModelState.IsValid)
+            {
+                Context.Entry(token).State = EntityState.Modified;
+                Context.SaveChanges();
+                return RedirectToAction("Tokens");
+            }
+            return View(token);
+        }
+
         #endregion
     }
 }

@@ -132,59 +132,26 @@ namespace Eregister.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Student student = db.Students.Where(x => x.ApplicationUser.NameSurname.Equals(model.SelectedStudent)).FirstOrDefault();
                 var x = model.SelectedStudent.ToString();
 
                 var student = db.Students.Where(y => y.ApplicationUser.NameSurname == x).FirstOrDefault();
-                Student studentToUpdate = db.Students.Where(u => u.UserId == student.UserId).SingleOrDefault();
-                // student.GroupID = model.GroupID;
-                // studentToUpdate.GroupName = model.Name;
+                var studentToUpdate = db.Students.Where(u => u.ApplicationUser.Id == student.UserId).FirstOrDefault();
 
-                //  studentToUpdate.GroupID = model.GroupID.Value; // tu wywala
-                var now = DateTime.Now;
+                var now = new DateTime();
+                   now = DateTime.Now;
 
-                studentToUpdate.GroupID = model.GroupID;
+                studentToUpdate.ApplicationUser.Id = student.UserId;
+                studentToUpdate.GroupID = model.GroupID.Value;
                 studentToUpdate.GroupName = model.Name;
                 studentToUpdate.JoinDate = now;
-              //  studentToUpdate.JoinDate = DateTime.Now;
-
-
-                var entity = db.Students.Find(studentToUpdate.UserId);
-                //if (entity == null)
-                //{
-                //    return;
-                //}
-
-                db.Entry(entity).CurrentValues.SetValues(studentToUpdate);
-
-                //   db.Students.Attach(student); // State = Unchanged
-                //  student.GroupID = model.GroupID; // State = Modified, and only the FirstName property is dirty.
-                // student.GroupID = model.GroupID;
-                //    student.GroupName = model.Name;
-
-
-                //db.Students.Attach(student);
-                //student.GroupID = model.GroupID;
-                //Group grp = new Group();
-                //grp.GroupID = model.GroupID.Value;
-                //grp.Name = model.Name;
-                //student.Group = new Group();
-                //student.Group = grp;
-
 
                 db.SaveChanges();
 
-                return RedirectToAction("Index");
+                return RedirectToAction("CreateClass", "Groups", new { id = model.GroupID.Value });
             }
 
             return View(model);
         }
-
-
-
-
-
-
 
 
         // GET: Groups

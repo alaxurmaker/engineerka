@@ -1,0 +1,42 @@
+﻿<div class="modal-body">
+    @using (Html.BeginForm("AuthorizeFromCandidate", "Home"))
+    {
+        @Html.AntiForgeryToken()
+        <div class="box box-info">
+            <div class="box-header with-border">
+                <h3 class="box-title">Uwierzytelnianie</h3>
+            </div>
+            <form class="form-horizontal">
+                <div class="box-body">
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 control-label">Kod</label>
+
+                        <div class="col-sm-10">
+                            @Html.TextBox("code")
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword3" class="col-sm-2 control-label">Pesel</label>
+
+                        <div class="col-sm-10">
+                           @Html.TextBox("pesel")
+                        </div>
+                    </div>
+                    
+                    <t style="margin-left:25px; margin-top:25px;">*Chcąc uzyskać prawa rodzica poczekaj na autoryzację od nauczyciela</t>
+                </div>
+                <div class="box-footer">
+                    <button type="submit" class="btn btn-info" id="approve-btn">Uwierzytelnij</button>
+                    <button type="submit" class="btn btn-default pull-right" data-dismiss="modal">Powrót</button>
+                </div>
+            </form>
+        </div>
+    }
+</div>
+<script type="text/javascript">
+    $(function () {
+        $('#approve-btn').click(function () {
+            $('#modal-container').modal('hide');
+        });
+    });
+</script>

@@ -8,12 +8,10 @@
 {
     @Html.AntiForgeryToken()
 
-    <b>Dodaj nowy post</b>
-    <br />
+    @*<br />
     <div class="editPostContainer">
         <table>
-            <tr>              
-                @*<td colspan="2" class="editPostId">@Html.TextBoxFor(m => m.ID, new { @class = "editPostIdInp", @readonly = "readonly" })</td>*@
+            <tr>                           
                 <td colspan="2" class="editPostId">@Html.HiddenFor(m => m.ID)</td>              
             </tr>
 
@@ -71,4 +69,78 @@
             </tr>
         </table>
     </div>
+}*@
+
+
+<div class="box box-info">
+    <div class="box-header with-border">
+        <h3 class="box-title">Dodaj nowy post</h3>
+    </div>
+    <form class="form-horizontal">
+        <div class="box-body">
+            @Html.HiddenFor(m => m.ID)
+            @if (User.IsInRole("Student"))
+            {
+
+            }
+            else
+            {
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-2 control-label">Dla grupy</label>
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(m => m.GroupDirect, new { @class = "form-control" })
+                    </div>
+                </div>
+            }
+                    @*</div>*@
+                    <div class="form-group">
+                        <label for="inputPassword3" class="col-sm-2 control-label">Tytuł</label>
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword3" class="col-sm-2 control-label">Meta</label>
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(m => m.Meta, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword3" class="col-sm-2 control-label">Url SEO</label>
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(m => m.UrlSeo, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword3" class="col-sm-2 control-label">Opis</label>
+
+                        <div class="col-sm-10">
+                            @Html.TextAreaFor(m => m.ShortDescription, new { @id = "editor1", Value = Model.ShortDescription })
+                            <script>
+                                CKEDITOR.replace('editor1',
+                                    {
+                                        customConfig: '/Scripts/ckEditorConfigComments.js'
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword3" class="col-sm-2 control-label">Treść</label>
+                        <div class="col-sm-10">
+                            @Html.TextAreaFor(m => m.Body, new { @id = "editor2", Value = Model.Body })
+                            <script>
+                                CKEDITOR.replace('editor2',
+                                    {
+                                        customConfig: '/Scripts/ckEditorConfigComments.js'
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+        <div class="box-footer">
+            <input class="comTextBtn" type="submit" value="&#x27a5;"/>
+        </div>
+    </form>
+</div>
 }
+

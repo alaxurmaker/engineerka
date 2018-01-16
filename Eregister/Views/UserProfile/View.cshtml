@@ -1,0 +1,71 @@
+﻿@model Eregister.Models.UserProfileViewModel
+
+@{
+    ViewBag.Title = "View";
+}
+
+<h2>Profil</h2>
+
+<div></div>
+
+    <div class="pull-left image">
+        <img src="@Url.Action("UserPhotos", "UserProfile" )" height="100" width="100" class="img-circle" alt="User Image">
+    </div>
+
+<table class="table">
+    <tr>
+        <th>
+            Imię:
+        </th>
+        <th>
+            Nazwisko:
+        </th>
+        <th>
+            Email:
+        </th>
+        <th>
+            Ulica
+        </th>
+        <th>
+            Miasto
+        </th>
+        <th>
+            Kod Pocztowy
+        </th>
+        <th>
+            Kraj
+        </th>
+        <th>
+            Telefon
+        </th>
+    </tr>
+
+        <tr>
+            <td>
+                @Html.DisplayFor(m => Model.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(m => Model.Surname)
+            </td>
+            <td>
+                @Html.DisplayFor(m => Model.Email)
+            <td>
+            <td>
+                @Html.DisplayFor(m => Model.Street)
+            </td>
+            <td>
+                @Html.DisplayFor(m => Model.City)
+            </td>
+            <td>
+                @Html.DisplayFor(m => Model.PostalCode)
+            </td>
+            <td>
+                @Html.DisplayFor(m => Model.Country)
+            </td>
+            <td>
+                @Html.DisplayFor(m => Model.Phone)
+            </td>
+        </tr>
+</table>
+@Html.ActionLink("Edycja profilu", "Edit")
+

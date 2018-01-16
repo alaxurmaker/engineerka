@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Eregister.Models.SubjectsViewModel>
+
+@{
+    ViewBag.Title = "TeachersList";
+}
+
+<h2 style="text-align: center; margin-bottom: 50px;">Nauczyciele</h2>
+<div class="container">  
+        @{
+            int row = 0;
+            foreach (var item in Model)
+            {
+                if (row <= 4)
+                {
+                    <div class="row">
+                        <div class="col-sm-6 col-md-4 col-lg-3 mt-4">
+                            <div class="card" style="background-color: white;">
+                                <img class="card-img-top" src="@Url.Action("UserCommentPhotos", "UserProfile", new { id = item.UserName } )" style="height: 253px; width:  253px;" />
+                                <div class="card-block">
+                                    <h4 class="card-title mt-3">@item.UserName</h4>
+                                    <div class="card-text">
+                                        Przedmiot: @item.Subject
+                                    </div>
+                                    <div class="card-text">
+                                        Email: @item.Mail
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    row++;
+                }
+
+                else
+                {
+                    <div class="row mb-5">
+                        <div class="col-sm-6 col-md-4 col-lg-3 mt-4">
+                            <div class="card" style="background-color: white;">
+                                <img class="card-img-top" src="@Url.Action("UserCommentPhotos", "UserProfile", new { id = item.UserName } )" style="height: 253px; width:  253px;" />
+                                <div class="card-block">
+                                    <h4 class="card-title mt-3">@item.UserName</h4>
+                                    <div class="card-text">
+                                        Przedmiot: @item.Subject
+                                    </div>
+                                    <div class="card-text">
+                                        Email: @item.Mail
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    row++;
+                }
+
+            }
+        }                
+</div>
+
+
+

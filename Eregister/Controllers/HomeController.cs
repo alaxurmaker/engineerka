@@ -6,6 +6,8 @@ using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -19,7 +21,6 @@ namespace Eregister.Controllers
         {
             context = new ApplicationDbContext();
         }
-
 
         public ActionResult Index()
         {
@@ -56,13 +57,66 @@ namespace Eregister.Controllers
             return View();
         }
 
+        #region TeachersList       
+        //public ActionResult TeachersList()
+        //{
+        //    return View();
+        //}
+
+        public ActionResult TeachersList()
+        {
+            SubjectsViewModel subjectViewModel = new SubjectsViewModel();
+            List<SubjectsViewModel> teachersList = new List<SubjectsViewModel>();
+
+            var teacherSubjects = context.TeacherSubjects?.Where(x => x.SubjectID != 0).ToList();
+
+            Group ownGroup = new Group();
+
+            if (teacherSubjects != null)
+            {
+                SubjectsViewModel item = new SubjectsViewModel();
+                foreach (var t in teacherSubjects)
+                {
+                    var user = context.Users.Find(t.UserId);
+                    var subject = context.Subjects.Where(x => x.SubjectID == t.SubjectID).FirstOrDefault().Name;
+
+                    item.UserName = user.NameSurname;
+                    item.Phone = user.PhoneNumber;
+                    item.Mail = user.Email;
+                    if (subject != null) item.Subject = subject;
+                    else item.Subject = "Brak danych";
+                }
+                teachersList.Add(item);
+            }
+
+            return View(teachersList);
+        }
+
+        public ActionResult Gallery()
+        {
+            return View();
+        }
+
+        #endregion TeachersList
+
         //UWIERZYTELNIANIE
+        #region Authorize
+        public ActionResult ModalAuthorize()
+        {
+            return PartialView("_ModalAuthorize");
+        }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult AuthorizeFromCandidate(string code, string pesel) //(string code)
+        public ActionResult Authorize()
         {
-            if (!string.IsNullOrWhiteSpace(code) && !string.IsNullOrWhiteSpace(pesel))
+            return RedirectToAction("Index");
+        }
+      
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AuthorizeFromCandidate(string code, string pesel) //(string code)
+        {
+            if (!string.IsNullOrWhiteSpace(code) && !string.IsNullOrWhiteSpace(pesel) && pesel?.Length==11)
             {
                 string userName = User.Identity.Name;
                 string loggedUserId = User.Identity.GetUserId();
@@ -71,21 +125,29 @@ namespace Eregister.Controllers
                 long pes = 0;
                 bool result = Int64.TryParse(pesel, out pes);
                 var token = GetAuthorizationToken(user.Id);
-
                 token.TokenIsValid = true; //zakomentowac te sztywne dane
+                token.TokenAdvIsValid = true;
                // token.TokenValue = "Student"; // temp code dla candidatee->student
 
                 if (User.IsInRole("Candidate") && code == token.TokenValue && token.TokenIsValid)
                 {
-                    // var doesStudentExist = context.Students.Where(s => s.UserId.Equals(loggedUserId)).ToList();//.ToList().FirstOrDefault().UserId;
-                    // PostCategory postCategory = _context.PostCategories.Where(x => x.PostId == postid && x.CategoryId == categoryid).FirstOrDefault();
                     var ifStudentExist = context.Students.Find(loggedUserId);
                     if (ifStudentExist == null)
                     {
-                        UserManager.RemoveFromRole(user.Id, "Candidate");
-                        UserManager.AddToRole(user.Id, "Student");
+                        var userRoles = await UserManager.GetRolesAsync(user.Id);
+                        string[] roles = new string[userRoles.Count];
+                        userRoles.CopyTo(roles, 0);
+                        await UserManager.RemoveFromRolesAsync(user.Id, roles);
+                        await UserManager.AddToRoleAsync(user.Id, "Student");
+
+                        var usr = User as ClaimsPrincipal;
+                        var identity = usr.Identity as ClaimsIdentity;
+                        var claim = (from c in usr.Claims
+                                     where c.Value == "Candidate"
+                                     select c).Single();
+                        identity.RemoveClaim(claim);
+                        identity.AddClaim(new Claim(ClaimTypes.Role, "Student"));
                         user.TokenIsValid = false;
-                        //var myStudent = new Student() { UserId = loggedUserId, JoinDate = DateTime.Now, Pesel = result ? pesel : "",
                         var myStudent = new Student()
                         {
                             UserId = loggedUserId,
@@ -95,18 +157,54 @@ namespace Eregister.Controllers
                         context.Students.Add(myStudent);
                         context.SaveChanges();
                     }
-                    ViewBag.ResultMessage = "Uwierzytelniono, dodano do listy";
+                  //  ViewBag.ResultMessage = "Uwierzytelniono, dodano do listy";
+                    TempData["msg"] = "<script>alert('Uwierzytelniono! Dodano Cię do listy studentów');</script>";
                 }
+
+
+                else if (User.IsInRole("Candidate") && code == token.TokenValueAdv && token.TokenAdvIsValid)
+                {
+                    var ifTeacherExist = context.Teachers.Find(loggedUserId);
+                    if (ifTeacherExist == null)
+                    {
+                        var userRoles = await UserManager.GetRolesAsync(user.Id);
+                        string[] roles = new string[userRoles.Count];
+                        userRoles.CopyTo(roles, 0);
+                        await UserManager.RemoveFromRolesAsync(user.Id, roles);
+                        await UserManager.AddToRoleAsync(user.Id, "Teacher");
+
+                        var usr = User as ClaimsPrincipal;
+                        var identity = usr.Identity as ClaimsIdentity;
+                        var claim = (from c in usr.Claims
+                                     where c.Value == "Candidate"
+                                     select c).Single();
+                        identity.RemoveClaim(claim);
+                        identity.AddClaim(new Claim(ClaimTypes.Role, "Teacher"));
+                        user.TokenAdvIsValid = false;
+                        var myTeacher = new Teacher()
+                        {
+                            UserId = loggedUserId,
+                            Pesel = result ? pesel : "",
+
+                        };
+                        context.Teachers.Add(myTeacher);
+                        context.SaveChanges();
+                    }
+                    //  ViewBag.ResultMessage = "Uwierzytelniono, dodano do listy";
+                    TempData["msg"] = "<script>alert('Uwierzytelniono! Dodano Cię do listy Nauczycieli');</script>";
+                }
+
                 else
                 {
-                    ViewBag.ResultMessage = "Nie uwierzytelniono";
+              //      ViewBag.ResultMessage = "Nie uwierzytelniono";
+                    TempData["msg"] = "<script>alert('Nie wierzytelniono! Sprawdź poprawność kodu i pesel');</script>";
                 }
             }
-            return View("Index");
+            return RedirectToAction("Index");
         }
 
+        #endregion
 
-        //[ValidateInput(false)]
         [HttpPost]
         public ActionResult ClearNotifications(int go)
         {
@@ -122,21 +220,6 @@ namespace Eregister.Controllers
 
                     if (teacherNots != null & teacherNots.Count > 0)
                     {
-                        //var notsId = user.Teacher.AlertID.Value;
-                        //var isOn = user.Teacher.Alert.IsOn;
-
-                        //var notsCount = user.Teacher.Alert.Count;
-
-                        //if (notsId != 0)
-                        //{
-                        //    //  isOn = false;
-                        //    //  notsCount = 0;
-
-                        //    user.Teacher.Alert.IsOn = false;
-                        //    user.Teacher.Alert.Count = 0;
-
-                        //    context.SaveChanges();
-
                         foreach (var i in teacherNots)
                         {
                             context.Alerts.Remove(i);
@@ -144,17 +227,25 @@ namespace Eregister.Controllers
                         context.SaveChanges();
                         ViewData.Remove("NotificationsContent");
                         ViewData.Remove("NotificationsCount");
-                        //  }
                     }
                 }
-                //else if (user.Student != null)
-                //{
+                else if (user.Student != null)
+                {
+                    var studentNots = context.Alerts.Where(x => x.StudentUserId == userId).ToList();
 
-                //}
+                    if (studentNots != null & studentNots.Count > 0)
+                    {
+                        foreach (var i in studentNots)
+                        {
+                            context.Alerts.Remove(i);
+                        }
+                        context.SaveChanges();
+                        ViewData.Remove("NotificationsContent");
+                        ViewData.Remove("NotificationsCount");
+                    }
+                }
             }
-            return Redirect(Request.UrlReferrer.ToString());
-          //  return new EmptyResult();
-           
+            return Redirect(Request.UrlReferrer.ToString());          
         }
 
         #region Helpers
@@ -163,16 +254,31 @@ namespace Eregister.Controllers
             var token = context.Users.Where(x => x.Id == userId).FirstOrDefault();
             return token;
         }
-
-        //public Student AddCandidateToStudents(string userID)
-        //{
-        //    Group group = new Group();
-        //    group.Teacher.UserId
-        //    group.StudentID = userID;
-        //    var addGroup = context.Groups.Add()
-        //    var student = context.MyUserss.Where(x => x.UserId == userId).FirstOrDefault();
-        //    return token;
-        //}
         #endregion
+
+        #region Skins
+        [ValidateInput(false)]
+        [HttpPost]
+        public ActionResult ChangeSkin(string skin)
+        {
+            var userId = User.Identity.GetUserId();
+            var user = context.Users.Where(x => x.Id == userId).FirstOrDefault();
+            switch(skin)
+            {
+                case "purple":
+                    user.CustomSkin = "purple";
+                    break;
+                case "red":
+                    user.CustomSkin = "red";
+                    break;
+                default:
+                    user.CustomSkin = "green";
+                    break;
+            }
+            context.SaveChanges();
+            return Redirect(Request.UrlReferrer.ToString());
+        }
+        #endregion
+
     }
 }

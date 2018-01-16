@@ -4,23 +4,23 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+
+<h2 style="text-align:center">Przedmioty ucznia</h2>
+
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Stwórz nowy", "Create")
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Student.Pesel)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Subject.Name)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
+<div class="box">
+    <div class="box-body">
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <th>Pesel</th>
+                    <th>Przedmiot</th>
+                </tr>
+@foreach (var item in Model)
+{
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.Student.Pesel)
@@ -29,11 +29,13 @@
             @Html.DisplayFor(modelItem => item.Subject.Name)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.StudentSubjectID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.StudentSubjectID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.StudentSubjectID })
+            @Html.ActionLink("Edycja", "Edit", new { id = item.StudentSubjectID }) |
+            @Html.ActionLink("Szczegóły", "Details", new { id = item.StudentSubjectID }) |
+            @Html.ActionLink("Usuń", "Delete", new { id = item.StudentSubjectID })
         </td>
     </tr>
 }
-
-</table>
+            </tbody>
+        </table>
+    </div>
+</div>
