@@ -24,7 +24,6 @@ namespace Eregister.Controllers
 
         public ActionResult Index()
         {
-            ViewBag.Alert = TempData["Alert"];
             return View();
         }
 
@@ -258,7 +257,7 @@ namespace Eregister.Controllers
 
         #region Skins
         [ValidateInput(false)]
-        [HttpPost]
+        [HttpGet]
         public ActionResult ChangeSkin(string skin)
         {
             var userId = User.Identity.GetUserId();

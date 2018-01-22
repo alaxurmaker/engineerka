@@ -204,6 +204,7 @@
     <Compile Include="Controllers\StudentParentsController.cs" />
     <Compile Include="Controllers\StudentSubjectsController.cs" />
     <Compile Include="Controllers\SubjectsController.cs" />
+    <Compile Include="Controllers\SweetController.cs" />
     <Compile Include="Controllers\TeacherSubjectsController.cs" />
     <Compile Include="Controllers\TimetableController.cs" />
     <Compile Include="Controllers\UserProfileController.cs" />
@@ -390,7 +391,6 @@
     <Compile Include="Models\AccountManagerModel.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AdminsViewModel.cs" />
-    <Compile Include="Models\Features\Quiz\Quiz.cs" />
     <Compile Include="Models\GroupViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ImageViewModel.cs" />
@@ -7096,6 +7096,10 @@
     <Content Include="Content\images\school3.jpg" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\Siteold.css" />
+    <Content Include="Content\sweetalert\bootstrap-sweetalert.png" />
+    <Content Include="Content\sweetalert\docs.css" />
+    <Content Include="Content\sweetalert\sweet-alert.css" />
+    <Content Include="Content\sweetalert\thumbs-up.jpg" />
     <Content Include="Content\user\css\simple-sidebar.css" />
     <Content Include="Content\user\vendor\bootstrap\css\bootstrap-grid.css" />
     <Content Include="Content\user\vendor\bootstrap\css\bootstrap-grid.min.css" />
@@ -7728,6 +7732,11 @@
     <Content Include="ckeditor\CHANGES.md" />
     <Content Include="ckeditor\LICENSE.md" />
     <Content Include="ckeditor\README.md" />
+    <Content Include="Content\sweetalert\sweet-alert.less" />
+    <Content Include="Content\sweetalert\sweet-alert-combine.less" />
+    <Content Include="Content\sweetalert\sweet-alert-animations.less" />
+    <Content Include="Content\bootstrap\variables.less" />
+    <Content Include="Content\bootstrap\mixins.less" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ckEditorConfig1.js" />
     <Content Include="Scripts\ckEditorConfigComments.js" />
@@ -8075,6 +8084,7 @@
     <Content Include="Views\StudentParents\Edit.cshtml" />
     <Content Include="Views\StudentParents\Index.cshtml" />
     <Content Include="Views\StudentParents\IndexForParent.cshtml" />
+    <Content Include="Views\Sweet\Alert.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

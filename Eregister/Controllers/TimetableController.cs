@@ -51,7 +51,7 @@ namespace Eregister.Controllers
             }
             else
             {
-                var groupEdit = TempData["TeacherGroup"];
+                var groupEdit = TempData["TeacherGroupEdit"];
                 groupId = Convert.ToInt32(groupEdit.ToString());
             }
 

@@ -22,7 +22,7 @@ namespace Eregister.Controllers
             {
                 MailMessage mail = new MailMessage();                
                 mail.To.Add(_objModelMail.To);
-                mail.From = new MailAddress(_objModelMail.From);
+                mail.From = new MailAddress(_objModelMail.From);  //WYWALA!!!! przy add grade
                 mail.Subject = _objModelMail.Subject;
                 string Body = _objModelMail.Body;
                 mail.Body = Body;

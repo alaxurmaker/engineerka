@@ -4,7 +4,7 @@
         ViewBag.Title = "Rejestracja";
     }
 
-    <h2>@ViewBag.Title.</h2>
+    <h2>Rejestracja</h2>
 
     @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
     {
@@ -12,45 +12,45 @@
         <h4>Stwórz nowe konto.</h4>
         <hr />
         @Html.ValidationSummary("", new { @class = "text-danger" })
-        <div class="form-group">
-            Imię
+        <div class="form-group">          
             <div class="col-md-10">
+                Imię
                 @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
             </div>
         </div>
-        <div class="form-group">
-            Nazwisko
+        <div class="form-group">     
             <div class="col-md-10">
+                Nazwisko
                 @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
             </div>
         </div>
         <div class="form-group">
-            Login
             <div class="col-md-10">
+                Login
                 @Html.TextBoxFor(m => m.RegisterUsername, new { @class = "form-control" })
             </div>
         </div>
         <div class="form-group">
-            E-mail
             <div class="col-md-10">
+                E-mail
                 @Html.TextBoxFor(m => m.RegisterEmail, new { @class = "form-control" })
             </div>
         </div>
-        <div class="form-group">
-            Hasło
+        <div class="form-group">           
             <div class="col-md-10">
+                Hasło
                 @Html.PasswordFor(m => m.RegisterPassword, new { @class = "form-control" })
             </div>
         </div>
         <div class="form-group">
-            Powtórz hasło
             <div class="col-md-10">
+                Powtórz hasło
                 @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
             </div>
         </div>
-        <div class="form-group">
-            Data urodzenia
+        <div class="form-group">          
             <div class="col-md-10">
+                Data urodzenia
                 @Html.TextBoxFor(m => m.BirthDate, new { @class = "form-control" })
             </div>
         </div>
@@ -59,29 +59,23 @@
             ViewBag.Country = AccountController.GetCountries();
         }
         <div class="form-group">
-            Kraj
             <div class="col-md-10">
+                Kraj
                 @Html.DropDownListFor(model => model.Country, (IEnumerable<SelectListItem>)ViewBag.Country, new { @class = "droplist" })
             </div>
         </div>
-
-
-
         {
             ViewBag.Sex = AccountController.GetSex();
         }
-        <div class="form-group">
-            Płeć
+        <div class="form-group">         
             <div class="col-md-10">
-                @*@Html.DropDownList("Sex", (IEnumerable<SelectListItem>)ViewBag.Sex, new { @class = "form-control" })*@
+                Płeć
                 @Html.DropDownListFor(model => model.Sex, (IEnumerable<SelectListItem>)ViewBag.Sex, new { @class = "droplist" })
             </div>
         </div>
-
-
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" class="btn btn-default" value="Register" />
+                <input type="submit" class="btn btn-default" value="Zarejestruj" />
             </div>
         </div>
     }

@@ -15,6 +15,8 @@
           apply the skin class to the body tag so the changes take effect. -->
     <!--<link rel="stylesheet" href="~/Content/admin/dist/css/skins/skin-green-light.min.css"> -->
     <link rel="stylesheet" href="~/Content/admin/dist/css/skins/_all-skins.min.css">  
+    <script src="https://lipis.github.io/bootstrap-sweetalert/lib/sweet-alert.js"></script>
+    <link href="~/Content/sweetalert/sweet-alert.css" rel="stylesheet" />  
     <!--MODALE-->
     <style>
         .modal-content {
@@ -26,26 +28,7 @@
     <link href="~/Content/Siteold.css" rel="stylesheet" />
     <script src="~/ckeditor/ckeditor.js"></script> <!-- ckeditor-->
 </head>
-<!--
-BODY TAG OPTIONS:
-=================
-Apply one or more of the following classes to get the
-desired effect
-|---------------------------------------------------------|
-| SKINS         | skin-blue                               |
-|               | skin-black                              |
-|               | skin-purple                             |
-|               | skin-yellow                             |
-|               | skin-red                                |
-|               | skin-green                              |
-|---------------------------------------------------------|
-|LAYOUT OPTIONS | fixed                                   |
-|               | layout-boxed                            |
-|               | layout-top-nav                          |
-|               | sidebar-collapse                        |
-|               | sidebar-mini                            |
-|---------------------------------------------------------|
--->
+
 @{
     var skinClass = "hold-transition skin-green-light sidebar-mini";
     if (ViewData["Skin"] != null)
@@ -54,7 +37,7 @@ desired effect
 
         if (skin == "purple")
         {
-            skinClass = "hold-transition skin-purple-light sidebar-mini";
+            skinClass = "hold-transition skin-purple sidebar-mini";
         }
         else if (skin=="red")
         {
@@ -293,9 +276,9 @@ desired effect
                     <li class="header">E-Register</li>
                     @if (User.IsInRole("Teacher"))
                     {
-                        <li><a href="/Blog/Wall"><i class="fa fa-link"></i><span>Główna tablica</span></a> </li>
-                            <li><a href="/Groups/Index"><i class="fa fa-link"></i> <span>Zarządzaj grupami</span></a></li>
-                                            <li><a href="/Subjects/Index"><i class="fa fa-link"></i> <span>Przedmioty</span></a></li>
+                        <li><a href="/Blog/Wall"><i class="fa fa-window-maximize"></i><span>Główna tablica</span></a> </li>
+                            <li><a href="/Groups/Index"><i class="fa fa-users"></i> <span>Zarządzaj grupami</span></a></li>
+                                            <li><a href="/Subjects/Index"><i class="fa fa-book"></i> <span>Przedmioty</span></a></li>
                                             <li><a href="/StudentGrades/IndexForTeacher"><i class="fa fa-pencil"></i><span>Wystaw oceny</span></a></li>
                                             <li><a href="/TeacherSubjects/Index"><i class="fa fa-server"></i><span>Przedmioty nauczyciela</span></a></li>
                                             <li><a href="@Url.Action("Timetables", "Timetable")"><i class="fa fa-table"></i><span>Plan zajęć</span></a></li>
@@ -306,24 +289,24 @@ desired effect
                     }
                     else if (User.IsInRole("Student"))
                     {
-                                            <li><a href="/Blog/Wall"><i class="fa fa-link"></i><span>Główna tablica</span></a> </li>
-                                            <li><a href="@Url.Action("WallPostsGroups", "Blog")"><i class="fa fa-link"></i><span>Grupowa tablica</span></a></li>
-                                            <li><a href="@Url.Action("Timetables", "Timetable")"><i class="fa fa-link"></i><span>Plan zajęć</span></a></li>
-                                            <li><a href="/StudentGrades/IndexForStudent"><i class="fa fa-link"></i> <span>Moje oceny</span></a></li>
-                                            <li><a href="/Home/TeachersList"><i class="fa fa-link"></i> <span>Nauczyciele</span></a></li>
+                                            <li><a href="/Blog/Wall"><i class="fa fa-window-maximize"></i><span>Główna tablica</span></a> </li>
+                                            <li><a href="@Url.Action("WallPostsGroups", "Blog")"><i class="fa fa-building-o"></i><span>Grupowa tablica</span></a></li>
+                                            <li><a href="@Url.Action("Timetables", "Timetable")"><i class="fa fa-table"></i><span>Plan zajęć</span></a></li>
+                                            <li><a href="/StudentGrades/IndexForStudent"><i class="fa fa-graduation-cap"></i> <span>Moje oceny</span></a></li>
+                                            <li><a href="/Home/TeachersList"><i class="fa fa-user-secret"></i> <span>Nauczyciele</span></a></li>
                                             <li><a href="/UserProfile/View"><i class="fa fa-user-circle"></i><span>Twój profil</span></a></li>
                     }
                     else if (User.IsInRole("Parent"))
                     {
-                                          <li><a href="/Blog/Wall"><i class="fa fa-link"></i><span>Główna tablica</span></a> </li>
-                                          <li><a href="/StudentParents/IndexForParent"><i class="fa fa-link"></i><span>Oceny dziecka</span></a></li>
-                                          <li><a href="@Url.Action("Timetables", "Timetable")"><i class="fa fa-link"></i><span>Plan zajęć</span></a></li>
-                                          <li><a href="/Home/TeachersList"><i class="fa fa-link"></i> <span>Nauczyciele</span></a></li>
+                                          <li><a href="/Blog/Wall"><i class="fa fa-window-maximize"></i><span>Główna tablica</span></a> </li>
+                                          <li><a href="/StudentParents/IndexForParent"><i class="fa fa-graduation-cap"></i><span>Oceny dziecka</span></a></li>
+                                          <li><a href="@Url.Action("Timetables", "Timetable")"><i class="fa fa-table"></i><span>Plan zajęć</span></a></li>
+                                          <li><a href="/Home/TeachersList"><i class="fa fa-user-secret"></i> <span>Nauczyciele</span></a></li>
                                         <li><a href="/UserProfile/View"><i class="fa fa-user-circle"></i><span>Twój profil</span></a></li>
                     }
                     else if (User.IsInRole("Admin"))
                     {
-                        <li><a href="/Blog/Wall"><i class="fa fa-link"></i><span>Główna tablica</span></a> </li>
+                        <li><a href="/Blog/Wall"><i class="fa fa-window-maximize"></i><span>Główna tablica</span></a> </li>
                         <li><a href="/UserProfile/View"><i class="fa fa-user-circle"></i><span>Twój profil</span></a></li>                       
                             <li class="treeview">
                                 <a href="#">
@@ -341,9 +324,9 @@ desired effect
                     }
                     else
                     {
-                        <li><a href="/Home/Index"><i class="fa fa-link"></i><span>Home</span></a> </li>
-                        <li><a href="/Home/About"><i class="fa fa-link"></i><span>About</span></a> </li>
-                        <li><a href="/Home/Contact"><i class="fa fa-link"></i><span>Contact</span></a> </li>
+                        <li><a href="/Home/Index"><i class="fa fa-home"></i><span>Home</span></a> </li>
+                        <li><a href="/Home/About"><i class="fa fa-info-circle"></i><span>About</span></a> </li>
+                        <li><a href="/Home/Contact"><i class="fa fa-phone"></i><span>Contact</span></a> </li>
                     }
                     <li class="treeview">
                         <a href="#">
